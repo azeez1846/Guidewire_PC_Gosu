@@ -79,4 +79,16 @@ enhancement SubmissionEnhancement : PolicyPeriod {
     }
     this.Status = "Issued"
   }
+
+  public function createPolicyChange(editEffectiveDateStr : String, newJobNum : String) : PolicyPeriod {
+    var sdf = new java.text.SimpleDateFormat("yyyy-MM-dd")
+    var editEffDate = sdf.parse(editEffectiveDateStr)
+    return this.createPolicyChangeBranch(editEffDate, newJobNum)
+  }
+
+  public function cancelPolicy(cancelEffectiveDateStr : String, newJobNum : String) : PolicyPeriod {
+    var sdf = new java.text.SimpleDateFormat("yyyy-MM-dd")
+    var cancelEffDate = sdf.parse(cancelEffectiveDateStr)
+    return this.createCancellationBranch(cancelEffDate, newJobNum)
+  }
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="PolicyChangeWizard"
+     title="Policy Change Wizard - Guidewire PolicyCenter">
+    <Wizard id="PolicyChangeWizardFlow">
+        <WizardStep id="PolicyChangeInfo" title="Step 1: Policy Change Info &amp; Effective Date">
+            <Screen id="PolicyChangeInfoScreen">
+                <Toolbar id="PolicyChangeToolbar1">
+                    <ToolbarButton id="NextBtn1" action="Wizard.nextStep()" label="Next &gt; Edit Coverages"/>
+                </Toolbar>
+                <DetailViewPanel id="PolicyChangeDV">
+                    <InputColumn title="Policy Change Transaction Info">
+                        <TextInput id="JobNumber" label="Transaction #" value="Submission.JobNumber" editable="false"/>
+                        <TextInput id="PolicyNumber" label="Policy #" value="Submission.PolicyNumber" editable="false"/>
+                        <TextInput id="FixedID" label="Branch FixedID" value="Submission.PolicyPeriodFixedId" editable="false"/>
+                        <DateInput id="EditEffectiveDate" label="Change Effective Date" value="Submission.EditEffectiveDate" required="true"/>
+                    </InputColumn>
+                </DetailViewPanel>
+            </Screen>
+        </WizardStep>
+
+        <WizardStep id="PolicyChangeQuote" title="Step 2: Calculate Prorated Premium &amp; Quote">
+            <Screen id="PolicyChangeQuoteScreen">
+                <Toolbar id="PolicyChangeToolbar2">
+                    <ToolbarButton id="BindChangeBtn" action="SubmissionEnhancement.bindAndIssue(Submission)" label="Bind Policy Change"/>
+                </Toolbar>
+                <DetailViewPanel id="PolicyChangeQuoteDV">
+                    <InputColumn title="Prorated Financial Impact">
+                        <TextInput id="BasePremium" label="Prorated Premium Difference" value="Submission.BasePremium" editable="false"/>
+                        <TextInput id="TotalPremium" label="Revised Total Premium" value="Submission.TotalPremium" editable="false"/>
+                    </InputColumn>
+                </DetailViewPanel>
+            </Screen>
+        </WizardStep>
+    </Wizard>
+</PCF>

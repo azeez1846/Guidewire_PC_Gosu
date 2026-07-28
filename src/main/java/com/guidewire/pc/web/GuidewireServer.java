@@ -107,6 +107,12 @@ public class GuidewireServer {
                 String jobNum = params.get("jobNum");
                 String step = params.getOrDefault("step", "step1");
                 html = renderSubmissionWizard(jobNum, step, params);
+            } else if ("policy-change".equals(page)) {
+                String origJobNum = params.get("jobNum");
+                html = renderPolicyChangePage(origJobNum, params);
+            } else if ("cancellation".equals(page)) {
+                String origJobNum = params.get("jobNum");
+                html = renderCancellationPage(origJobNum, params);
             } else {
                 html = renderDesktopPage("submissions", null);
             }
@@ -677,7 +683,9 @@ public class GuidewireServer {
             if (!"Issued".equalsIgnoreCase(sub.getStatus())) {
                 sb.append("<button type='submit' class='gw-btn gw-btn-success'>📜 Bind &amp; Issue Policy</button>");
             } else {
-                sb.append("<span style='color:#28A745; font-weight:700; display:inline-flex; align-items:center; gap:5px;'>✅ Policy In Force</span>");
+                sb.append("<span style='color:#28A745; font-weight:700; display:inline-flex; align-items:center; gap:5px; margin-right:10px;'>✅ Policy In Force</span>");
+                sb.append("<a href='/?page=policy-change&jobNum=").append(jobNum).append("' class='gw-btn gw-btn-secondary'>⚡ Policy Change</a> ");
+                sb.append("<a href='/?page=cancellation&jobNum=").append(jobNum).append("' class='gw-btn' style='background:#C53030;'>❌ Cancel Policy</a>");
             }
             sb.append("</div>");
 
@@ -689,6 +697,8 @@ public class GuidewireServer {
             if (sub.getPolicyNumber() != null) {
                 sb.append("<p style='margin-bottom:8px; font-size:14px;'><b>Issued Policy #:</b> <b style='color:#0073B1;'>").append(sub.getPolicyNumber()).append("</b></p>");
             }
+            sb.append("<p style='margin-bottom:8px;'><b>Job Type:</b> <span class='gw-pcf-tag'>").append(sub.getJobType()).append("</span></p>");
+            sb.append("<p style='margin-bottom:8px;'><b>PolicyPeriod FixedID:</b> <code>").append(sub.getPolicyPeriodFixedId()).append("</code></p>");
             sb.append("<p style='margin-bottom:8px;'><b>Line of Business:</b> ").append(sub.getProductCode()).append("</p>");
             sb.append("<p style='margin-bottom:8px;'><b>Effective Period:</b> ").append(sub.getEffectiveDate()).append(" to ").append(sub.getExpirationDate()).append("</p>");
             sb.append("</div>");
@@ -704,6 +714,111 @@ public class GuidewireServer {
             sb.append("</div></div>");
             sb.append("</form>");
         }
+
+        sb.append("</div></div></body></html>");
+        return sb.toString();
+    }
+
+    private String renderPolicyChangePage(String origJobNum, Map<String, String> params) {
+        PolicyPeriod orig = dataStore.findSubmission(origJobNum);
+        if (orig == null) return "Original Policy Period Not Found";
+
+        if (params.containsKey("action") && "executeChange".equals(params.get("action"))) {
+            String editEffDateStr = params.getOrDefault("editEffectiveDate", "2026-10-01");
+            try {
+                java.util.Date editEffDate = new java.text.SimpleDateFormat("yyyy-MM-dd").parse(editEffDateStr);
+                String newJobNum = "C000" + (int)(Math.random() * 9000 + 1000);
+                PolicyPeriod changeBranch = orig.createPolicyChangeBranch(editEffDate, newJobNum);
+                changeBranch.calculatePremium();
+                changeBranch.setStatus("Issued");
+
+                dataStore.createSubmission(changeBranch);
+                return "<!DOCTYPE html><html><head><script>window.location.href='/?page=submission-wizard&jobNum=" + changeBranch.getJobNumber() + "&step=step3';</script></head></html>";
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("<!DOCTYPE html><html><head><title>Policy Change Wizard - Guidewire PolicyCenter</title>").append(getHeaderCSS()).append("</head><body>");
+        sb.append(renderHeader("submissions"));
+
+        sb.append("<div class='gw-main-container'>");
+        sb.append("<div class='gw-content' style='max-width:720px; margin:0 auto;'>");
+        sb.append("<div class='gw-page-header'>");
+        sb.append("<div class='gw-page-title'>Start Policy Change Transaction <span class='gw-pcf-tag'>PolicyChangeWizard.pcf</span></div>");
+        sb.append("</div>");
+
+        sb.append("<form action='/?page=policy-change&jobNum=").append(origJobNum).append("' method='POST'>");
+        sb.append("<input type='hidden' name='action' value='executeChange'>");
+
+        sb.append("<div class='gw-card'>");
+        sb.append("<div class='gw-card-title'>Policy Change Transaction Info</div>");
+        sb.append("<p style='margin-bottom:8px;'><b>Parent Policy #:</b> ").append(orig.getPolicyNumber()).append("</p>");
+        sb.append("<p style='margin-bottom:8px;'><b>PolicyPeriod FixedID:</b> <code>").append(orig.getPolicyPeriodFixedId()).append("</code></p>");
+        sb.append("<p style='margin-bottom:8px;'><b>Account Holder:</b> ").append(orig.getAccount() != null ? orig.getAccount().getAccountHolderName() : "N/A").append("</p>");
+
+        sb.append("<div class='gw-field' style='margin-top:16px;'><label>Change Effective Date <span class='required'>*</span></label><input type='date' name='editEffectiveDate' value='2026-10-01' required></div>");
+
+        sb.append("<div style='margin-top:20px; display:flex; gap:10px;'>");
+        sb.append("<button type='submit' class='gw-btn gw-btn-success'>⚡ Process Mid-Term Policy Change</button> ");
+        sb.append("<a href='/?page=submission-wizard&jobNum=").append(origJobNum).append("' class='gw-btn gw-btn-secondary'>Cancel</a>");
+        sb.append("</div>");
+
+        sb.append("</div>");
+        sb.append("</form>");
+
+        sb.append("</div></div></body></html>");
+        return sb.toString();
+    }
+
+    private String renderCancellationPage(String origJobNum, Map<String, String> params) {
+        PolicyPeriod orig = dataStore.findSubmission(origJobNum);
+        if (orig == null) return "Original Policy Period Not Found";
+
+        if (params.containsKey("action") && "executeCancellation".equals(params.get("action"))) {
+            String cancelEffDateStr = params.getOrDefault("cancelEffectiveDate", "2026-11-01");
+            try {
+                java.util.Date cancelEffDate = new java.text.SimpleDateFormat("yyyy-MM-dd").parse(cancelEffDateStr);
+                String newJobNum = "X000" + (int)(Math.random() * 9000 + 1000);
+                PolicyPeriod cancelBranch = orig.createCancellationBranch(cancelEffDate, newJobNum);
+                cancelBranch.setStatus("Issued");
+
+                dataStore.createSubmission(cancelBranch);
+                return "<!DOCTYPE html><html><head><script>window.location.href='/?page=submission-wizard&jobNum=" + cancelBranch.getJobNumber() + "&step=step3';</script></head></html>";
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("<!DOCTYPE html><html><head><title>Cancellation Wizard - Guidewire PolicyCenter</title>").append(getHeaderCSS()).append("</head><body>");
+        sb.append(renderHeader("submissions"));
+
+        sb.append("<div class='gw-main-container'>");
+        sb.append("<div class='gw-content' style='max-width:720px; margin:0 auto;'>");
+        sb.append("<div class='gw-page-header'>");
+        sb.append("<div class='gw-page-title'>Start Cancellation Transaction <span class='gw-pcf-tag'>CancellationWizard.pcf</span></div>");
+        sb.append("</div>");
+
+        sb.append("<form action='/?page=cancellation&jobNum=").append(origJobNum).append("' method='POST'>");
+        sb.append("<input type='hidden' name='action' value='executeCancellation'>");
+
+        sb.append("<div class='gw-card'>");
+        sb.append("<div class='gw-card-title'>Cancellation Transaction Info</div>");
+        sb.append("<p style='margin-bottom:8px;'><b>Parent Policy #:</b> ").append(orig.getPolicyNumber()).append("</p>");
+        sb.append("<p style='margin-bottom:8px;'><b>PolicyPeriod FixedID:</b> <code>").append(orig.getPolicyPeriodFixedId()).append("</code></p>");
+        sb.append("<p style='margin-bottom:8px;'><b>Account Holder:</b> ").append(orig.getAccount() != null ? orig.getAccount().getAccountHolderName() : "N/A").append("</p>");
+
+        sb.append("<div class='gw-field' style='margin-top:16px;'><label>Cancellation Effective Date <span class='required'>*</span></label><input type='date' name='cancelEffectiveDate' value='2026-11-01' required></div>");
+
+        sb.append("<div style='margin-top:20px; display:flex; gap:10px;'>");
+        sb.append("<button type='submit' class='gw-btn' style='background:#C53030;'>❌ Confirm Policy Cancellation</button> ");
+        sb.append("<a href='/?page=submission-wizard&jobNum=").append(origJobNum).append("' class='gw-btn gw-btn-secondary'>Cancel</a>");
+        sb.append("</div>");
+
+        sb.append("</div>");
+        sb.append("</form>");
 
         sb.append("</div></div></body></html>");
         return sb.toString();

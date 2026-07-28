@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel"
+        entity="Coverage"
+        table="coverage"
+        type="effdated"
+        desc="Represents an Effective-Dated Policy Line Coverage in Guidewire PolicyCenter">
+    <column name="FixedID" type="long" nullability="false" desc="Guidewire FixedID (Logical identity across slices)"/>
+    <column name="PatternCode" type="shorttext" nullability="false" desc="Coverage Pattern Code (e.g. PAAutoLiabilityCov)"/>
+    <column name="CoverageName" type="mediumtext" nullability="false" desc="Display Name of Coverage"/>
+    <column name="DirectLimit" type="decimal" nullability="true" desc="Limit Amount"/>
+    <column name="Deductible" type="decimal" nullability="true" desc="Deductible Amount"/>
+    <column name="EffectiveDate" type="date" nullability="false" desc="Effective Date slice start"/>
+    <column name="ExpirationDate" type="date" nullability="false" desc="Expiration Date slice end"/>
+</entity>

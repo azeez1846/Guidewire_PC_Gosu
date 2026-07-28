@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="CancellationWizard"
+     title="Cancellation Wizard - Guidewire PolicyCenter">
+    <Wizard id="CancellationWizardFlow">
+        <WizardStep id="CancellationInfo" title="Cancellation Effective Date &amp; Reason">
+            <Screen id="CancellationInfoScreen">
+                <Toolbar id="CancelToolbar">
+                    <ToolbarButton id="ConfirmCancelBtn" action="SubmissionEnhancement.bindAndIssue(Submission)" label="Confirm &amp; Process Cancellation"/>
+                </Toolbar>
+                <DetailViewPanel id="CancellationDV">
+                    <InputColumn title="Cancellation Transaction Info">
+                        <TextInput id="JobNumber" label="Transaction #" value="Submission.JobNumber" editable="false"/>
+                        <TextInput id="PolicyNumber" label="Policy #" value="Submission.PolicyNumber" editable="false"/>
+                        <TextInput id="FixedID" label="Branch FixedID" value="Submission.PolicyPeriodFixedId" editable="false"/>
+                        <DateInput id="CancellationDate" label="Cancellation Effective Date" value="Submission.ExpirationDate" required="true"/>
+                    </InputColumn>
+                </DetailViewPanel>
+            </Screen>
+        </WizardStep>
+    </Wizard>
+</PCF>
