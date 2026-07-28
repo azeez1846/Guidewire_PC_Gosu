@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="AccountDetailDV"
+     title="Account Detail View">
+    <DetailViewPanel id="AccountDV">
+        <InputColumn title="Primary Information">
+            <TextInput id="AccountHolderName" label="Account Holder Name" value="Account.AccountHolderName" required="true"/>
+            <TypeKeyInput id="AccountHolderType" label="Holder Type" value="Account.AccountHolderType" required="true"/>
+            <TextInput id="FEIN" label="Tax ID / FEIN" value="Account.FEIN"/>
+            <TextInput id="ProducerCode" label="Producer Code" value="Account.ProducerCode" required="true"/>
+            <TextInput id="IndustryCode" label="Industry Code (SIC/NAICS)" value="Account.IndustryCode"/>
+            <TypeKeyInput id="OrgType" label="Organization Type" value="Account.OrgType"/>
+        </InputColumn>
+        <InputColumn title="Address &amp; Contact Details">
+            <TextInput id="AddressLine1" label="Address Line 1" value="Account.AddressLine1" required="true"/>
+            <TextInput id="AddressLine2" label="Address Line 2" value="Account.AddressLine2"/>
+            <TextInput id="City" label="City" value="Account.City" required="true"/>
+            <TextInput id="State" label="State" value="Account.State" required="true"/>
+            <TextInput id="PostalCode" label="ZIP / Postal Code" value="Account.PostalCode" required="true"/>
+            <TextInput id="Phone" label="Phone Number" value="Account.Phone"/>
+            <TextInput id="Email" label="Email Address" value="Account.Email"/>
+        </InputColumn>
+    </DetailViewPanel>
+</PCF>

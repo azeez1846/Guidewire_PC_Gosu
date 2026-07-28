@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="NewSubmission"
+     title="Select Product for New Submission">
+    <Page id="NewSubmissionPage">
+        <Screen id="NewSubmissionScreen">
+            <Verbatim id="SelectProductHeader" label="Create New Policy Submission"/>
+            <DetailViewPanel id="ProductSelectDV">
+                <InputColumn title="Select Parent Account &amp; Line of Business">
+                    <SelectInput id="SelectAccount" label="Account" value="Submission.Account.AccountNumber" required="true"/>
+                    <SelectInput id="ProductCode" label="Product / Line of Business" value="Submission.ProductCode" required="true">
+                        <Choice value="PersonalAuto" label="Personal Auto"/>
+                        <Choice value="CommercialAuto" label="Commercial Auto"/>
+                        <Choice value="CommercialProperty" label="Commercial Property"/>
+                        <Choice value="GeneralLiability" label="General Liability"/>
+                    </SelectInput>
+                    <ButtonInput id="CreateSubmissionBtn" action="SubmissionWizard.go(Submission)" value="Create &amp; Enter Policy Wizard"/>
+                </InputColumn>
+            </DetailViewPanel>
+        </Screen>
+    </Page>
+</PCF>

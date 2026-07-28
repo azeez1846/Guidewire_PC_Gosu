@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="Desktop"
+     title="Desktop - PolicyCenter">
+    <Page id="DesktopPage">
+        <Screen id="DesktopScreen">
+            <Toolbar id="DesktopToolbar">
+                <ToolbarButton id="NewAccountBtn" action="NewAccount.go()" label="New Account"/>
+                <ToolbarButton id="NewSubmissionBtn" action="NewSubmission.go()" label="New Submission"/>
+            </Toolbar>
+            <CardViewPanel id="DesktopCardPanel">
+                <Card id="SubmissionsTab" title="My Submissions">
+                    <PanelRef def="DesktopSubmissionsLV"/>
+                </Card>
+                <Card id="ActivitiesTab" title="My Activities">
+                    <PanelRef def="DesktopActivitiesLV"/>
+                </Card>
+                <Card id="AccountsTab" title="My Accounts">
+                    <PanelRef def="DesktopAccountsLV"/>
+                </Card>
+            </CardViewPanel>
+        </Screen>
+    </Page>
+</PCF>

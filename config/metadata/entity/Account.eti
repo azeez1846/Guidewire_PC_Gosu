@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel"
+        entity="Account"
+        table="account"
+        type="retireable"
+        desc="Represents an Account in Guidewire PolicyCenter">
+    <column name="AccountNumber" type="shorttext" nullability="false" desc="Unique Account Number (e.g. A0001001)"/>
+    <column name="AccountHolderName" type="mediumtext" nullability="false" desc="Primary Account Holder Name"/>
+    <typekey name="AccountHolderType" typekey="AccountHolderType" nullability="false" desc="Individual or Company"/>
+    <column name="FEIN" type="shorttext" nullability="true" desc="Tax ID / FEIN or SSN"/>
+    <column name="AddressLine1" type="mediumtext" nullability="false" desc="Street Address"/>
+    <column name="AddressLine2" type="mediumtext" nullability="true" desc="Suite / Apt"/>
+    <column name="City" type="shorttext" nullability="false" desc="City"/>
+    <column name="State" type="shorttext" nullability="false" desc="State / Province"/>
+    <column name="PostalCode" type="shorttext" nullability="false" desc="ZIP / Postal Code"/>
+    <column name="Phone" type="shorttext" nullability="true" desc="Primary Phone Number"/>
+    <column name="Email" type="shorttext" nullability="true" desc="Primary Email Address"/>
+    <typekey name="AccountStatus" typekey="AccountStatus" nullability="false" desc="Pending, Active, Suspended"/>
+    <column name="ProducerCode" type="shorttext" nullability="false" desc="Assigned Producer Code"/>
+    <column name="IndustryCode" type="shorttext" nullability="true" desc="SIC / NAICS Industry Code"/>
+    <column name="OrgType" type="shorttext" nullability="true" desc="Corporation, LLC, Partnership, Individual"/>
+    <column name="CreateTime" type="datetime" nullability="false" desc="Timestamp when Account was created"/>
+</entity>

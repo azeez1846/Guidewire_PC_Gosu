@@ -1,0 +1,76 @@
+package com.guidewire.pc.pcf;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+public class PCFParser {
+    private final Map<String, File> pcfFiles = new HashMap<>();
+
+    public PCFParser(File baseConfigDir) {
+        scanDirectory(new File(baseConfigDir, "config/web/pcf"));
+    }
+
+    private void scanDirectory(File dir) {
+        if (!dir.exists() || !dir.isDirectory()) return;
+        File[] files = dir.listFiles();
+        if (files == null) return;
+        for (File f : files) {
+            if (f.isDirectory()) {
+                scanDirectory(f);
+            } else if (f.getName().endsWith(".pcf")) {
+                String id = f.getName().replace(".pcf", "");
+                pcfFiles.put(id, f);
+            }
+        }
+    }
+
+    public Map<String, File> getPcfFiles() {
+        return pcfFiles;
+    }
+
+    public PCFDefinition parsePCF(String pcfId) {
+        File file = pcfFiles.get(pcfId);
+        if (file == null) return null;
+
+        try {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document doc = db.parse(file);
+            doc.getDocumentElement().normalize();
+
+            Element root = doc.getDocumentElement();
+            String id = root.getAttribute("id");
+            String title = root.getAttribute("title");
+
+            return new PCFDefinition(id, title, file.getAbsolutePath(), root);
+        } catch (Exception e) {
+            System.err.println("[PCF Parser Warning] Error parsing PCF " + pcfId + ": " + e.getMessage());
+            return null;
+        }
+    }
+
+    public static class PCFDefinition {
+        private final String id;
+        private final String title;
+        private final String filePath;
+        private final Element rootElement;
+
+        public PCFDefinition(String id, String title, String filePath, Element rootElement) {
+            this.id = id;
+            this.title = title;
+            this.filePath = filePath;
+            this.rootElement = rootElement;
+        }
+
+        public String getId() { return id; }
+        public String getTitle() { return title; }
+        public String getFilePath() { return filePath; }
+        public Element getRootElement() { return rootElement; }
+    }
+}

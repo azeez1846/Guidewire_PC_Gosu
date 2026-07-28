@@ -1,0 +1,4 @@
+target/
+cookies.txt
+*.log
+.DS_Store

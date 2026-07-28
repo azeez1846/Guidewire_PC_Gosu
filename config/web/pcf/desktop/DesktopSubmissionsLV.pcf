@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="DesktopSubmissionsLV"
+     title="Submissions List View">
+    <ListViewPanel id="SubmissionsLV">
+        <RowLayout>
+            <TextCell id="JobNumber" label="Transaction #" value="Submission.JobNumber"/>
+            <TextCell id="AccountHolder" label="Account Holder" value="Submission.Account.AccountHolderName"/>
+            <TextCell id="Product" label="Policy Line" value="Submission.ProductCode"/>
+            <TextCell id="EffectiveDate" label="Effective Date" value="Submission.EffectiveDate"/>
+            <TextCell id="Status" label="Status" value="Submission.FormattedStatus"/>
+            <TextCell id="TotalPremium" label="Premium ($)" value="Submission.TotalPremium"/>
+            <TextCell id="ProducerCode" label="Producer Code" value="Submission.ProducerCode"/>
+        </RowLayout>
+    </ListViewPanel>
+</PCF>

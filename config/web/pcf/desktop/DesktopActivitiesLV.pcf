@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="DesktopActivitiesLV"
+     title="Activities List View">
+    <ListViewPanel id="ActivitiesLV">
+        <RowLayout>
+            <TextCell id="DueDate" label="Due Date" value="Activity.DueDate"/>
+            <TextCell id="Priority" label="Priority" value="Activity.Priority"/>
+            <TextCell id="Subject" label="Subject" value="Activity.Subject"/>
+            <TextCell id="Target" label="Target Account / Job" value="Activity.RelatedJobNumber"/>
+            <TextCell id="Status" label="Status" value="Activity.Status"/>
+            <TextCell id="AssignedUser" label="Assigned To" value="Activity.AssignedUser"/>
+        </RowLayout>
+    </ListViewPanel>
+</PCF>

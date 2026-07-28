@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel"
+        entity="Activity"
+        table="activity"
+        type="retireable"
+        desc="Represents an Underwriting or Administrative Activity in Guidewire PolicyCenter">
+    <column name="Subject" type="mediumtext" nullability="false" desc="Activity Title / Subject"/>
+    <column name="Description" type="longtext" nullability="true" desc="Detailed instructions for activity"/>
+    <typekey name="Priority" typekey="Priority" nullability="false" desc="Low, Normal, High, Urgent"/>
+    <typekey name="Status" typekey="ActivityStatus" nullability="false" desc="Open, Complete, Escalated"/>
+    <column name="DueDate" type="date" nullability="false" desc="Due Date for completion"/>
+    <column name="AssignedUser" type="shorttext" nullability="false" desc="Assigned User (e.g. su)"/>
+    <column name="RelatedAccountID" type="shorttext" nullability="true" desc="Related Account Number"/>
+    <column name="RelatedJobNumber" type="shorttext" nullability="true" desc="Related Submission / Job Number"/>
+    <column name="CreateTime" type="datetime" nullability="false" desc="Activity Created Date"/>
+</entity>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="NewAccount"
+     title="Create New Account - PolicyCenter">
+    <Page id="NewAccountPage">
+        <Screen id="NewAccountScreen">
+            <Toolbar id="NewAccountToolbar">
+                <ToolbarButton id="UpdateBtn" action="AccountService.Instance.createAccount(Account)" label="Update &amp; Save"/>
+                <ToolbarButton id="CancelBtn" action="Desktop.go()" label="Cancel"/>
+            </Toolbar>
+            <PanelRef def="AccountDetailDV"/>
+        </Screen>
+    </Page>
+</PCF>

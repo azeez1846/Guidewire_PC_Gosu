@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="DesktopAccountsLV"
+     title="Accounts List View">
+    <ListViewPanel id="AccountsLV">
+        <RowLayout>
+            <TextCell id="AccountNumber" label="Account #" value="Account.AccountNumber"/>
+            <TextCell id="AccountHolder" label="Account Holder Name" value="Account.AccountHolderName"/>
+            <TextCell id="HolderType" label="Type" value="Account.AccountHolderType"/>
+            <TextCell id="Address" label="Address" value="Account.FormattedAddress"/>
+            <TextCell id="Status" label="Status" value="Account.AccountStatus"/>
+            <TextCell id="ProducerCode" label="Producer Code" value="Account.ProducerCode"/>
+            <TextCell id="CreateTime" label="Created On" value="Account.CreateTime"/>
+        </RowLayout>
+    </ListViewPanel>
+</PCF>

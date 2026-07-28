@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel"
+        entity="PolicyPeriod"
+        table="policyperiod"
+        type="retireable"
+        desc="Represents a Policy Period / Submission in Guidewire PolicyCenter">
+    <column name="JobNumber" type="shorttext" nullability="false" desc="Submission / Job Number (e.g. S0005001)"/>
+    <column name="PolicyNumber" type="shorttext" nullability="true" desc="Issued Policy Number (e.g. POL-984321)"/>
+    <typekey name="ProductCode" typekey="Product" nullability="false" desc="PersonalAuto, CommercialAuto, CommercialProperty, GeneralLiability"/>
+    <typekey name="Status" typekey="PolicyStatus" nullability="false" desc="Draft, Quoted, Bound, Issued"/>
+    <column name="EffectiveDate" type="date" nullability="false" desc="Policy Effective Date"/>
+    <column name="ExpirationDate" type="date" nullability="false" desc="Policy Expiration Date"/>
+    <column name="TermMonths" type="integer" nullability="false" desc="Term in Months (6 or 12)"/>
+    <column name="BaseState" type="shorttext" nullability="false" desc="Base State of Coverage"/>
+    <column name="ProducerCode" type="shorttext" nullability="false" desc="Producer Code"/>
+    <foreignkey fkentity="Account" name="Account" nullability="false" desc="Parent Account"/>
+    
+    <!-- Coverage Details -->
+    <column name="BodilyInjuryLimit" type="shorttext" nullability="true" desc="Bodily Injury Liability Limit"/>
+    <column name="PropertyDamageLimit" type="shorttext" nullability="true" desc="Property Damage Liability Limit"/>
+    <column name="ComprehensiveDeductible" type="shorttext" nullability="true" desc="Comprehensive Deductible"/>
+    <column name="CollisionDeductible" type="shorttext" nullability="true" desc="Collision Deductible"/>
+    
+    <!-- Financial Ratings -->
+    <column name="BasePremium" type="decimal" nullability="true" desc="Calculated Base Premium"/>
+    <column name="TaxesAndFees" type="decimal" nullability="true" desc="Calculated Taxes &amp; Surcharges"/>
+    <column name="TotalPremium" type="decimal" nullability="true" desc="Total Annual Premium"/>
+    
+    <column name="CreateTime" type="datetime" nullability="false" desc="Submission Creation Timestamp"/>
+</entity>

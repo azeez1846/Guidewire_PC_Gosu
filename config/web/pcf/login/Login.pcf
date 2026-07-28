@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="Login"
+     title="Guidewire PolicyCenter Login">
+    <Screen id="LoginScreen">
+        <Verbatim id="LoginTitle" label="Guidewire PolicyCenter 10.0"/>
+        <DetailViewPanel id="LoginDV">
+            <InputColumn>
+                <TextInput id="Username" label="Username" value="su" required="true"/>
+                <PasswordInput id="Password" label="Password" value="gw" required="true"/>
+                <ButtonInput id="LoginButton" action="AuthenticationService.authenticate(Username, Password)" value="Log In"/>
+            </InputColumn>
+        </DetailViewPanel>
+    </Screen>
+</PCF>

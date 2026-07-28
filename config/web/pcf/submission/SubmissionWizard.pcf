@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="SubmissionWizard"
+     title="Submission Wizard - Guidewire PolicyCenter">
+    <Wizard id="SubmissionWizardFlow">
+        <WizardStep id="PolicyInfo" title="Step 1: Policy Info">
+            <Screen id="PolicyInfoScreen">
+                <Toolbar id="WizardToolbar1">
+                    <ToolbarButton id="NextBtn1" action="Wizard.nextStep()" label="Next &gt; Coverages"/>
+                </Toolbar>
+                <DetailViewPanel id="PolicyInfoDV">
+                    <InputColumn title="Policy General Info">
+                        <TextInput id="JobNumber" label="Transaction #" value="Submission.JobNumber" editable="false"/>
+                        <DateInput id="EffectiveDate" label="Effective Date" value="Submission.EffectiveDate" required="true"/>
+                        <DateInput id="ExpirationDate" label="Expiration Date" value="Submission.ExpirationDate" required="true"/>
+                        <SelectInput id="TermMonths" label="Term Length" value="Submission.TermMonths"/>
+                        <TextInput id="BaseState" label="Base State" value="Submission.BaseState" required="true"/>
+                        <TextInput id="ProducerCode" label="Producer Code" value="Submission.ProducerCode" required="true"/>
+                    </InputColumn>
+                </DetailViewPanel>
+            </Screen>
+        </WizardStep>
+
+        <WizardStep id="Coverages" title="Step 2: Coverages &amp; Limits">
+            <Screen id="CoveragesScreen">
+                <Toolbar id="WizardToolbar2">
+                    <ToolbarButton id="BackBtn2" action="Wizard.previousStep()" label="&lt; Back"/>
+                    <ToolbarButton id="QuoteBtn" action="SubmissionEnhancement.quote(Submission)" label="Calculate Quote &gt;"/>
+                </Toolbar>
+                <DetailViewPanel id="CoveragesDV">
+                    <InputColumn title="Liability &amp; Casualty Limits">
+                        <SelectInput id="BodilyInjury" label="Bodily Injury Limit" value="Submission.BodilyInjuryLimit">
+                            <Choice value="$250k/$500k" label="$250,000 / $500,000"/>
+                            <Choice value="$500k/$500k" label="$500,000 / $500,000"/>
+                            <Choice value="$1M/$1M" label="$1,000,000 / $1,000,000"/>
+                        </SelectInput>
+                        <SelectInput id="PropertyDamage" label="Property Damage Limit" value="Submission.PropertyDamageLimit">
+                            <Choice value="$100k" label="$100,000"/>
+                            <Choice value="$250k" label="$250,000"/>
+                            <Choice value="$500k" label="$500,000"/>
+                        </SelectInput>
+                    </InputColumn>
+                    <InputColumn title="Physical Damage Deductibles">
+                        <SelectInput id="Comprehensive" label="Comprehensive Deductible" value="Submission.ComprehensiveDeductible">
+                            <Choice value="$250" label="$250"/>
+                            <Choice value="$500" label="$500"/>
+                            <Choice value="$1000" label="$1,000"/>
+                        </SelectInput>
+                        <SelectInput id="Collision" label="Collision Deductible" value="Submission.CollisionDeductible">
+                            <Choice value="$500" label="$500"/>
+                            <Choice value="$1000" label="$1,000"/>
+                            <Choice value="$2500" label="$2,500"/>
+                        </SelectInput>
+                    </InputColumn>
+                </DetailViewPanel>
+            </Screen>
+        </WizardStep>
+
+        <WizardStep id="Quote" title="Step 3: Rating &amp; Quote Summary">
+            <Screen id="QuoteScreen">
+                <Toolbar id="WizardToolbar3">
+                    <ToolbarButton id="BackBtn3" action="Wizard.previousStep()" label="&lt; Back"/>
+                    <ToolbarButton id="BindBtn" action="SubmissionEnhancement.bindAndIssue(Submission)" label="Bind &amp; Issue Policy"/>
+                </Toolbar>
+                <DetailViewPanel id="QuoteDV">
+                    <InputColumn title="Financial Summary &amp; Rating Breakdown">
+                        <TextInput id="Status" label="Submission Status" value="Submission.FormattedStatus" editable="false"/>
+                        <TextInput id="BasePremium" label="Base Written Premium" value="Submission.BasePremium" editable="false"/>
+                        <TextInput id="TaxesAndFees" label="Taxes &amp; Surcharges" value="Submission.TaxesAndFees" editable="false"/>
+                        <TextInput id="TotalPremium" label="Total Annual Cost" value="Submission.TotalPremium" editable="false"/>
+                        <TextInput id="PolicyNumber" label="Issued Policy #" value="Submission.PolicyNumber" editable="false"/>
+                    </InputColumn>
+                </DetailViewPanel>
+            </Screen>
+        </WizardStep>
+    </Wizard>
+</PCF>
