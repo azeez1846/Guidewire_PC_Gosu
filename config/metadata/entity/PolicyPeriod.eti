@@ -2,14 +2,17 @@
 <entity xmlns="http://guidewire.com/datamodel"
         entity="PolicyPeriod"
         table="policyperiod"
-        type="retireable"
-        desc="Represents a Policy Period / Submission in Guidewire PolicyCenter">
+        type="effdated"
+        desc="Represents an Effective-Dated Policy Period Branch in Guidewire PolicyCenter">
+    <column name="FixedID" type="long" nullability="false" desc="Guidewire FixedID (Logical identity across period slices &amp; transaction branches)"/>
     <column name="JobNumber" type="shorttext" nullability="false" desc="Submission / Job Number (e.g. S0005001)"/>
     <column name="PolicyNumber" type="shorttext" nullability="true" desc="Issued Policy Number (e.g. POL-984321)"/>
+    <column name="JobType" type="shorttext" nullability="false" desc="Submission, PolicyChange, Cancellation, Renewal"/>
     <typekey name="ProductCode" typekey="Product" nullability="false" desc="PersonalAuto, CommercialAuto, CommercialProperty, GeneralLiability"/>
     <typekey name="Status" typekey="PolicyStatus" nullability="false" desc="Draft, Quoted, Bound, Issued"/>
-    <column name="EffectiveDate" type="date" nullability="false" desc="Policy Effective Date"/>
-    <column name="ExpirationDate" type="date" nullability="false" desc="Policy Expiration Date"/>
+    <column name="PeriodStart" type="date" nullability="false" desc="Period Start Date"/>
+    <column name="PeriodEnd" type="date" nullability="false" desc="Period End Date"/>
+    <column name="EditEffectiveDate" type="date" nullability="false" desc="Edit Effective Date of Policy Branch Transaction"/>
     <column name="TermMonths" type="integer" nullability="false" desc="Term in Months (6 or 12)"/>
     <column name="BaseState" type="shorttext" nullability="false" desc="Base State of Coverage"/>
     <column name="ProducerCode" type="shorttext" nullability="false" desc="Producer Code"/>
