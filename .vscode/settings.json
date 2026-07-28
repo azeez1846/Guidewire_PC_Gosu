@@ -1,10 +1,25 @@
 {
   "files.associations": {
-    "*.gs": "java",
-    "*.gsx": "java",
-    "*.gst": "java",
+    "*.gs": "groovy",
+    "*.gsx": "groovy",
+    "*.gst": "html",
     "*.pcf": "xml",
     "*.eti": "xml",
     "*.eix": "xml"
+  },
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": [
+          "keyword.other.groovy",
+          "storage.type.groovy",
+          "entity.name.type.groovy"
+        ],
+        "settings": {
+          "foreground": "#569CD6",
+          "fontStyle": "bold"
+        }
+      }
+    ]
   }
 }
