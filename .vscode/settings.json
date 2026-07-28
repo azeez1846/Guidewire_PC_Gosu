@@ -1,3 +1,10 @@
 {
-    "java.configuration.updateBuildConfiguration": "automatic"
+  "files.associations": {
+    "*.gs": "java",
+    "*.gsx": "java",
+    "*.gst": "java",
+    "*.pcf": "xml",
+    "*.eti": "xml",
+    "*.eix": "xml"
+  }
 }
