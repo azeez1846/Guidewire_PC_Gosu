@@ -41,6 +41,23 @@
             </exclusions>
         </dependency>
 
+        <!-- Eclipse Jetty Server (OOTB Guidewire Web Container) -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>11.0.20</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>11.0.20</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>5.0.0</version>
+        </dependency>
+
         <!-- Jackson for JSON handling -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

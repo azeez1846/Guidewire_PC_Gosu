@@ -1,7 +1,7 @@
 package com.guidewire.pc;
 
 import com.guidewire.pc.gosu.GosuBridge;
-import com.guidewire.pc.web.GuidewireServer;
+import com.guidewire.pc.web.JettyPolicyCenterServer;
 
 import java.io.File;
 
@@ -21,10 +21,10 @@ public class App {
         }
 
         try {
-            GuidewireServer server = new GuidewireServer(port, rootDir);
+            JettyPolicyCenterServer server = new JettyPolicyCenterServer(port, rootDir);
             server.start();
-        } catch (java.io.IOException e) {
-            System.err.println("Failed to start Guidewire PolicyCenter server: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Failed to start Guidewire PolicyCenter Jetty server: " + e.getMessage());
         }
     }
 }

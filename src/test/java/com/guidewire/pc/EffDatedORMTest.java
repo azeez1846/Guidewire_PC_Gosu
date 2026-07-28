@@ -3,7 +3,6 @@ package com.guidewire.pc;
 import com.guidewire.pc.model.Coverage;
 import com.guidewire.pc.model.PolicyPeriod;
 import com.guidewire.pc.orm.FixedId;
-import com.guidewire.pc.orm.GosuORMSession;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
