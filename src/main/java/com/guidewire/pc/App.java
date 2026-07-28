@@ -13,7 +13,7 @@ public class App {
         // Init Gosu runtime
         GosuBridge.initGosuEngine(rootDir);
 
-        int port = 8080;
+        int port = 8085;
         if (args.length > 0) {
             try {
                 port = Integer.parseInt(args[0]);
