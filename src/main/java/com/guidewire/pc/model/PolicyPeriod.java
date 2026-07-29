@@ -11,7 +11,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class PolicyPeriod implements KeyableBean, EffDatedBranch {
+import com.guidewire.pc.productmodel.Coverable;
+import com.guidewire.pc.productmodel.CoveragePattern;
+import com.guidewire.pc.productmodel.ProductModelLoader;
+
+public class PolicyPeriod implements KeyableBean, EffDatedBranch, Coverable {
     private Long id;
     private Long branchId;
     private FixedId<PolicyPeriod> policyPeriodFixedId;
@@ -103,18 +107,22 @@ public class PolicyPeriod implements KeyableBean, EffDatedBranch {
     public String getEffectiveDate() { return effectiveDateStr; }
     public void setEffectiveDate(String effectiveDateStr) {
         this.effectiveDateStr = effectiveDateStr;
-        try {
-            this.periodStart = new SimpleDateFormat("yyyy-MM-dd").parse(effectiveDateStr);
-            if (this.editEffectiveDate == null) this.editEffectiveDate = this.periodStart;
-        } catch (ParseException ignored) {}
+        if (effectiveDateStr != null && !effectiveDateStr.trim().isEmpty()) {
+            try {
+                this.periodStart = new SimpleDateFormat("yyyy-MM-dd").parse(effectiveDateStr);
+                if (this.editEffectiveDate == null) this.editEffectiveDate = this.periodStart;
+            } catch (ParseException ignored) {}
+        }
     }
 
     public String getExpirationDate() { return expirationDateStr; }
     public void setExpirationDate(String expirationDateStr) {
         this.expirationDateStr = expirationDateStr;
-        try {
-            this.periodEnd = new SimpleDateFormat("yyyy-MM-dd").parse(expirationDateStr);
-        } catch (ParseException ignored) {}
+        if (expirationDateStr != null && !expirationDateStr.trim().isEmpty()) {
+            try {
+                this.periodEnd = new SimpleDateFormat("yyyy-MM-dd").parse(expirationDateStr);
+            } catch (ParseException ignored) {}
+        }
     }
 
     public int getTermMonths() { return termMonths; }
@@ -244,5 +252,75 @@ public class PolicyPeriod implements KeyableBean, EffDatedBranch {
         }
 
         return cancelBranch;
+    }
+
+    public com.guidewire.pc.orm.PolicyPeriodSlice getSlice(Date asOfDate) {
+        return new com.guidewire.pc.orm.PolicyPeriodSlice(this, asOfDate);
+    }
+
+    public List<EffDatedBean> getSlicedEffDatedBeans(Date asOfDate) {
+        return getSlice(asOfDate).getSlicedBeans();
+    }
+
+    // COVERABLE INTERFACE IMPLEMENTATION
+
+    @Override
+    public List<Coverage> getCoverages() {
+        List<Coverage> list = new ArrayList<>();
+        for (EffDatedBean b : effDatedBeans) {
+            if (b instanceof Coverage) {
+                list.add((Coverage) b);
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public Coverage getCoverage(String patternCode) {
+        for (Coverage c : getCoverages()) {
+            if (c.getPatternCode().equalsIgnoreCase(patternCode)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Coverage createCoverage(String patternCode) {
+        if (hasCoverage(patternCode)) {
+            return getCoverage(patternCode);
+        }
+        CoveragePattern pattern = ProductModelLoader.getInstance().getCoveragePattern(getProductCode(), patternCode);
+        Coverage cov;
+        if (pattern != null) {
+            cov = new Coverage(pattern.getCode(), pattern.getName(), pattern.getDefaultLimitOrDeductible(), pattern.getDefaultLimitOrDeductible());
+        } else {
+            cov = new Coverage(patternCode, patternCode, BigDecimal.ZERO, BigDecimal.ZERO);
+        }
+        if (getPeriodStart() != null) cov.setEffectiveDate(getPeriodStart());
+        if (getPeriodEnd() != null) cov.setExpirationDate(getPeriodEnd());
+        addEffDatedBean(cov);
+        return cov;
+    }
+
+    @Override
+    public boolean removeCoverage(String patternCode) {
+        Coverage cov = getCoverage(patternCode);
+        if (cov != null) {
+            effDatedBeans.remove(cov);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean hasCoverage(String patternCode) {
+        return getCoverage(patternCode) != null;
+    }
+
+    // POLICYPERIOD VALIDATION
+
+    public com.guidewire.pc.validation.PCValidationContext validate(String validationLevel) {
+        return com.guidewire.pc.validation.PolicyPeriodValidation.validate(this, validationLevel);
     }
 }

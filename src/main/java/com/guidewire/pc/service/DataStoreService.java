@@ -5,22 +5,23 @@ import com.guidewire.pc.model.Activity;
 import com.guidewire.pc.model.PolicyPeriod;
 
 import java.math.BigDecimal;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DataStoreService {
+    private static final Logger LOGGER = Logger.getLogger(DataStoreService.class.getName());
     private static DataStoreService instance;
 
-    private final List<Account> accounts = new ArrayList<>();
-    private final List<PolicyPeriod> submissions = new ArrayList<>();
-    private final List<Activity> activities = new ArrayList<>();
     private int accountSeq = 1003;
     private int jobSeq = 5003;
 
     private DataStoreService() {
-        seedSampleData();
+        seedSampleDataIfEmpty();
     }
 
     public static synchronized DataStoreService getInstance() {
@@ -30,151 +31,366 @@ public class DataStoreService {
         return instance;
     }
 
-    private void seedSampleData() {
-        // Sample Account 1
-        Account acc1 = new Account();
-        acc1.setAccountNumber("A0001001");
-        acc1.setAccountHolderName("Acme Logistics Inc.");
-        acc1.setAccountHolderType("Company");
-        acc1.setFein("12-3456789");
-        acc1.setAddressLine1("100 Innovation Way");
-        acc1.setAddressLine2("Suite 400");
-        acc1.setCity("San Jose");
-        acc1.setState("CA");
-        acc1.setPostalCode("95113");
-        acc1.setPhone("(408) 555-0199");
-        acc1.setEmail("contact@acmelogistics.com");
-        acc1.setAccountStatus("Active");
-        acc1.setProducerCode("PR-10928");
-        acc1.setIndustryCode("484110 - General Freight");
-        acc1.setOrgType("Corporation");
-        acc1.setCreateTime("2026-01-15 09:30:00");
-        accounts.add(acc1);
-
-        // Sample Account 2
-        Account acc2 = new Account();
-        acc2.setAccountNumber("A0001002");
-        acc2.setAccountHolderName("Johnathan Mercer");
-        acc2.setAccountHolderType("Individual");
-        acc2.setFein("XXX-XX-4891");
-        acc2.setAddressLine1("742 Evergreen Terrace");
-        acc2.setCity("Springfield");
-        acc2.setState("OR");
-        acc2.setPostalCode("97477");
-        acc2.setPhone("(541) 555-0142");
-        acc2.setEmail("john.mercer@example.com");
-        acc2.setAccountStatus("Active");
-        acc2.setProducerCode("PR-20451");
-        acc2.setIndustryCode("811111 - Automotive Repair");
-        acc2.setOrgType("Individual");
-        acc2.setCreateTime("2026-02-01 14:15:00");
-        accounts.add(acc2);
-
-        // Sample Submission 1
-        PolicyPeriod sub1 = new PolicyPeriod();
-        sub1.setJobNumber("S0005001");
-        sub1.setPolicyNumber("POL-849102");
-        sub1.setProductCode("CommercialAuto");
-        sub1.setStatus("Issued");
-        sub1.setEffectiveDate("2026-03-01");
-        sub1.setExpirationDate("2027-03-01");
-        sub1.setTermMonths(12);
-        sub1.setBaseState("CA");
-        sub1.setProducerCode("PR-10928");
-        sub1.setAccount(acc1);
-        sub1.setBodilyInjuryLimit("$500k/$500k");
-        sub1.setPropertyDamageLimit("$250k");
-        sub1.setComprehensiveDeductible("$500");
-        sub1.setCollisionDeductible("$1000");
-        sub1.setBasePremium(new BigDecimal("2675.00"));
-        sub1.setTaxesAndFees(new BigDecimal("214.00"));
-        sub1.setTotalPremium(new BigDecimal("2889.00"));
-        sub1.setCreateTime("2026-02-10 11:20:00");
-        submissions.add(sub1);
-
-        // Sample Submission 2
-        PolicyPeriod sub2 = new PolicyPeriod();
-        sub2.setJobNumber("S0005002");
-        sub2.setProductCode("GeneralLiability");
-        sub2.setStatus("Quoted");
-        sub2.setEffectiveDate("2026-04-01");
-        sub2.setExpirationDate("2027-04-01");
-        sub2.setTermMonths(12);
-        sub2.setBaseState("CA");
-        sub2.setProducerCode("PR-10928");
-        sub2.setAccount(acc1);
-        sub2.setBodilyInjuryLimit("$1M/$1M");
-        sub2.setPropertyDamageLimit("$500k");
-        sub2.setComprehensiveDeductible("$1000");
-        sub2.setCollisionDeductible("$1000");
-        sub2.setBasePremium(new BigDecimal("3920.00"));
-        sub2.setTaxesAndFees(new BigDecimal("313.60"));
-        sub2.setTotalPremium(new BigDecimal("4233.60"));
-        sub2.setCreateTime("2026-02-20 16:45:00");
-        submissions.add(sub2);
-
-        // Sample Activities
-        Activity act1 = new Activity();
-        act1.setSubject("Verify High-Value Commercial Fleet Risk");
-        act1.setDescription("Perform loss history verification for Acme Logistics Inc.");
-        act1.setPriority("High");
-        act1.setStatus("Open");
-        act1.setDueDate("2026-08-05");
-        act1.setAssignedUser("su");
-        act1.setRelatedAccountId("A0001001");
-        act1.setRelatedJobNumber("S0005001");
-        act1.setCreateTime("2026-07-25 10:00:00");
-        activities.add(act1);
-
-        Activity act2 = new Activity();
-        act2.setSubject("Review General Liability Endorsement Request");
-        act2.setDescription("Underwriter review needed for sub-contractor coverage limits.");
-        act2.setPriority("Normal");
-        act2.setStatus("Open");
-        act2.setDueDate("2026-08-10");
-        act2.setAssignedUser("su");
-        act2.setRelatedAccountId("A0001001");
-        act2.setRelatedJobNumber("S0005002");
-        act2.setCreateTime("2026-07-26 14:30:00");
-        activities.add(act2);
+    private Connection getConnection() throws SQLException {
+        return DatabaseService.getInstance().getConnection();
     }
 
-    public List<Account> getAccounts() { return accounts; }
-    public List<PolicyPeriod> getSubmissions() { return submissions; }
-    public List<Activity> getActivities() { return activities; }
+    private void seedSampleDataIfEmpty() {
+        try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
+            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM ACCOUNTS");
+            if (rs.next() && rs.getInt(1) > 0) {
+                LOGGER.info("H2 database already populated with accounts.");
+                return;
+            }
+
+            LOGGER.info("Seeding initial OOTB Guidewire sample data into H2 database...");
+
+            // Sample Account 1
+            Account acc1 = new Account();
+            acc1.setAccountNumber("A0001001");
+            acc1.setAccountHolderName("Acme Logistics Inc.");
+            acc1.setAccountHolderType("Company");
+            acc1.setFein("12-3456789");
+            acc1.setAddressLine1("100 Innovation Way");
+            acc1.setAddressLine2("Suite 400");
+            acc1.setCity("San Jose");
+            acc1.setState("CA");
+            acc1.setPostalCode("95113");
+            acc1.setPhone("(408) 555-0199");
+            acc1.setEmail("contact@acmelogistics.com");
+            acc1.setAccountStatus("Active");
+            acc1.setProducerCode("PR-10928");
+            acc1.setIndustryCode("484110 - General Freight");
+            acc1.setOrgType("Corporation");
+            acc1.setCreateTime("2026-01-15 09:30:00");
+            insertAccountToDb(acc1);
+
+            // Sample Account 2
+            Account acc2 = new Account();
+            acc2.setAccountNumber("A0001002");
+            acc2.setAccountHolderName("Johnathan Mercer");
+            acc2.setAccountHolderType("Individual");
+            acc2.setFein("XXX-XX-4891");
+            acc2.setAddressLine1("742 Evergreen Terrace");
+            acc2.setCity("Springfield");
+            acc2.setState("OR");
+            acc2.setPostalCode("97477");
+            acc2.setPhone("(541) 555-0142");
+            acc2.setEmail("john.mercer@example.com");
+            acc2.setAccountStatus("Active");
+            acc2.setProducerCode("PR-20451");
+            acc2.setIndustryCode("811111 - Automotive Repair");
+            acc2.setOrgType("Individual");
+            acc2.setCreateTime("2026-02-01 14:15:00");
+            insertAccountToDb(acc2);
+
+            // Sample Submission 1
+            PolicyPeriod sub1 = new PolicyPeriod();
+            sub1.setJobNumber("S0005001");
+            sub1.setPolicyNumber("POL-849102");
+            sub1.setProductCode("CommercialAuto");
+            sub1.setStatus("Issued");
+            sub1.setEffectiveDate("2026-03-01");
+            sub1.setExpirationDate("2027-03-01");
+            sub1.setTermMonths(12);
+            sub1.setBaseState("CA");
+            sub1.setProducerCode("PR-10928");
+            sub1.setAccount(acc1);
+            sub1.setBodilyInjuryLimit("$500k/$500k");
+            sub1.setPropertyDamageLimit("$250k");
+            sub1.setComprehensiveDeductible("$500");
+            sub1.setCollisionDeductible("$1000");
+            sub1.setBasePremium(new BigDecimal("2675.00"));
+            sub1.setTaxesAndFees(new BigDecimal("214.00"));
+            sub1.setTotalPremium(new BigDecimal("2889.00"));
+            sub1.setCreateTime("2026-02-10 11:20:00");
+            insertSubmissionToDb(sub1);
+
+            // Sample Submission 2
+            PolicyPeriod sub2 = new PolicyPeriod();
+            sub2.setJobNumber("S0005002");
+            sub2.setProductCode("GeneralLiability");
+            sub2.setStatus("Quoted");
+            sub2.setEffectiveDate("2026-04-01");
+            sub2.setExpirationDate("2027-04-01");
+            sub2.setTermMonths(12);
+            sub2.setBaseState("CA");
+            sub2.setProducerCode("PR-10928");
+            sub2.setAccount(acc1);
+            sub2.setBodilyInjuryLimit("$1M/$1M");
+            sub2.setPropertyDamageLimit("$500k");
+            sub2.setComprehensiveDeductible("$1000");
+            sub2.setCollisionDeductible("$1000");
+            sub2.setBasePremium(new BigDecimal("3920.00"));
+            sub2.setTaxesAndFees(new BigDecimal("313.60"));
+            sub2.setTotalPremium(new BigDecimal("4233.60"));
+            sub2.setCreateTime("2026-02-20 16:45:00");
+            insertSubmissionToDb(sub2);
+
+            // Sample Activities
+            Activity act1 = new Activity();
+            act1.setSubject("Verify High-Value Commercial Fleet Risk");
+            act1.setDescription("Perform loss history verification for Acme Logistics Inc.");
+            act1.setPriority("High");
+            act1.setStatus("Open");
+            act1.setDueDate("2026-08-05");
+            act1.setAssignedUser("su");
+            act1.setRelatedAccountId("A0001001");
+            act1.setRelatedJobNumber("S0005001");
+            act1.setCreateTime("2026-07-25 10:00:00");
+            insertActivityToDb(act1);
+
+            Activity act2 = new Activity();
+            act2.setSubject("Review General Liability Endorsement Request");
+            act2.setDescription("Underwriter review needed for sub-contractor coverage limits.");
+            act2.setPriority("Normal");
+            act2.setStatus("Open");
+            act2.setDueDate("2026-08-10");
+            act2.setAssignedUser("su");
+            act2.setRelatedAccountId("A0001001");
+            act2.setRelatedJobNumber("S0005002");
+            act2.setCreateTime("2026-07-26 14:30:00");
+            insertActivityToDb(act2);
+
+            LOGGER.info("H2 database sample data seeded successfully.");
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error checking or seeding H2 database sample data", e);
+        }
+    }
+
+    private void insertAccountToDb(Account a) {
+        String sql = "INSERT INTO ACCOUNTS (account_number, account_holder_name, account_holder_type, fein, " +
+                "address_line1, address_line2, city, state, postal_code, phone, email, account_status, " +
+                "producer_code, industry_code, org_type, create_time) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, a.getAccountNumber());
+            ps.setString(2, a.getAccountHolderName());
+            ps.setString(3, a.getAccountHolderType());
+            ps.setString(4, a.getFein());
+            ps.setString(5, a.getAddressLine1());
+            ps.setString(6, a.getAddressLine2());
+            ps.setString(7, a.getCity());
+            ps.setString(8, a.getState());
+            ps.setString(9, a.getPostalCode());
+            ps.setString(10, a.getPhone());
+            ps.setString(11, a.getEmail());
+            ps.setString(12, a.getAccountStatus());
+            ps.setString(13, a.getProducerCode());
+            ps.setString(14, a.getIndustryCode());
+            ps.setString(15, a.getOrgType());
+            ps.setString(16, a.getCreateTime());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to insert account to H2 database: " + a.getAccountNumber(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void insertSubmissionToDb(PolicyPeriod sub) {
+        String sql = "INSERT INTO POLICY_PERIODS (job_number, policy_number, product_code, status, job_type, " +
+                "effective_date, expiration_date, term_months, base_state, producer_code, account_number, " +
+                "bodily_injury_limit, property_damage_limit, comprehensive_deductible, collision_deductible, " +
+                "base_premium, taxes_and_fees, total_premium, create_time) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, sub.getJobNumber());
+            ps.setString(2, sub.getPolicyNumber());
+            ps.setString(3, sub.getProductCode());
+            ps.setString(4, sub.getStatus());
+            ps.setString(5, sub.getJobType());
+            ps.setString(6, sub.getEffectiveDate());
+            ps.setString(7, sub.getExpirationDate());
+            ps.setInt(8, sub.getTermMonths());
+            ps.setString(9, sub.getBaseState());
+            ps.setString(10, sub.getProducerCode());
+            ps.setString(11, sub.getAccount() != null ? sub.getAccount().getAccountNumber() : null);
+            ps.setString(12, sub.getBodilyInjuryLimit());
+            ps.setString(13, sub.getPropertyDamageLimit());
+            ps.setString(14, sub.getComprehensiveDeductible());
+            ps.setString(15, sub.getCollisionDeductible());
+            ps.setBigDecimal(16, sub.getBasePremium());
+            ps.setBigDecimal(17, sub.getTaxesAndFees());
+            ps.setBigDecimal(18, sub.getTotalPremium());
+            ps.setString(19, sub.getCreateTime());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to insert submission to H2 database: " + sub.getJobNumber(), e);
+        }
+    }
+
+    private void insertActivityToDb(Activity act) {
+        String sql = "INSERT INTO ACTIVITIES (subject, description, priority, status, due_date, assigned_user, " +
+                "related_account_id, related_job_number, create_time) VALUES (?,?,?,?,?,?,?,?,?)";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, act.getSubject());
+            ps.setString(2, act.getDescription());
+            ps.setString(3, act.getPriority());
+            ps.setString(4, act.getStatus());
+            ps.setString(5, act.getDueDate());
+            ps.setString(6, act.getAssignedUser());
+            ps.setString(7, act.getRelatedAccountId());
+            ps.setString(8, act.getRelatedJobNumber());
+            ps.setString(9, act.getCreateTime());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to insert activity to H2 database", e);
+        }
+    }
+
+    public List<Account> getAccounts() {
+        List<Account> list = new ArrayList<>();
+        String sql = "SELECT * FROM ACCOUNTS ORDER BY create_time DESC";
+        try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                Account a = mapResultSetToAccount(rs);
+                list.add(a);
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to query accounts from H2 database", e);
+        }
+        return list;
+    }
+
+    public List<PolicyPeriod> getSubmissions() {
+        List<PolicyPeriod> list = new ArrayList<>();
+        String sql = "SELECT * FROM POLICY_PERIODS ORDER BY create_time DESC";
+        try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                PolicyPeriod p = mapResultSetToPolicyPeriod(rs);
+                list.add(p);
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to query submissions from H2 database", e);
+        }
+        return list;
+    }
+
+    public List<Activity> getActivities() {
+        List<Activity> list = new ArrayList<>();
+        String sql = "SELECT * FROM ACTIVITIES ORDER BY create_time DESC";
+        try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                Activity act = new Activity();
+                act.setSubject(rs.getString("subject"));
+                act.setDescription(rs.getString("description"));
+                act.setPriority(rs.getString("priority"));
+                act.setStatus(rs.getString("status"));
+                act.setDueDate(rs.getString("due_date"));
+                act.setAssignedUser(rs.getString("assigned_user"));
+                act.setRelatedAccountId(rs.getString("related_account_id"));
+                act.setRelatedJobNumber(rs.getString("related_job_number"));
+                act.setCreateTime(rs.getString("create_time"));
+                list.add(act);
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to query activities from H2 database", e);
+        }
+        return list;
+    }
 
     public Account findAccount(String accountNumber) {
-        for (Account a : accounts) {
-            if (a.getAccountNumber().equalsIgnoreCase(accountNumber)) return a;
+        if (accountNumber == null) return null;
+        String sql = "SELECT * FROM ACCOUNTS WHERE UPPER(account_number) = UPPER(?)";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, accountNumber);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToAccount(rs);
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to find account by number in H2: " + accountNumber, e);
         }
         return null;
     }
 
     public PolicyPeriod findSubmission(String jobNumber) {
-        for (PolicyPeriod s : submissions) {
-            if (s.getJobNumber().equalsIgnoreCase(jobNumber)) return s;
+        if (jobNumber == null) return null;
+        String sql = "SELECT * FROM POLICY_PERIODS WHERE UPPER(job_number) = UPPER(?)";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, jobNumber);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToPolicyPeriod(rs);
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to find submission by job number in H2: " + jobNumber, e);
         }
         return null;
     }
 
     public synchronized Account createAccount(Account newAccount) {
-        newAccount.setAccountNumber("A000" + accountSeq++);
+        if (newAccount.getAccountNumber() == null || newAccount.getAccountNumber().trim().isEmpty()) {
+            newAccount.setAccountNumber("A000" + (System.currentTimeMillis() % 89999 + 10000));
+        }
         if (newAccount.getAccountStatus() == null) newAccount.setAccountStatus("Active");
         if (newAccount.getCreateTime() == null) {
             newAccount.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         }
-        accounts.add(0, newAccount);
+        insertAccountToDb(newAccount);
         return newAccount;
     }
 
     public synchronized PolicyPeriod createSubmission(PolicyPeriod submission) {
-        submission.setJobNumber("S000" + jobSeq++);
+        if (submission.getJobNumber() == null || submission.getJobNumber().trim().isEmpty()) {
+            submission.setJobNumber("S000" + (System.currentTimeMillis() % 89999 + 10000));
+        }
         if (submission.getStatus() == null) submission.setStatus("Draft");
         if (submission.getCreateTime() == null) {
             submission.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         }
         submission.calculatePremium();
-        submissions.add(0, submission);
+        insertSubmissionToDb(submission);
         return submission;
+    }
+
+    private Account mapResultSetToAccount(ResultSet rs) throws SQLException {
+        Account a = new Account();
+        a.setAccountNumber(rs.getString("account_number"));
+        a.setAccountHolderName(rs.getString("account_holder_name"));
+        a.setAccountHolderType(rs.getString("account_holder_type"));
+        a.setFein(rs.getString("fein"));
+        a.setAddressLine1(rs.getString("address_line1"));
+        a.setAddressLine2(rs.getString("address_line2"));
+        a.setCity(rs.getString("city"));
+        a.setState(rs.getString("state"));
+        a.setPostalCode(rs.getString("postal_code"));
+        a.setPhone(rs.getString("phone"));
+        a.setEmail(rs.getString("email"));
+        a.setAccountStatus(rs.getString("account_status"));
+        a.setProducerCode(rs.getString("producer_code"));
+        a.setIndustryCode(rs.getString("industry_code"));
+        a.setOrgType(rs.getString("org_type"));
+        a.setCreateTime(rs.getString("create_time"));
+        return a;
+    }
+
+    private PolicyPeriod mapResultSetToPolicyPeriod(ResultSet rs) throws SQLException {
+        PolicyPeriod p = new PolicyPeriod();
+        p.setJobNumber(rs.getString("job_number"));
+        p.setPolicyNumber(rs.getString("policy_number"));
+        p.setProductCode(rs.getString("product_code"));
+        p.setStatus(rs.getString("status"));
+        p.setJobType(rs.getString("job_type"));
+        p.setEffectiveDate(rs.getString("effective_date"));
+        p.setExpirationDate(rs.getString("expiration_date"));
+        p.setTermMonths(rs.getInt("term_months"));
+        p.setBaseState(rs.getString("base_state"));
+        p.setProducerCode(rs.getString("producer_code"));
+        
+        String accNum = rs.getString("account_number");
+        if (accNum != null) {
+            p.setAccount(findAccount(accNum));
+        }
+
+        p.setBodilyInjuryLimit(rs.getString("bodily_injury_limit"));
+        p.setPropertyDamageLimit(rs.getString("property_damage_limit"));
+        p.setComprehensiveDeductible(rs.getString("comprehensive_deductible"));
+        p.setCollisionDeductible(rs.getString("collision_deductible"));
+        p.setBasePremium(rs.getBigDecimal("base_premium"));
+        p.setTaxesAndFees(rs.getBigDecimal("taxes_and_fees"));
+        p.setTotalPremium(rs.getBigDecimal("total_premium"));
+        p.setCreateTime(rs.getString("create_time"));
+        return p;
     }
 }

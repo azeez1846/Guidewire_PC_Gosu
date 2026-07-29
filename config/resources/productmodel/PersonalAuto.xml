@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<product id="PersonalAuto" name="Personal Auto">
+  <line id="PersonalAutoLine" name="Personal Auto Line">
+    <coverage-pattern code="PAAutoLiabilityCov" name="Auto Liability Coverage" category="Liability">
+      <limit default="500000">
+        <option value="100000" display="$100k/$300k"/>
+        <option value="300000" display="$300k/$300k"/>
+        <option value="500000" display="$500k/$500k"/>
+      </limit>
+    </coverage-pattern>
+    <coverage-pattern code="PACollisionCov" name="Collision Coverage" category="PhysicalDamage">
+      <deductible default="500">
+        <option value="250" display="$250"/>
+        <option value="500" display="$500"/>
+        <option value="1000" display="$1000"/>
+      </deductible>
+    </coverage-pattern>
+    <coverage-pattern code="PAComprehensiveCov" name="Comprehensive Coverage" category="PhysicalDamage">
+      <deductible default="500">
+        <option value="250" display="$250"/>
+        <option value="500" display="$500"/>
+        <option value="1000" display="$1000"/>
+      </deductible>
+    </coverage-pattern>
+  </line>
+</product>

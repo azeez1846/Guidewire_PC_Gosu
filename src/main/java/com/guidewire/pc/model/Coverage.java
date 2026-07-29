@@ -26,6 +26,7 @@ public class Coverage extends EffDatedBean {
     public void setPatternCode(String patternCode) { this.patternCode = patternCode; }
 
     public String getCoverageName() { return coverageName; }
+    public String getPatternName() { return coverageName; }
     public void setCoverageName(String coverageName) { this.coverageName = coverageName; }
 
     public BigDecimal getDirectLimit() { return directLimit; }

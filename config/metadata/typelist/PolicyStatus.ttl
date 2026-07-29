@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<typelist xmlns="http://guidewire.com/typelist"
+          name="PolicyStatus"
+          desc="Status of the Policy Period">
+  <typecode code="Draft" name="Draft" priority="1" desc="Policy period is in draft state"/>
+  <typecode code="Quoted" name="Quoted" priority="2" desc="Policy period has been quoted"/>
+  <typecode code="Bound" name="Bound" priority="3" desc="Policy period is bound"/>
+  <typecode code="Issued" name="Issued" priority="4" desc="Policy period is in force / issued"/>
+  <typecode code="Canceled" name="Canceled" priority="5" desc="Policy period has been canceled"/>
+</typelist>

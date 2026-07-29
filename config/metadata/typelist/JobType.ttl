@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<typelist xmlns="http://guidewire.com/typelist"
+          name="JobType"
+          desc="Type of policy transaction job">
+  <typecode code="Submission" name="Submission" priority="1" desc="New business policy submission"/>
+  <typecode code="PolicyChange" name="Policy Change" priority="2" desc="Mid-term policy alteration"/>
+  <typecode code="Cancellation" name="Cancellation" priority="3" desc="Policy cancellation job"/>
+  <typecode code="Renewal" name="Renewal" priority="4" desc="Policy renewal job"/>
+  <typecode code="Rewrite" name="Rewrite" priority="5" desc="Policy rewrite job"/>
+</typelist>

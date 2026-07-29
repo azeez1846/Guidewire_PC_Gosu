@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<typelist xmlns="http://guidewire.com/typelist"
+          name="AccountStatus"
+          desc="Status of an Account">
+  <typecode code="Pending" name="Pending" priority="1" desc="Account creation is pending approval"/>
+  <typecode code="Active" name="Active" priority="2" desc="Active account"/>
+  <typecode code="Merged" name="Merged" priority="3" desc="Account merged into another account"/>
+  <typecode code="Withdrawn" name="Withdrawn" priority="4" desc="Account withdrawn"/>
+</typelist>

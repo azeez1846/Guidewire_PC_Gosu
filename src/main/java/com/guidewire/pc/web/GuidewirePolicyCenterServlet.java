@@ -235,6 +235,8 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
                 "<a href='/?page=desktop&tab=submissions' class='gw-tab " + ("submissions".equals(activeTab) ? "active" : "") + "'>Policies &amp; Submissions</a>" +
                 "<a href='/?page=new-account' class='gw-tab'>+ New Account</a>" +
                 "<a href='/?page=new-submission' class='gw-tab'>+ New Submission</a>" +
+                "<a href='/swagger-ui' target='_blank' class='gw-tab' style='color:#38B6FF;'>⚡ Swagger REST API</a>" +
+                "<a href='http://localhost:8082' target='_blank' class='gw-tab' style='color:#00C853;'>🗄️ H2 DB Console</a>" +
                 "</div>";
     }
 

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<typelist xmlns="http://guidewire.com/typelist"
+          name="Product"
+          desc="Insurance Products offered in PolicyCenter">
+  <typecode code="PersonalAuto" name="Personal Auto" priority="1" desc="Personal Automobile Policy"/>
+  <typecode code="CommercialAuto" name="Commercial Auto" priority="2" desc="Commercial Automobile Policy"/>
+  <typecode code="CommercialProperty" name="Commercial Property" priority="3" desc="Commercial Property Policy"/>
+  <typecode code="GeneralLiability" name="General Liability" priority="4" desc="General Liability Policy"/>
+</typelist>

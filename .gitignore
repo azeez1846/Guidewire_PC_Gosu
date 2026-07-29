@@ -1,4 +1,6 @@
 target/
 cookies.txt
+h2_cookies.txt
 *.log
 .DS_Store
+data/

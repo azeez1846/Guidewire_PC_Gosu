@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<typelist xmlns="http://guidewire.com/typelist"
+          name="ValidationLevel"
+          desc="PolicyCenter Validation Levels">
+  <typecode code="Draft" name="Draft" priority="1" desc="Basic validation during draft creation"/>
+  <typecode code="Quotation" name="Quotation" priority="2" desc="Validation required prior to generating quote"/>
+  <typecode code="Bind" name="Bind" priority="3" desc="Validation required prior to binding policy"/>
+  <typecode code="Billing" name="Billing" priority="4" desc="Validation required for billing setup"/>
+</typelist>

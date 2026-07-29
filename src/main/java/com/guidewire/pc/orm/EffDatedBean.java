@@ -45,5 +45,16 @@ public abstract class EffDatedBean implements KeyableBean {
         return true;
     }
 
+    public EffDatedBean getSlice(Date asOfDate) {
+        if (isEffectiveAt(asOfDate)) {
+            return this;
+        }
+        return null;
+    }
+
+    public EffDatedBean getUntypedSlice(Date asOfDate) {
+        return getSlice(asOfDate);
+    }
+
     public abstract EffDatedBean cloneSlice(EffDatedBranch targetBranch, Date sliceEffectiveDate);
 }

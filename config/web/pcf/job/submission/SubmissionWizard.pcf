@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<PCF
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="../../../../../pcf.xsd">
+  <Wizard
+    id="SubmissionWizard"
+    title="Policy Submission Wizard">
+    <LocationStep
+      id="AccountInfoStep"
+      title="1. Account Information"/>
+    <LocationStep
+      id="PolicyLineStep"
+      title="2. Product & Line Selection"/>
+    <LocationStep
+      id="CoveragesStep"
+      title="3. Coverages & Limits"/>
+    <LocationStep
+      id="RatingStep"
+      title="4. Rating & Financials"/>
+    <LocationStep
+      id="BindStep"
+      title="5. Issue & Bind Policy"/>
+  </Wizard>
+</PCF>

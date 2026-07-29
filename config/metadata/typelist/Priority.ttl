@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<typelist xmlns="http://guidewire.com/typelist"
+          name="Priority"
+          desc="Activity Priority Levels">
+  <typecode code="Low" name="Low" priority="1" desc="Low priority task"/>
+  <typecode code="Normal" name="Normal" priority="2" desc="Standard/Normal priority task"/>
+  <typecode code="High" name="High" priority="3" desc="High priority task"/>
+  <typecode code="Urgent" name="Urgent" priority="4" desc="Urgent action required"/>
+</typelist>
