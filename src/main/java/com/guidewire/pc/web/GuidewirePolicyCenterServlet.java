@@ -400,9 +400,9 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
         }
 
         sb.append("<div class='gw-toolbar'>");
-        sb.append("<a href='/?page=desktop&tab=submissions' class='gw-btn ").append("submissions".equals(tab) ? "" : "gw-btn-secondary").append("'>My Submissions (").append(dataStore.getSubmissions().size()).append(")</a> ");
-        sb.append("<a href='/?page=desktop&tab=activities' class='gw-btn ").append("activities".equals(tab) ? "" : "gw-btn-secondary").append("'>My Activities (").append(dataStore.getActivities().size()).append(")</a> ");
-        sb.append("<a href='/?page=desktop&tab=accounts' class='gw-btn ").append("accounts".equals(tab) ? "" : "gw-btn-secondary").append("'>My Accounts (").append(dataStore.getAccounts().size()).append(")</a>");
+        sb.append("<a href='/?page=desktop&tab=submissions' class='gw-btn ").append("submissions".equals(tab) ? "" : "gw-btn-secondary").append("'>My Submissions (").append(dataStore.getSubmissionCount()).append(")</a> ");
+        sb.append("<a href='/?page=desktop&tab=activities' class='gw-btn ").append("activities".equals(tab) ? "" : "gw-btn-secondary").append("'>My Activities (").append(dataStore.getActivityCount()).append(")</a> ");
+        sb.append("<a href='/?page=desktop&tab=accounts' class='gw-btn ").append("accounts".equals(tab) ? "" : "gw-btn-secondary").append("'>My Accounts (").append(dataStore.getAccountCount()).append(")</a>");
         sb.append("</div>");
 
         switch (tab) {

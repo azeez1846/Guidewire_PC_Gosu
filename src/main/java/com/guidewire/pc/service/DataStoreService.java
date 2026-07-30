@@ -10,6 +10,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,8 +19,15 @@ public class DataStoreService {
     private static final Logger LOGGER = Logger.getLogger(DataStoreService.class.getName());
     private static DataStoreService instance;
 
+    // Fast In-Memory Cache Layers (Eliminates N+1 SQL queries and disk delays)
+    private final Map<String, Account> accountCache = new ConcurrentHashMap<>();
+    private final Map<String, PolicyPeriod> submissionCache = new ConcurrentHashMap<>();
+    private final Map<String, Activity> activityCache = new ConcurrentHashMap<>();
+    private volatile boolean cacheLoaded = false;
+
     private DataStoreService() {
         seedSampleDataIfEmpty();
+        warmupCacheFromDb();
     }
 
     public static synchronized DataStoreService getInstance() {
@@ -30,6 +39,40 @@ public class DataStoreService {
 
     private Connection getConnection() throws SQLException {
         return DatabaseService.getInstance().getConnection();
+    }
+
+    private synchronized void warmupCacheFromDb() {
+        if (cacheLoaded) return;
+        try {
+            // Load Accounts into cache
+            List<Account> dbAccounts = loadAccountsFromDb();
+            for (Account a : dbAccounts) {
+                if (a.getAccountNumber() != null) {
+                    accountCache.put(a.getAccountNumber().toUpperCase(), a);
+                }
+            }
+
+            // Load Submissions into cache
+            List<PolicyPeriod> dbSubmissions = loadSubmissionsFromDb();
+            for (PolicyPeriod p : dbSubmissions) {
+                if (p.getJobNumber() != null) {
+                    submissionCache.put(p.getJobNumber().toUpperCase(), p);
+                }
+            }
+
+            // Load Activities into cache
+            List<Activity> dbActivities = loadActivitiesFromDb();
+            for (Activity act : dbActivities) {
+                if (act.getSubject() != null) {
+                    activityCache.put(act.getSubject() + "_" + act.getCreateTime(), act);
+                }
+            }
+            cacheLoaded = true;
+            LOGGER.info("[DataStore Performance Cache] In-memory cache pre-warmed successfully. Loaded " +
+                    accountCache.size() + " accounts, " + submissionCache.size() + " submissions.");
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "Error pre-warming DataStore cache from DB", e);
+        }
     }
 
     private void seedSampleDataIfEmpty() {
@@ -177,6 +220,10 @@ public class DataStoreService {
             ps.setString(15, a.getOrgType());
             ps.setString(16, a.getCreateTime());
             ps.executeUpdate();
+
+            if (a.getAccountNumber() != null) {
+                accountCache.put(a.getAccountNumber().toUpperCase(), a);
+            }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Failed to insert account to H2 database: " + a.getAccountNumber(), e);
             throw new RuntimeException(e);
@@ -209,6 +256,10 @@ public class DataStoreService {
             ps.setBigDecimal(18, sub.getTotalPremium());
             ps.setString(19, sub.getCreateTime());
             ps.executeUpdate();
+
+            if (sub.getJobNumber() != null) {
+                submissionCache.put(sub.getJobNumber().toUpperCase(), sub);
+            }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Failed to insert submission to H2 database: " + sub.getJobNumber(), e);
         }
@@ -228,12 +279,23 @@ public class DataStoreService {
             ps.setString(8, act.getRelatedJobNumber());
             ps.setString(9, act.getCreateTime());
             ps.executeUpdate();
+
+            if (act.getSubject() != null) {
+                activityCache.put(act.getSubject() + "_" + act.getCreateTime(), act);
+            }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Failed to insert activity to H2 database", e);
         }
     }
 
     public List<Account> getAccounts() {
+        if (!accountCache.isEmpty()) {
+            return new ArrayList<>(accountCache.values());
+        }
+        return loadAccountsFromDb();
+    }
+
+    private List<Account> loadAccountsFromDb() {
         List<Account> list = new ArrayList<>();
         String sql = "SELECT * FROM ACCOUNTS ORDER BY create_time DESC";
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -248,6 +310,13 @@ public class DataStoreService {
     }
 
     public List<PolicyPeriod> getSubmissions() {
+        if (!submissionCache.isEmpty()) {
+            return new ArrayList<>(submissionCache.values());
+        }
+        return loadSubmissionsFromDb();
+    }
+
+    private List<PolicyPeriod> loadSubmissionsFromDb() {
         List<PolicyPeriod> list = new ArrayList<>();
         String sql = "SELECT * FROM POLICY_PERIODS ORDER BY create_time DESC";
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -262,6 +331,13 @@ public class DataStoreService {
     }
 
     public List<Activity> getActivities() {
+        if (!activityCache.isEmpty()) {
+            return new ArrayList<>(activityCache.values());
+        }
+        return loadActivitiesFromDb();
+    }
+
+    private List<Activity> loadActivitiesFromDb() {
         List<Activity> list = new ArrayList<>();
         String sql = "SELECT * FROM ACTIVITIES ORDER BY create_time DESC";
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -284,14 +360,31 @@ public class DataStoreService {
         return list;
     }
 
+    public int getAccountCount() {
+        return accountCache.size() > 0 ? accountCache.size() : loadAccountsFromDb().size();
+    }
+
+    public int getSubmissionCount() {
+        return submissionCache.size() > 0 ? submissionCache.size() : loadSubmissionsFromDb().size();
+    }
+
+    public int getActivityCount() {
+        return activityCache.size() > 0 ? activityCache.size() : loadActivitiesFromDb().size();
+    }
+
     public Account findAccount(String accountNumber) {
         if (accountNumber == null) return null;
+        Account cached = accountCache.get(accountNumber.toUpperCase());
+        if (cached != null) return cached;
+
         String sql = "SELECT * FROM ACCOUNTS WHERE UPPER(account_number) = UPPER(?)";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, accountNumber);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return mapResultSetToAccount(rs);
+                    Account a = mapResultSetToAccount(rs);
+                    accountCache.put(a.getAccountNumber().toUpperCase(), a);
+                    return a;
                 }
             }
         } catch (SQLException e) {
@@ -302,12 +395,17 @@ public class DataStoreService {
 
     public PolicyPeriod findSubmission(String jobNumber) {
         if (jobNumber == null) return null;
+        PolicyPeriod cached = submissionCache.get(jobNumber.toUpperCase());
+        if (cached != null) return cached;
+
         String sql = "SELECT * FROM POLICY_PERIODS WHERE UPPER(job_number) = UPPER(?)";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, jobNumber);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return mapResultSetToPolicyPeriod(rs);
+                    PolicyPeriod p = mapResultSetToPolicyPeriod(rs);
+                    submissionCache.put(p.getJobNumber().toUpperCase(), p);
+                    return p;
                 }
             }
         } catch (SQLException e) {

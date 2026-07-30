@@ -2,6 +2,7 @@ package com.guidewire.pc.web;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
@@ -25,13 +26,25 @@ public class JettyPolicyCenterServer {
         threadPool.setName("gw-virtual-jetty-worker");
 
         server = new Server(threadPool);
+        
+        // High-performance ServerConnector tuned for max throughput
         ServerConnector connector = new ServerConnector(server);
         connector.setPort(port);
+        connector.setIdleTimeout(30000);
         server.addConnector(connector);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
-        server.setHandler(context);
+
+        // Enable Gzip compression if available
+        try {
+            org.eclipse.jetty.server.handler.gzip.GzipHandler gzip = new org.eclipse.jetty.server.handler.gzip.GzipHandler();
+            gzip.setMinGzipSize(256);
+            gzip.setHandler(context);
+            server.setHandler(gzip);
+        } catch (Throwable ignored) {
+            server.setHandler(context);
+        }
 
         // Start official H2 Web Console server on port 8082 (secured to localhost only)
         try {

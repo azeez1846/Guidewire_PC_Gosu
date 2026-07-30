@@ -8,12 +8,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PCFParser {
     private final Map<String, File> pcfFiles = new HashMap<>();
+    private final Map<String, PCFDefinition> pcfCache = new ConcurrentHashMap<>();
 
     public PCFParser(File baseConfigDir) {
         scanDirectory(new File(baseConfigDir, "config/web/pcf"));
+        warmupCache();
     }
 
     private void scanDirectory(File dir) {
@@ -30,11 +33,22 @@ public class PCFParser {
         }
     }
 
+    private void warmupCache() {
+        for (String pcfId : pcfFiles.keySet()) {
+            parsePCFInternal(pcfId);
+        }
+    }
+
     public Map<String, File> getPcfFiles() {
         return pcfFiles;
     }
 
     public PCFDefinition parsePCF(String pcfId) {
+        if (pcfId == null) return null;
+        return pcfCache.computeIfAbsent(pcfId, this::parsePCFInternal);
+    }
+
+    private PCFDefinition parsePCFInternal(String pcfId) {
         File file = pcfFiles.get(pcfId);
         if (file == null) return null;
 
@@ -53,6 +67,11 @@ public class PCFParser {
             System.err.println("[PCF Parser Warning] Error parsing PCF " + pcfId + ": " + e.getMessage());
             return null;
         }
+    }
+
+    public void clearCache() {
+        pcfCache.clear();
+        warmupCache();
     }
 
     public static class PCFDefinition {
