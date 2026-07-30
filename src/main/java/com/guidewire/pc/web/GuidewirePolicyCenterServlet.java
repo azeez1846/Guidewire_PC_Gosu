@@ -271,70 +271,75 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
         sb.append("<a href='/?page=desktop&tab=accounts' class='gw-btn ").append("accounts".equals(tab) ? "" : "gw-btn-secondary").append("'>My Accounts (").append(dataStore.getAccounts().size()).append(")</a>");
         sb.append("</div>");
 
-        if ("submissions".equals(tab)) {
-            sb.append("<div class='gw-card'>");
-            sb.append("<div class='gw-card-title'>Submissions &amp; Policy Transactions <span class='gw-pcf-tag'>DesktopSubmissionsLV.pcf</span></div>");
-            sb.append("<table class='gw-table'>");
-            sb.append("<thead><tr><th>Transaction #</th><th>Job Type</th><th>FixedID</th><th>Account Holder</th><th>Policy Line</th><th>Effective Date</th><th>Status</th><th>Total Premium</th><th>Action</th></tr></thead><tbody>");
+        switch (tab) {
+            case "submissions" -> {
+                sb.append("<div class='gw-card'>");
+                sb.append("<div class='gw-card-title'>Submissions &amp; Policy Transactions <span class='gw-pcf-tag'>DesktopSubmissionsLV.pcf</span></div>");
+                sb.append("<table class='gw-table'>");
+                sb.append("<thead><tr><th>Transaction #</th><th>Job Type</th><th>FixedID</th><th>Account Holder</th><th>Policy Line</th><th>Effective Date</th><th>Status</th><th>Total Premium</th><th>Action</th></tr></thead><tbody>");
 
-            List<PolicyPeriod> subs = dataStore.getSubmissions();
-            for (PolicyPeriod s : subs) {
-                if (searchQuery != null && !searchQuery.isEmpty()) {
-                    boolean match = s.getJobNumber().toLowerCase().contains(searchQuery.toLowerCase()) ||
-                            (s.getAccount() != null && s.getAccount().getAccountHolderName().toLowerCase().contains(searchQuery.toLowerCase()));
-                    if (!match) continue;
+                List<PolicyPeriod> subs = dataStore.getSubmissions();
+                for (PolicyPeriod s : subs) {
+                    if (searchQuery != null && !searchQuery.isEmpty()) {
+                        boolean match = s.getJobNumber().toLowerCase().contains(searchQuery.toLowerCase()) ||
+                                (s.getAccount() != null && s.getAccount().getAccountHolderName().toLowerCase().contains(searchQuery.toLowerCase()));
+                        if (!match) continue;
+                    }
+                    sb.append("<tr>");
+                    sb.append("<td><b><a href='/?page=submission-wizard&jobNum=").append(s.getJobNumber()).append("' style='color:#0073B1; text-decoration:none;'>").append(s.getJobNumber()).append("</a></b></td>");
+                    sb.append("<td><span class='gw-pcf-tag'>").append(s.getJobType()).append("</span></td>");
+                    sb.append("<td><code>").append(s.getPolicyPeriodFixedId()).append("</code></td>");
+                    sb.append("<td>").append(s.getAccount() != null ? s.getAccount().getAccountHolderName() : "N/A").append("</td>");
+                    sb.append("<td><b>").append(s.getProductCode()).append("</b></td>");
+                    sb.append("<td>").append(s.getEffectiveDate()).append("</td>");
+                    sb.append("<td><span class='gw-status-badge status-").append(s.getStatus()).append("'>").append(s.getFormattedStatus()).append("</span></td>");
+                    sb.append("<td><b>$").append(s.getTotalPremium()).append("</b></td>");
+                    sb.append("<td><a href='/?page=submission-wizard&jobNum=").append(s.getJobNumber()).append("' class='gw-btn gw-btn-secondary' style='padding:4px 8px; font-size:11px;'>Open Wizard &gt;</a></td>");
+                    sb.append("</tr>");
                 }
-                sb.append("<tr>");
-                sb.append("<td><b><a href='/?page=submission-wizard&jobNum=").append(s.getJobNumber()).append("' style='color:#0073B1; text-decoration:none;'>").append(s.getJobNumber()).append("</a></b></td>");
-                sb.append("<td><span class='gw-pcf-tag'>").append(s.getJobType()).append("</span></td>");
-                sb.append("<td><code>").append(s.getPolicyPeriodFixedId()).append("</code></td>");
-                sb.append("<td>").append(s.getAccount() != null ? s.getAccount().getAccountHolderName() : "N/A").append("</td>");
-                sb.append("<td><b>").append(s.getProductCode()).append("</b></td>");
-                sb.append("<td>").append(s.getEffectiveDate()).append("</td>");
-                sb.append("<td><span class='gw-status-badge status-").append(s.getStatus()).append("'>").append(s.getFormattedStatus()).append("</span></td>");
-                sb.append("<td><b>$").append(s.getTotalPremium()).append("</b></td>");
-                sb.append("<td><a href='/?page=submission-wizard&jobNum=").append(s.getJobNumber()).append("' class='gw-btn gw-btn-secondary' style='padding:4px 8px; font-size:11px;'>Open Wizard &gt;</a></td>");
-                sb.append("</tr>");
+                sb.append("</tbody></table></div>");
             }
-            sb.append("</tbody></table></div>");
-        } else if ("activities".equals(tab)) {
-            sb.append("<div class='gw-card'>");
-            sb.append("<div class='gw-card-title'>Pending Underwriting Activities <span class='gw-pcf-tag'>DesktopActivitiesLV.pcf</span></div>");
-            sb.append("<table class='gw-table'>");
-            sb.append("<thead><tr><th>Due Date</th><th>Priority</th><th>Subject</th><th>Target Job / Account</th><th>Status</th><th>Assigned User</th></tr></thead><tbody>");
-            for (Activity a : dataStore.getActivities()) {
-                sb.append("<tr>");
-                sb.append("<td>").append(a.getDueDate()).append("</td>");
-                sb.append("<td><b style='color:").append("High".equals(a.getPriority()) ? "#C53030" : "#2B6CB0").append(";'>").append(a.getPriority()).append("</b></td>");
-                sb.append("<td><b>").append(a.getSubject()).append("</b><br><span style='font-size:11px; color:#718096;'>").append(a.getDescription()).append("</span></td>");
-                sb.append("<td>").append(a.getRelatedJobNumber() != null ? a.getRelatedJobNumber() : a.getRelatedAccountId()).append("</td>");
-                sb.append("<td><span class='gw-status-badge status-Active'>").append(a.getStatus()).append("</span></td>");
-                sb.append("<td>").append(a.getAssignedUser()).append("</td>");
-                sb.append("</tr>");
-            }
-            sb.append("</tbody></table></div>");
-        } else if ("accounts".equals(tab)) {
-            sb.append("<div class='gw-card'>");
-            sb.append("<div class='gw-card-title'>Accounts Directory <span class='gw-pcf-tag'>DesktopAccountsLV.pcf</span></div>");
-            sb.append("<table class='gw-table'>");
-            sb.append("<thead><tr><th>Account #</th><th>Account Holder Name</th><th>Type</th><th>Address</th><th>Status</th><th>Producer Code</th><th>Action</th></tr></thead><tbody>");
-            for (Account a : dataStore.getAccounts()) {
-                if (searchQuery != null && !searchQuery.isEmpty()) {
-                    boolean match = a.getAccountNumber().toLowerCase().contains(searchQuery.toLowerCase()) ||
-                            a.getAccountHolderName().toLowerCase().contains(searchQuery.toLowerCase());
-                    if (!match) continue;
+            case "activities" -> {
+                sb.append("<div class='gw-card'>");
+                sb.append("<div class='gw-card-title'>Pending Underwriting Activities <span class='gw-pcf-tag'>DesktopActivitiesLV.pcf</span></div>");
+                sb.append("<table class='gw-table'>");
+                sb.append("<thead><tr><th>Due Date</th><th>Priority</th><th>Subject</th><th>Target Job / Account</th><th>Status</th><th>Assigned User</th></tr></thead><tbody>");
+                for (Activity a : dataStore.getActivities()) {
+                    sb.append("<tr>");
+                    sb.append("<td>").append(a.getDueDate()).append("</td>");
+                    sb.append("<td><b style='color:").append("High".equals(a.getPriority()) ? "#C53030" : "#2B6CB0").append(";'>").append(a.getPriority()).append("</b></td>");
+                    sb.append("<td><b>").append(a.getSubject()).append("</b><br><span style='font-size:11px; color:#718096;'>").append(a.getDescription()).append("</span></td>");
+                    sb.append("<td>").append(a.getRelatedJobNumber() != null ? a.getRelatedJobNumber() : a.getRelatedAccountId()).append("</td>");
+                    sb.append("<td><span class='gw-status-badge status-Active'>").append(a.getStatus()).append("</span></td>");
+                    sb.append("<td>").append(a.getAssignedUser()).append("</td>");
+                    sb.append("</tr>");
                 }
-                sb.append("<tr>");
-                sb.append("<td><b><a href='/?page=account-detail&accNum=").append(a.getAccountNumber()).append("' style='color:#0073B1; text-decoration:none;'>").append(a.getAccountNumber()).append("</a></b></td>");
-                sb.append("<td><b>").append(a.getAccountHolderName()).append("</b></td>");
-                sb.append("<td>").append(a.getAccountHolderType()).append("</td>");
-                sb.append("<td>").append(a.getFormattedAddress()).append("</td>");
-                sb.append("<td><span class='gw-status-badge status-Active'>").append(a.getAccountStatus()).append("</span></td>");
-                sb.append("<td>").append(a.getProducerCode()).append("</td>");
-                sb.append("<td><a href='/?page=new-submission&accNum=").append(a.getAccountNumber()).append("' class='gw-btn' style='padding:4px 8px; font-size:11px;'>+ New Submission</a></td>");
-                sb.append("</tr>");
+                sb.append("</tbody></table></div>");
             }
-            sb.append("</tbody></table></div>");
+            case "accounts" -> {
+                sb.append("<div class='gw-card'>");
+                sb.append("<div class='gw-card-title'>Accounts Directory <span class='gw-pcf-tag'>DesktopAccountsLV.pcf</span></div>");
+                sb.append("<table class='gw-table'>");
+                sb.append("<thead><tr><th>Account #</th><th>Account Holder Name</th><th>Type</th><th>Address</th><th>Status</th><th>Producer Code</th><th>Action</th></tr></thead><tbody>");
+                for (Account a : dataStore.getAccounts()) {
+                    if (searchQuery != null && !searchQuery.isEmpty()) {
+                        boolean match = a.getAccountNumber().toLowerCase().contains(searchQuery.toLowerCase()) ||
+                                a.getAccountHolderName().toLowerCase().contains(searchQuery.toLowerCase());
+                        if (!match) continue;
+                    }
+                    sb.append("<tr>");
+                    sb.append("<td><b><a href='/?page=account-detail&accNum=").append(a.getAccountNumber()).append("' style='color:#0073B1; text-decoration:none;'>").append(a.getAccountNumber()).append("</a></b></td>");
+                    sb.append("<td><b>").append(a.getAccountHolderName()).append("</b></td>");
+                    sb.append("<td>").append(a.getAccountHolderType()).append("</td>");
+                    sb.append("<td>").append(a.getFormattedAddress()).append("</td>");
+                    sb.append("<td><span class='gw-status-badge status-Active'>").append(a.getAccountStatus()).append("</span></td>");
+                    sb.append("<td>").append(a.getProducerCode()).append("</td>");
+                    sb.append("<td><a href='/?page=new-submission&accNum=").append(a.getAccountNumber()).append("' class='gw-btn' style='padding:4px 8px; font-size:11px;'>+ New Submission</a></td>");
+                    sb.append("</tr>");
+                }
+                sb.append("</tbody></table></div>");
+            }
+            default -> {}
         }
 
         sb.append("</div></div></body></html>");
@@ -544,28 +549,33 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
 
         if (params.containsKey("action")) {
             String act = params.get("action");
-            if ("updateStep1".equals(act)) {
-                sub.setEffectiveDate(params.get("effectiveDate"));
-                sub.setExpirationDate(params.get("expirationDate"));
-                sub.setTermMonths(Integer.parseInt(params.getOrDefault("termMonths", "12")));
-                sub.setBaseState(params.get("baseState"));
-                sub.setProducerCode(params.get("producerCode"));
-                step = "step2";
-            } else if ("quote".equals(act)) {
-                sub.setBodilyInjuryLimit(params.get("bodilyInjuryLimit"));
-                sub.setPropertyDamageLimit(params.get("propertyDamageLimit"));
-                sub.setComprehensiveDeductible(params.get("comprehensiveDeductible"));
-                sub.setCollisionDeductible(params.get("collisionDeductible"));
-
-                sub.calculatePremium();
-                sub.setStatus("Quoted");
-                step = "step3";
-            } else if ("bind".equals(act)) {
-                if (sub.getPolicyNumber() == null || sub.getPolicyNumber().trim().isEmpty()) {
-                    sub.setPolicyNumber("POL-" + (int)(Math.random() * 900000 + 100000));
+            switch (act) {
+                case "updateStep1" -> {
+                    sub.setEffectiveDate(params.get("effectiveDate"));
+                    sub.setExpirationDate(params.get("expirationDate"));
+                    sub.setTermMonths(Integer.parseInt(params.getOrDefault("termMonths", "12")));
+                    sub.setBaseState(params.get("baseState"));
+                    sub.setProducerCode(params.get("producerCode"));
+                    step = "step2";
                 }
-                sub.setStatus("Issued");
-                step = "step3";
+                case "quote" -> {
+                    sub.setBodilyInjuryLimit(params.get("bodilyInjuryLimit"));
+                    sub.setPropertyDamageLimit(params.get("propertyDamageLimit"));
+                    sub.setComprehensiveDeductible(params.get("comprehensiveDeductible"));
+                    sub.setCollisionDeductible(params.get("collisionDeductible"));
+
+                    sub.calculatePremium();
+                    sub.setStatus("Quoted");
+                    step = "step3";
+                }
+                case "bind" -> {
+                    if (sub.getPolicyNumber() == null || sub.getPolicyNumber().trim().isEmpty()) {
+                        sub.setPolicyNumber("POL-" + (int)(Math.random() * 900000 + 100000));
+                    }
+                    sub.setStatus("Issued");
+                    step = "step3";
+                }
+                default -> {}
             }
         }
 
