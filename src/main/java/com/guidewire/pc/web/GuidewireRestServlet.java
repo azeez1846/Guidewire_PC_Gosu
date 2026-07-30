@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,6 +97,31 @@ public class GuidewireRestServlet extends HttpServlet {
                 objectMapper.writeValue(resp.getWriter(), Map.of("error", "Job not found for PDF generation: " + jobNumber));
                 return;
             }
+        }
+
+        if (path.startsWith("/vin/decode/")) {
+            String vin = path.substring("/vin/decode/".length());
+            Map<String, Object> decoded = com.guidewire.pc.service.VinLookupService.getInstance().decodeVin(vin);
+            objectMapper.writeValue(resp.getWriter(), decoded);
+            return;
+        }
+
+        if (path.startsWith("/payments/schedule/")) {
+            String jobNumber = path.substring("/payments/schedule/".length());
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            BigDecimal totalPrem = period != null && period.getTotalPremium() != null ? period.getTotalPremium() : new BigDecimal("2889.00");
+            BigDecimal downPayment = totalPrem.multiply(new BigDecimal("0.20")).setScale(2, java.math.RoundingMode.HALF_UP);
+            BigDecimal remaining = totalPrem.subtract(downPayment);
+            BigDecimal monthly = remaining.divide(new BigDecimal("11"), 2, java.math.RoundingMode.HALF_UP);
+
+            objectMapper.writeValue(resp.getWriter(), Map.of(
+                    "jobNumber", jobNumber,
+                    "totalPremium", totalPrem,
+                    "downPayment", downPayment,
+                    "monthlyInstallment", monthly,
+                    "numberOfInstallments", 12
+            ));
+            return;
         }
 
         if (path.startsWith("/jobs/")) {

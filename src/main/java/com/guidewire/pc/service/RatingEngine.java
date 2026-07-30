@@ -21,8 +21,9 @@ public class RatingEngine {
     }
 
     public List<Cost> rate(PolicyPeriod period) {
-        LOGGER.info("Executing Guidewire Rating Engine for PolicyPeriod: " + period.getJobNumber());
+        LOGGER.log(java.util.logging.Level.INFO, "Executing Guidewire Rating Engine for PolicyPeriod: {0}", period != null ? period.getJobNumber() : "null");
         List<Cost> costs = new ArrayList<>();
+        if (period == null) return costs;
 
         // 1. Base Premium Cost
         double baseRate = 500.0;

@@ -67,6 +67,32 @@ public class RulesEngine {
             }
         });
 
+        // Pre-Quote Rule 3: Geospatial Catastrophe Risk Rule
+        preQuoteRules.add(new GosuRule() {
+            @Override
+            public String getName() { return "GeospatialCatastropheRiskRule"; }
+
+            @Override
+            public String getDescription() { return "Triggers Underwriting Hold if base state has high Wildfire or Coastal Flood risk."; }
+
+            @Override
+            public boolean isApplicable(RuleContext context) {
+                return context.getPolicyPeriod() != null && context.getPolicyPeriod().getBaseState() != null;
+            }
+
+            @Override
+            public void execute(RuleContext context) {
+                String state = context.getPolicyPeriod().getBaseState();
+                if ("CA".equalsIgnoreCase(state)) {
+                    context.addWarning("Geospatial Risk: High Wildfire Zone (Score 85/100) - Underwriting Hold applied.");
+                    context.triggerUnderwritingHold();
+                } else if ("FL".equalsIgnoreCase(state)) {
+                    context.addWarning("Geospatial Risk: Coastal Special Flood Hazard Area (Zone A) - Special Deductible required.");
+                    context.triggerUnderwritingHold();
+                }
+            }
+        });
+
         // Pre-Bind Rule 1: Mandatory Producer Code Rule
         preBindRules.add(new GosuRule() {
             @Override
@@ -113,7 +139,7 @@ public class RulesEngine {
 
     public RuleContext evaluatePreQuoteRules(PolicyPeriod period) {
         RuleContext context = new RuleContext(period);
-        LOGGER.info("Evaluating Pre-Quote Rules for submission: " + period.getJobNumber());
+        LOGGER.log(java.util.logging.Level.INFO, "Evaluating Pre-Quote Rules for submission: {0}", period != null ? period.getJobNumber() : "null");
         for (GosuRule rule : preQuoteRules) {
             if (rule.isApplicable(context)) {
                 rule.execute(context);
@@ -124,7 +150,7 @@ public class RulesEngine {
 
     public RuleContext evaluatePreBindRules(PolicyPeriod period) {
         RuleContext context = new RuleContext(period);
-        LOGGER.info("Evaluating Pre-Bind Rules for submission: " + period.getJobNumber());
+        LOGGER.log(java.util.logging.Level.INFO, "Evaluating Pre-Bind Rules for submission: {0}", period != null ? period.getJobNumber() : "null");
         for (GosuRule rule : preBindRules) {
             if (rule.isApplicable(context)) {
                 rule.execute(context);
