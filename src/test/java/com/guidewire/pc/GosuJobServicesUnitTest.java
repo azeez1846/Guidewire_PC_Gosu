@@ -97,6 +97,7 @@ public class GosuJobServicesUnitTest {
     }
 
     private PolicyPeriod cancelPolicyMock(PolicyPeriod period, String reason, String calcMethod, String cancelDate) {
+        assertNotNull(reason);
         PolicyPeriod canceled = new PolicyPeriod();
         canceled.setPolicyNumber(period.getPolicyNumber());
         canceled.setJobType("Cancellation");
@@ -113,6 +114,7 @@ public class GosuJobServicesUnitTest {
     }
 
     private PolicyPeriod reinstatePolicyMock(PolicyPeriod canceled, String reason) {
+        assertNotNull(reason);
         canceled.setStatus("Issued");
         canceled.setJobType("Reinstatement");
         return canceled;

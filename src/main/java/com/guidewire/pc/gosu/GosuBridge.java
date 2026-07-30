@@ -2,6 +2,7 @@ package com.guidewire.pc.gosu;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class GosuBridge {
                 initMethod.invoke(null, classpath);
                 initialized = true;
                 System.out.println("[Gosu Engine] Gosu runtime initialized successfully.");
-            } catch (Throwable t) {
+            } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException t) {
                 System.out.println("[Gosu Engine] Standard runtime evaluation active: " + t.getMessage());
             }
         } catch (Exception e) {
@@ -54,7 +55,7 @@ public class GosuBridge {
                     return m.invoke(null, expression);
                 }
             }
-        } catch (Throwable ignored) {}
+        } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException ignored) {}
         return null;
     }
 
@@ -66,7 +67,7 @@ public class GosuBridge {
                     return m.invoke(null, args);
                 }
             }
-        } catch (Throwable t) {
+        } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException t) {
             // fallback
         }
         return null;
@@ -81,7 +82,7 @@ public class GosuBridge {
                     return m.invoke(target, args);
                 }
             }
-        } catch (Throwable t) {
+        } catch (IllegalAccessException | InvocationTargetException t) {
             // fallback
         }
         return null;
@@ -95,7 +96,7 @@ public class GosuBridge {
                     return c.newInstance(args);
                 }
             }
-        } catch (Throwable t) {
+        } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | InstantiationException t) {
             // fallback
         }
         return null;

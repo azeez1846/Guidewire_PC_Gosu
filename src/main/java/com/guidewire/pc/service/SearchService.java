@@ -62,7 +62,7 @@ public class SearchService {
     }
 
     public SearchResult executeSearch(String rawQuery) {
-        LOGGER.info("Executing Search & QuickJump query: " + rawQuery);
+        LOGGER.log(java.util.logging.Level.INFO, "Executing Search & QuickJump query: {0}", rawQuery);
         if (rawQuery == null || rawQuery.trim().isEmpty()) {
             return new SearchResult("");
         }

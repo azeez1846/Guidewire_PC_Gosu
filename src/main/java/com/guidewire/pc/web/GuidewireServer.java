@@ -599,114 +599,118 @@ public class GuidewireServer {
         sb.append("<a href='/?page=submission-wizard&jobNum=").append(jobNum).append("&step=step3' class='gw-step ").append("step3".equals(step) ? "active" : "").append("'>3. Rating &amp; Quote Summary</a>");
         sb.append("</div>");
 
-        if ("step1".equals(step)) {
-            sb.append("<form action='/?page=submission-wizard&jobNum=").append(jobNum).append("' method='POST'>");
-            sb.append("<input type='hidden' name='action' value='updateStep1'>");
+        switch (step) {
+            case "step1" -> {
+                sb.append("<form action='/?page=submission-wizard&jobNum=").append(jobNum).append("' method='POST'>");
+                sb.append("<input type='hidden' name='action' value='updateStep1'>");
 
-            sb.append("<div class='gw-toolbar'>");
-            sb.append("<button type='submit' class='gw-btn'>Next: Coverages &gt;</button>");
-            sb.append("</div>");
+                sb.append("<div class='gw-toolbar'>");
+                sb.append("<button type='submit' class='gw-btn'>Next: Coverages &gt;</button>");
+                sb.append("</div>");
 
-            sb.append("<div class='gw-card'>");
-            sb.append("<div class='gw-card-title'>Step 1: General Policy Information</div>");
-            sb.append("<div class='gw-form-grid'>");
-            sb.append("<div>");
-            sb.append("<div class='gw-field'><label>Transaction / Job #</label><input type='text' value='").append(sub.getJobNumber()).append("' disabled></div>");
-            sb.append("<div class='gw-field'><label>Account Holder</label><input type='text' value='").append(sub.getAccount() != null ? sub.getAccount().getAccountHolderName() : "N/A").append("' disabled></div>");
-            sb.append("<div class='gw-field'><label>Policy Line</label><input type='text' value='").append(sub.getProductCode()).append("' disabled></div>");
-            sb.append("</div>");
-            sb.append("<div>");
-            sb.append("<div class='gw-field'><label>Effective Date</label><input type='date' name='effectiveDate' value='").append(sub.getEffectiveDate()).append("' required></div>");
-            sb.append("<div class='gw-field'><label>Expiration Date</label><input type='date' name='expirationDate' value='").append(sub.getExpirationDate()).append("' required></div>");
-            sb.append("<div class='gw-field'><label>Term (Months)</label><select name='termMonths'><option value='12' ").append(sub.getTermMonths() == 12 ? "selected" : "").append(">12 Months</option><option value='6' ").append(sub.getTermMonths() == 6 ? "selected" : "").append(">6 Months</option></select></div>");
-            sb.append("<div class='gw-field'><label>Base State</label><input type='text' name='baseState' value='").append(sub.getBaseState()).append("' required></div>");
-            sb.append("<div class='gw-field'><label>Producer Code</label><input type='text' name='producerCode' value='").append(sub.getProducerCode()).append("' required></div>");
-            sb.append("</div>");
-            sb.append("</div></div>");
-            sb.append("</form>");
-        } else if ("step2".equals(step)) {
-            sb.append("<form action='/?page=submission-wizard&jobNum=").append(jobNum).append("' method='POST'>");
-            sb.append("<input type='hidden' name='action' value='quote'>");
-
-            sb.append("<div class='gw-toolbar'>");
-            sb.append("<a href='/?page=submission-wizard&jobNum=").append(jobNum).append("&step=step1' class='gw-btn gw-btn-secondary'>&lt; Back</a> ");
-            sb.append("<button type='submit' class='gw-btn gw-btn-success'>⚡ Run Gosu Rating Engine &amp; Generate Quote &gt;</button>");
-            sb.append("</div>");
-
-            sb.append("<div class='gw-card'>");
-            sb.append("<div class='gw-card-title'>Step 2: Line Coverages &amp; Deductibles</div>");
-            sb.append("<div class='gw-form-grid'>");
-            sb.append("<div>");
-            sb.append("<h4 style='margin-bottom:10px; color:#1C2B39;'>Liability Limits</h4>");
-            sb.append("<div class='gw-field'><label>Bodily Injury Limit</label><select name='bodilyInjuryLimit'>");
-            sb.append("<option value='$250k/$500k' ").append("$250k/$500k".equals(sub.getBodilyInjuryLimit()) ? "selected" : "").append(">$250,000 / $500,000</option>");
-            sb.append("<option value='$500k/$500k' ").append("$500k/$500k".equals(sub.getBodilyInjuryLimit()) ? "selected" : "").append(">$500,000 / $500,000</option>");
-            sb.append("<option value='$1M/$1M' ").append("$1M/$1M".equals(sub.getBodilyInjuryLimit()) ? "selected" : "").append(">$1,000,000 / $1,000,000</option>");
-            sb.append("</select></div>");
-
-            sb.append("<div class='gw-field'><label>Property Damage Limit</label><select name='propertyDamageLimit'>");
-            sb.append("<option value='$100k' ").append("$100k".equals(sub.getPropertyDamageLimit()) ? "selected" : "").append(">$100,000</option>");
-            sb.append("<option value='$250k' ").append("$250k".equals(sub.getPropertyDamageLimit()) ? "selected" : "").append(">$250,000</option>");
-            sb.append("<option value='$500k' ").append("$500k".equals(sub.getPropertyDamageLimit()) ? "selected" : "").append(">$500,000</option>");
-            sb.append("</select></div>");
-            sb.append("</div>");
-
-            sb.append("<div>");
-            sb.append("<h4 style='margin-bottom:10px; color:#1C2B39;'>Physical Damage Deductibles</h4>");
-            sb.append("<div class='gw-field'><label>Comprehensive Deductible</label><select name='comprehensiveDeductible'>");
-            sb.append("<option value='$250' ").append("$250".equals(sub.getComprehensiveDeductible()) ? "selected" : "").append(">$250</option>");
-            sb.append("<option value='$500' ").append("$500".equals(sub.getComprehensiveDeductible()) ? "selected" : "").append(">$500</option>");
-            sb.append("<option value='$1000' ").append("$1000".equals(sub.getComprehensiveDeductible()) ? "selected" : "").append(">$1,000</option>");
-            sb.append("</select></div>");
-
-            sb.append("<div class='gw-field'><label>Collision Deductible</label><select name='collisionDeductible'>");
-            sb.append("<option value='$500' ").append("$500".equals(sub.getCollisionDeductible()) ? "selected" : "").append(">$500</option>");
-            sb.append("<option value='$1000' ").append("$1000".equals(sub.getCollisionDeductible()) ? "selected" : "").append(">$1,000</option>");
-            sb.append("<option value='$2500' ").append("$2500".equals(sub.getCollisionDeductible()) ? "selected" : "").append(">$2,500</option>");
-            sb.append("</select></div>");
-            sb.append("</div>");
-
-            sb.append("</div></div>");
-            sb.append("</form>");
-        } else if ("step3".equals(step)) {
-            sb.append("<form action='/?page=submission-wizard&jobNum=").append(jobNum).append("' method='POST'>");
-            sb.append("<input type='hidden' name='action' value='bind'>");
-
-            sb.append("<div class='gw-toolbar'>");
-            sb.append("<a href='/?page=submission-wizard&jobNum=").append(jobNum).append("&step=step2' class='gw-btn gw-btn-secondary'>&lt; Edit Coverages</a> ");
-            if (!"Issued".equalsIgnoreCase(sub.getStatus())) {
-                sb.append("<button type='submit' class='gw-btn gw-btn-success'>📜 Bind &amp; Issue Policy</button>");
-            } else {
-                sb.append("<span style='color:#28A745; font-weight:700; display:inline-flex; align-items:center; gap:5px; margin-right:10px;'>✅ Policy In Force</span>");
-                sb.append("<a href='/?page=policy-change&jobNum=").append(jobNum).append("' class='gw-btn gw-btn-secondary'>⚡ Policy Change</a> ");
-                sb.append("<a href='/?page=cancellation&jobNum=").append(jobNum).append("' class='gw-btn' style='background:#C53030;'>❌ Cancel Policy</a>");
+                sb.append("<div class='gw-card'>");
+                sb.append("<div class='gw-card-title'>Step 1: General Policy Information</div>");
+                sb.append("<div class='gw-form-grid'>");
+                sb.append("<div>");
+                sb.append("<div class='gw-field'><label>Transaction / Job #</label><input type='text' value='").append(sub.getJobNumber()).append("' disabled></div>");
+                sb.append("<div class='gw-field'><label>Account Holder</label><input type='text' value='").append(sub.getAccount() != null ? sub.getAccount().getAccountHolderName() : "N/A").append("' disabled></div>");
+                sb.append("<div class='gw-field'><label>Policy Line</label><input type='text' value='").append(sub.getProductCode()).append("' disabled></div>");
+                sb.append("</div>");
+                sb.append("<div>");
+                sb.append("<div class='gw-field'><label>Effective Date</label><input type='date' name='effectiveDate' value='").append(sub.getEffectiveDate()).append("' required></div>");
+                sb.append("<div class='gw-field'><label>Expiration Date</label><input type='date' name='expirationDate' value='").append(sub.getExpirationDate()).append("' required></div>");
+                sb.append("<div class='gw-field'><label>Term (Months)</label><select name='termMonths'><option value='12' ").append(sub.getTermMonths() == 12 ? "selected" : "").append(">12 Months</option><option value='6' ").append(sub.getTermMonths() == 6 ? "selected" : "").append(">6 Months</option></select></div>");
+                sb.append("<div class='gw-field'><label>Base State</label><input type='text' name='baseState' value='").append(sub.getBaseState()).append("' required></div>");
+                sb.append("<div class='gw-field'><label>Producer Code</label><input type='text' name='producerCode' value='").append(sub.getProducerCode()).append("' required></div>");
+                sb.append("</div>");
+                sb.append("</div></div>");
+                sb.append("</form>");
             }
-            sb.append("</div>");
+            case "step2" -> {
+                sb.append("<form action='/?page=submission-wizard&jobNum=").append(jobNum).append("' method='POST'>");
+                sb.append("<input type='hidden' name='action' value='quote'>");
 
-            sb.append("<div class='gw-card'>");
-            sb.append("<div class='gw-card-title'>Step 3: Rating Breakdown &amp; Financial Summary</div>");
-            sb.append("<div class='gw-form-grid'>");
-            sb.append("<div>");
-            sb.append("<p style='margin-bottom:8px;'><b>Transaction Status:</b> <span class='gw-status-badge status-").append(sub.getStatus()).append("'>").append(sub.getFormattedStatus()).append("</span></p>");
-            if (sub.getPolicyNumber() != null) {
-                sb.append("<p style='margin-bottom:8px; font-size:14px;'><b>Issued Policy #:</b> <b style='color:#0073B1;'>").append(sub.getPolicyNumber()).append("</b></p>");
+                sb.append("<div class='gw-toolbar'>");
+                sb.append("<a href='/?page=submission-wizard&jobNum=").append(jobNum).append("&step=step1' class='gw-btn gw-btn-secondary'>&lt; Back</a> ");
+                sb.append("<button type='submit' class='gw-btn gw-btn-success'>⚡ Run Gosu Rating Engine &amp; Generate Quote &gt;</button>");
+                sb.append("</div>");
+
+                sb.append("<div class='gw-card'>");
+                sb.append("<div class='gw-card-title'>Step 2: Line Coverages &amp; Deductibles</div>");
+                sb.append("<div class='gw-form-grid'>");
+                sb.append("<div>");
+                sb.append("<h4 style='margin-bottom:10px; color:#1C2B39;'>Liability Limits</h4>");
+                sb.append("<div class='gw-field'><label>Bodily Injury Limit</label><select name='bodilyInjuryLimit'>");
+                sb.append("<option value='$250k/$500k' ").append("$250k/$500k".equals(sub.getBodilyInjuryLimit()) ? "selected" : "").append(">$250,000 / $500,000</option>");
+                sb.append("<option value='$500k/$500k' ").append("$500k/$500k".equals(sub.getBodilyInjuryLimit()) ? "selected" : "").append(">$500,000 / $500,000</option>");
+                sb.append("<option value='$1M/$1M' ").append("$1M/$1M".equals(sub.getBodilyInjuryLimit()) ? "selected" : "").append(">$1,000,000 / $1,000,000</option>");
+                sb.append("</select></div>");
+
+                sb.append("<div class='gw-field'><label>Property Damage Limit</label><select name='propertyDamageLimit'>");
+                sb.append("<option value='$100k' ").append("$100k".equals(sub.getPropertyDamageLimit()) ? "selected" : "").append(">$100,000</option>");
+                sb.append("<option value='$250k' ").append("$250k".equals(sub.getPropertyDamageLimit()) ? "selected" : "").append(">$250,000</option>");
+                sb.append("<option value='$500k' ").append("$500k".equals(sub.getPropertyDamageLimit()) ? "selected" : "").append(">$500,000</option>");
+                sb.append("</select></div>");
+                sb.append("</div>");
+
+                sb.append("<div>");
+                sb.append("<h4 style='margin-bottom:10px; color:#1C2B39;'>Physical Damage Deductibles</h4>");
+                sb.append("<div class='gw-field'><label>Comprehensive Deductible</label><select name='comprehensiveDeductible'>");
+                sb.append("<option value='$250' ").append("$250".equals(sub.getComprehensiveDeductible()) ? "selected" : "").append(">$250</option>");
+                sb.append("<option value='$500' ").append("$500".equals(sub.getComprehensiveDeductible()) ? "selected" : "").append(">$500</option>");
+                sb.append("<option value='$1000' ").append("$1000".equals(sub.getComprehensiveDeductible()) ? "selected" : "").append(">$1,000</option>");
+                sb.append("</select></div>");
+
+                sb.append("<div class='gw-field'><label>Collision Deductible</label><select name='collisionDeductible'>");
+                sb.append("<option value='$500' ").append("$500".equals(sub.getCollisionDeductible()) ? "selected" : "").append(">$500</option>");
+                sb.append("<option value='$1000' ").append("$1000".equals(sub.getCollisionDeductible()) ? "selected" : "").append(">$1,000</option>");
+                sb.append("<option value='$2500' ").append("$2500".equals(sub.getCollisionDeductible()) ? "selected" : "").append(">$2,500</option>");
+                sb.append("</select></div>");
+                sb.append("</div>");
+
+                sb.append("</div></div>");
+                sb.append("</form>");
             }
-            sb.append("<p style='margin-bottom:8px;'><b>Job Type:</b> <span class='gw-pcf-tag'>").append(sub.getJobType()).append("</span></p>");
-            sb.append("<p style='margin-bottom:8px;'><b>PolicyPeriod FixedID:</b> <code>").append(sub.getPolicyPeriodFixedId()).append("</code></p>");
-            sb.append("<p style='margin-bottom:8px;'><b>Line of Business:</b> ").append(sub.getProductCode()).append("</p>");
-            sb.append("<p style='margin-bottom:8px;'><b>Effective Period:</b> ").append(sub.getEffectiveDate()).append(" to ").append(sub.getExpirationDate()).append("</p>");
-            sb.append("</div>");
+            default -> {
+                sb.append("<form action='/?page=submission-wizard&jobNum=").append(jobNum).append("' method='POST'>");
+                sb.append("<input type='hidden' name='action' value='bind'>");
 
-            sb.append("<div style='background:#F7FAFC; padding:16px; border-radius:6px; border:1px solid #E2E8F0;'>");
-            sb.append("<h4 style='color:#1C2B39; margin-bottom:12px;'>Gosu Rating Calculation Results</h4>");
-            sb.append("<p style='display:flex; justify-content:space-between; margin-bottom:6px;'><span>Base Written Premium:</span> <b>$").append(sub.getBasePremium()).append("</b></p>");
-            sb.append("<p style='display:flex; justify-content:space-between; margin-bottom:6px;'><span>Taxes &amp; Surcharges (8%):</span> <b>$").append(sub.getTaxesAndFees()).append("</b></p>");
-            sb.append("<hr style='margin:8px 0; border:none; border-top:1px solid #CBD5E1;'>");
-            sb.append("<p style='display:flex; justify-content:space-between; font-size:15px; color:#0073B1;'><span>Total Cost / Premium:</span> <b>$").append(sub.getTotalPremium()).append("</b></p>");
-            sb.append("</div>");
+                sb.append("<div class='gw-toolbar'>");
+                sb.append("<a href='/?page=submission-wizard&jobNum=").append(jobNum).append("&step=step2' class='gw-btn gw-btn-secondary'>&lt; Edit Coverages</a> ");
+                if (!"Issued".equalsIgnoreCase(sub.getStatus())) {
+                    sb.append("<button type='submit' class='gw-btn gw-btn-success'>📜 Bind &amp; Issue Policy</button>");
+                } else {
+                    sb.append("<span style='color:#28A745; font-weight:700; display:inline-flex; align-items:center; gap:5px; margin-right:10px;'>✅ Policy In Force</span>");
+                    sb.append("<a href='/?page=policy-change&jobNum=").append(jobNum).append("' class='gw-btn gw-btn-secondary'>⚡ Policy Change</a> ");
+                    sb.append("<a href='/?page=cancellation&jobNum=").append(jobNum).append("' class='gw-btn' style='background:#C53030;'>❌ Cancel Policy</a>");
+                }
+                sb.append("</div>");
 
-            sb.append("</div></div>");
-            sb.append("</form>");
+                sb.append("<div class='gw-card'>");
+                sb.append("<div class='gw-card-title'>Step 3: Rating Breakdown &amp; Financial Summary</div>");
+                sb.append("<div class='gw-form-grid'>");
+                sb.append("<div>");
+                sb.append("<p style='margin-bottom:8px;'><b>Transaction Status:</b> <span class='gw-status-badge status-").append(sub.getStatus()).append("'>").append(sub.getFormattedStatus()).append("</span></p>");
+                if (sub.getPolicyNumber() != null) {
+                    sb.append("<p style='margin-bottom:8px; font-size:14px;'><b>Issued Policy #:</b> <b style='color:#0073B1;'>").append(sub.getPolicyNumber()).append("</b></p>");
+                }
+                sb.append("<p style='margin-bottom:8px;'><b>Job Type:</b> <span class='gw-pcf-tag'>").append(sub.getJobType()).append("</span></p>");
+                sb.append("<p style='margin-bottom:8px;'><b>PolicyPeriod FixedID:</b> <code>").append(sub.getPolicyPeriodFixedId()).append("</code></p>");
+                sb.append("<p style='margin-bottom:8px;'><b>Line of Business:</b> ").append(sub.getProductCode()).append("</p>");
+                sb.append("<p style='margin-bottom:8px;'><b>Effective Period:</b> ").append(sub.getEffectiveDate()).append(" to ").append(sub.getExpirationDate()).append("</p>");
+                sb.append("</div>");
+
+                sb.append("<div style='background:#F7FAFC; padding:16px; border-radius:6px; border:1px solid #E2E8F0;'>");
+                sb.append("<h4 style='color:#1C2B39; margin-bottom:12px;'>Gosu Rating Calculation Results</h4>");
+                sb.append("<p style='display:flex; justify-content:space-between; margin-bottom:6px;'><span>Base Written Premium:</span> <b>$").append(sub.getBasePremium()).append("</b></p>");
+                sb.append("<p style='display:flex; justify-content:space-between; margin-bottom:6px;'><span>Taxes &amp; Surcharges (8%):</span> <b>$").append(sub.getTaxesAndFees()).append("</b></p>");
+                sb.append("<hr style='margin:8px 0; border:none; border-top:1px solid #CBD5E1;'>");
+                sb.append("<p style='display:flex; justify-content:space-between; font-size:15px; color:#0073B1;'><span>Total Cost / Premium:</span> <b>$").append(sub.getTotalPremium()).append("</b></p>");
+                sb.append("</div>");
+
+                sb.append("</div></div>");
+                sb.append("</form>");
+            }
         }
 
         sb.append("</div></div></body></html>");

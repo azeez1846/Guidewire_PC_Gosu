@@ -69,10 +69,10 @@ public class GosuUnderwritingUnitTest {
 
     // Mock classes representing Gosu UW model entities
     public static class UWIssueMock {
-        private String issueKey;
-        private String description;
-        private String blockingPoint;
-        private String requiredAuthority;
+        private final String issueKey;
+        private final String description;
+        private final String blockingPoint;
+        private final String requiredAuthority;
         private String status;
 
         public UWIssueMock(String key, String desc, String point, String authority) {
@@ -99,8 +99,8 @@ public class GosuUnderwritingUnitTest {
     }
 
     public static class ApprovalAuthorityMock {
-        private String role;
-        private BigDecimal maxLimit;
+        private final String role;
+        private final BigDecimal maxLimit;
 
         public ApprovalAuthorityMock(String role, BigDecimal limit) {
             this.role = role;
