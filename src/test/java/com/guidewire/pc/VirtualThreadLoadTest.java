@@ -20,7 +20,7 @@ public class VirtualThreadLoadTest {
 
     @Test
     public void testSimulatedIoBlockingLoadVirtualVsPlatform() throws Exception {
-        int taskCount = 1000;
+        int taskCount = 10000;
         int simulatedIoDelayMs = 15; // Simulates DB / REST API network latency
 
         AtomicInteger virtualSuccess = new AtomicInteger(0);

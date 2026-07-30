@@ -41,10 +41,10 @@ High-concurrency load testing performed in [`VirtualThreadLoadTest.java`](file:/
 ```text
 ===============================================================
   Java 23 Realistic I/O Blocking Load Test Benchmark Results
-  Task Count: 1000 concurrent requests (15ms simulated I/O delay)
-  Virtual Threads Duration:  25 ms (Completed: 1000/1000)
-  Platform Threads Duration: 364 ms (Completed: 1000/1000)
-  🚀 Virtual Threads Speedup: 14.56x FASTER!
+  Task Count: 10,000 concurrent requests (15ms simulated I/O delay)
+  Virtual Threads Duration:  111 ms  (Completed: 10,000/10,000)
+  Platform Threads Duration: 3,505 ms (Completed: 10,000/10,000)
+  🚀 Virtual Threads Speedup: 31.58x FASTER!
 ===============================================================
 ```
 
