@@ -19,24 +19,26 @@ import static org.junit.jupiter.api.Assertions.*;
 public class VirtualThreadLoadTest {
 
     @Test
-    public void testHighConcurrencyVirtualThreadsVsPlatformThreads() throws Exception {
-        int taskCount = 2000;
-        AtomicInteger virtualSuccessCount = new AtomicInteger(0);
-        AtomicInteger platformSuccessCount = new AtomicInteger(0);
+    public void testSimulatedIoBlockingLoadVirtualVsPlatform() throws Exception {
+        int taskCount = 1000;
+        int simulatedIoDelayMs = 15; // Simulates DB / REST API network latency
 
-        // 1. Virtual Threads High-Load Test
+        AtomicInteger virtualSuccess = new AtomicInteger(0);
+        AtomicInteger platformSuccess = new AtomicInteger(0);
+
+        // 1. Virtual Threads Test (Every request gets a lightweight virtual thread)
         long vStart = System.currentTimeMillis();
         try (ExecutorService vExecutor = Executors.newVirtualThreadPerTaskExecutor()) {
             List<Future<?>> futures = new ArrayList<>();
             for (int i = 0; i < taskCount; i++) {
                 final int idx = i;
                 futures.add(vExecutor.submit(() -> {
-                    // Simulate I/O bound DB & API search query task
+                    try {
+                        Thread.sleep(simulatedIoDelayMs); // Unmounts virtual thread during IO wait
+                    } catch (InterruptedException ignored) {}
                     PolicyPeriod p = new PolicyPeriod();
                     p.setJobNumber("VJOB-" + idx);
-                    p.setProductCode("PersonalAuto");
-                    p.setStatus("Draft");
-                    virtualSuccessCount.incrementAndGet();
+                    virtualSuccess.incrementAndGet();
                 }));
             }
             for (Future<?> f : futures) {
@@ -45,18 +47,19 @@ public class VirtualThreadLoadTest {
         }
         long vDuration = System.currentTimeMillis() - vStart;
 
-        // 2. Fixed Platform Threads High-Load Test
+        // 2. Fixed OS Platform Threads Test (Limited to 50 OS threads)
         long pStart = System.currentTimeMillis();
-        try (ExecutorService pExecutor = Executors.newFixedThreadPool(100)) {
+        try (ExecutorService pExecutor = Executors.newFixedThreadPool(50)) {
             List<Future<?>> futures = new ArrayList<>();
             for (int i = 0; i < taskCount; i++) {
                 final int idx = i;
                 futures.add(pExecutor.submit(() -> {
+                    try {
+                        Thread.sleep(simulatedIoDelayMs); // Blocks OS thread
+                    } catch (InterruptedException ignored) {}
                     PolicyPeriod p = new PolicyPeriod();
                     p.setJobNumber("PJOB-" + idx);
-                    p.setProductCode("PersonalAuto");
-                    p.setStatus("Draft");
-                    platformSuccessCount.incrementAndGet();
+                    platformSuccess.incrementAndGet();
                 }));
             }
             for (Future<?> f : futures) {
@@ -65,16 +68,19 @@ public class VirtualThreadLoadTest {
         }
         long pDuration = System.currentTimeMillis() - pStart;
 
+        double speedup = (double) pDuration / (double) vDuration;
+
         System.out.println("===============================================================");
-        System.out.println("  Java 23 High Concurrency Virtual Thread Benchmark Results");
-        System.out.println("  Task Count: " + taskCount + " concurrent requests");
-        System.out.println("  Virtual Threads Duration:  " + vDuration + " ms (Completed: " + virtualSuccessCount.get() + ")");
-        System.out.println("  Platform Threads Duration: " + pDuration + " ms (Completed: " + platformSuccessCount.get() + ")");
+        System.out.println("  Java 23 Realistic I/O Blocking Load Test Benchmark Results");
+        System.out.println("  Task Count: " + taskCount + " concurrent requests (" + simulatedIoDelayMs + "ms simulated I/O delay)");
+        System.out.println("  Virtual Threads Duration:  " + vDuration + " ms (Completed: " + virtualSuccess.get() + ")");
+        System.out.println("  Platform Threads Duration: " + pDuration + " ms (Completed: " + platformSuccess.get() + ")");
+        System.out.println("  🚀 Virtual Threads Speedup: " + String.format("%.2f", speedup) + "x FASTER!");
         System.out.println("===============================================================");
 
-        assertEquals(taskCount, virtualSuccessCount.get());
-        assertEquals(taskCount, platformSuccessCount.get());
-        assertTrue(vDuration <= pDuration + 500, "Virtual Threads execution should complete efficiently under load");
+        assertEquals(taskCount, virtualSuccess.get());
+        assertEquals(taskCount, platformSuccess.get());
+        assertTrue(vDuration < pDuration, "Virtual Threads should complete significantly faster under I/O blocking workloads");
     }
 
     @Test
