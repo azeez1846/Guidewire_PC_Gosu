@@ -22,7 +22,7 @@ public class TypelistLoader {
         return INSTANCE;
     }
 
-    public synchronized void loadTypelists() {
+    public final synchronized void loadTypelists() {
         typelists.clear();
         File dir = new File("config/metadata/typelist");
         if (!dir.exists() || !dir.isDirectory()) {
@@ -68,7 +68,7 @@ public class TypelistLoader {
                 Typecode typecode = new Typecode(typelistName, code, name, priority, desc);
                 typecodeMap.put(code.toLowerCase(), typecode);
             }
-        } catch (Exception e) {
+        } catch (javax.xml.parsers.ParserConfigurationException | org.xml.sax.SAXException | java.io.IOException e) {
             System.err.println("[TypelistLoader] Failed to parse " + file.getName() + ": " + e.getMessage());
         }
     }

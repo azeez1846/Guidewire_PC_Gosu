@@ -25,7 +25,7 @@ public class DocumentGenerator {
     }
 
     public byte[] generatePolicyBinderPdf(PolicyPeriod period) throws IOException {
-        LOGGER.info("Generating Policy Binder PDF document for job: " + period.getJobNumber());
+        LOGGER.log(Level.INFO, "Generating Policy Binder PDF document for job: {0}", period.getJobNumber());
 
         try (PDDocument document = new PDDocument()) {
             PDPage page = new PDPage();

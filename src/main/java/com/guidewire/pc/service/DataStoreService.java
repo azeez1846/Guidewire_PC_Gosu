@@ -17,9 +17,6 @@ public class DataStoreService {
     private static final Logger LOGGER = Logger.getLogger(DataStoreService.class.getName());
     private static DataStoreService instance;
 
-    private int accountSeq = 1003;
-    private int jobSeq = 5003;
-
     private DataStoreService() {
         seedSampleDataIfEmpty();
     }

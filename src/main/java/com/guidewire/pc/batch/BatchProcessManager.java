@@ -19,14 +19,14 @@ public class BatchProcessManager {
         return instance;
     }
 
-    public void registerProcess(BatchProcess process) {
+    public final void registerProcess(BatchProcess process) {
         batchProcesses.put(process.getType().toLowerCase(), process);
     }
 
     public BatchProcessResult runProcess(String type) {
         BatchProcess process = batchProcesses.get(type.toLowerCase());
         if (process == null) {
-            LOGGER.warning("Unknown batch process type requested: " + type);
+            LOGGER.log(java.util.logging.Level.WARNING, "Unknown batch process type requested: {0}", type);
             return new BatchProcessResult(type, false, 0, "Process type not registered");
         }
         return process.run();

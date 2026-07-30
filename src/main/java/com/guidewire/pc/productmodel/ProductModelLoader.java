@@ -23,7 +23,7 @@ public class ProductModelLoader {
         return INSTANCE;
     }
 
-    public synchronized void loadProductModels() {
+    public final synchronized void loadProductModels() {
         productPatterns.clear();
         File dir = new File("config/resources/productmodel");
         if (!dir.exists() || !dir.isDirectory()) {
@@ -85,7 +85,7 @@ public class ProductModelLoader {
 
                 patternMap.put(code, pattern);
             }
-        } catch (Exception e) {
+        } catch (javax.xml.parsers.ParserConfigurationException | org.xml.sax.SAXException | java.io.IOException e) {
             System.err.println("[ProductModelLoader] Failed to parse " + file.getName() + ": " + e.getMessage());
         }
     }

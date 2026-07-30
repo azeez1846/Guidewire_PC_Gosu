@@ -75,7 +75,7 @@ public class GuidewireRestServlet extends HttpServlet {
             return;
         }
 
-        if (path != null && path.startsWith("/documents/policy/")) {
+        if (path.startsWith("/documents/policy/")) {
             String jobNumber = path.substring("/documents/policy/".length()).replace("/binder.pdf", "");
             PolicyPeriod period = dataStore.findSubmission(jobNumber);
             if (period != null) {
@@ -86,7 +86,7 @@ public class GuidewireRestServlet extends HttpServlet {
                     resp.setContentLength(pdfBytes.length);
                     resp.getOutputStream().write(pdfBytes);
                     return;
-                } catch (Exception e) {
+                } catch (IOException e) {
                     resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                     objectMapper.writeValue(resp.getWriter(), Map.of("error", "Failed to generate PDF document: " + e.getMessage()));
                     return;

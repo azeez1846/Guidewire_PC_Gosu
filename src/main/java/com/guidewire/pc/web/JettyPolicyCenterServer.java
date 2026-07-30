@@ -27,7 +27,7 @@ public class JettyPolicyCenterServer {
         try {
             org.h2.tools.Server h2WebServer = org.h2.tools.Server.createWebServer("-web", "-webPort", "8082").start();
             System.out.println("  H2 Web Console: " + h2WebServer.getURL());
-        } catch (Exception e) {
+        } catch (java.sql.SQLException e) {
             System.out.println("  H2 Web Console: http://localhost:8082 (Already running or port busy)");
         }
 

@@ -106,37 +106,20 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
         }
 
         String page = params.getOrDefault("page", loggedIn ? "desktop" : "login");
-        String html = "";
 
-        if ("login".equals(page)) {
-            html = renderLoginPage(params.containsKey("error"));
-        } else if ("desktop".equals(page)) {
-            String tab = params.getOrDefault("tab", "submissions");
-            html = renderDesktopPage(tab, params.get("q"));
-        } else if ("new-account".equals(page)) {
-            html = renderNewAccountPage(params, resp);
-            if (html == null) return; // Redirect performed
-        } else if ("account-detail".equals(page)) {
-            String accNum = params.get("accNum");
-            html = renderAccountDetailPage(accNum);
-        } else if ("new-submission".equals(page)) {
-            html = renderNewSubmissionPage(params, resp);
-            if (html == null) return; // Redirect performed
-        } else if ("submission-wizard".equals(page)) {
-            String jobNum = params.get("jobNum");
-            String step = params.getOrDefault("step", "step1");
-            html = renderSubmissionWizard(jobNum, step, params);
-        } else if ("policy-change".equals(page)) {
-            String origJobNum = params.get("jobNum");
-            html = renderPolicyChangePage(origJobNum, params, resp);
-            if (html == null) return;
-        } else if ("cancellation".equals(page)) {
-            String origJobNum = params.get("jobNum");
-            html = renderCancellationPage(origJobNum, params, resp);
-            if (html == null) return;
-        } else {
-            html = renderDesktopPage("submissions", null);
-        }
+        String html = switch (page) {
+            case "login" -> renderLoginPage(params.containsKey("error"));
+            case "desktop" -> renderDesktopPage(params.getOrDefault("tab", "submissions"), params.get("q"));
+            case "new-account" -> renderNewAccountPage(params, resp);
+            case "account-detail" -> renderAccountDetailPage(params.get("accNum"));
+            case "new-submission" -> renderNewSubmissionPage(params, resp);
+            case "submission-wizard" -> renderSubmissionWizard(params.get("jobNum"), params.getOrDefault("step", "step1"), params);
+            case "policy-change" -> renderPolicyChangePage(params.get("jobNum"), params, resp);
+            case "cancellation" -> renderCancellationPage(params.get("jobNum"), params, resp);
+            default -> renderDesktopPage("submissions", null);
+        };
+
+        if (html == null) return; // Redirect performed
 
         byte[] bytes = html.getBytes(StandardCharsets.UTF_8);
         resp.setContentType("text/html; charset=UTF-8");
@@ -734,8 +717,8 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
                 dataStore.createSubmission(changeBranch);
                 resp.sendRedirect("/?page=submission-wizard&jobNum=" + changeBranch.getJobNumber() + "&step=step3");
                 return null;
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (java.text.ParseException e) {
+                System.err.println("Failed to parse policy change effective date: " + e.getMessage());
             }
         }
 
@@ -787,8 +770,8 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
                 dataStore.createSubmission(cancelBranch);
                 resp.sendRedirect("/?page=submission-wizard&jobNum=" + cancelBranch.getJobNumber() + "&step=step3");
                 return null;
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (java.text.ParseException e) {
+                System.err.println("Failed to parse policy cancellation effective date: " + e.getMessage());
             }
         }
 

@@ -41,8 +41,8 @@ public class PolicyPeriodSlice {
     }
 
     public boolean isEffective() {
-        if (rootPeriod.getPeriodStart() != null && asOfDate.before(rootPeriod.getPeriodStart())) return false;
-        if (rootPeriod.getPeriodEnd() != null && !asOfDate.before(rootPeriod.getPeriodEnd())) return false;
-        return true;
+        boolean beforeStart = rootPeriod.getPeriodStart() != null && asOfDate.before(rootPeriod.getPeriodStart());
+        boolean afterEnd = rootPeriod.getPeriodEnd() != null && !asOfDate.before(rootPeriod.getPeriodEnd());
+        return !beforeStart && !afterEnd;
     }
 }

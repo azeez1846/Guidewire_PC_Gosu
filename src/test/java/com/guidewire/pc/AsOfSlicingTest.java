@@ -2,7 +2,6 @@ package com.guidewire.pc;
 
 import com.guidewire.pc.model.Coverage;
 import com.guidewire.pc.model.PolicyPeriod;
-import com.guidewire.pc.orm.EffDatedBean;
 import com.guidewire.pc.orm.PolicyPeriodSlice;
 import org.junit.jupiter.api.Test;
 

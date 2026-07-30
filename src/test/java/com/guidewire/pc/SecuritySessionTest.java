@@ -60,7 +60,9 @@ public class SecuritySessionTest {
 
     @Test
     public void testNullOrEmptyUsernameRejection() {
-        assertThrows(IllegalArgumentException.class, () -> sessionManager.createSession(null));
-        assertThrows(IllegalArgumentException.class, () -> sessionManager.createSession("   "));
+        IllegalArgumentException ex1 = assertThrows(IllegalArgumentException.class, () -> sessionManager.createSession(null));
+        assertNotNull(ex1);
+        IllegalArgumentException ex2 = assertThrows(IllegalArgumentException.class, () -> sessionManager.createSession("   "));
+        assertNotNull(ex2);
     }
 }
