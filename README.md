@@ -7,6 +7,7 @@ A full-stack insurance policy administration system built on **Guidewire PolicyC
 ## 🌟 Key System Features
 
 - **Embedded Gosu Runtime Engine**: Executes Gosu script files (`.gs`), enhancements (`.gsx`), rating engines, and underwriting rules natively.
+- **Java 23 Virtual Threads (JEP 444)**: Powered by Virtual Threads across Eclipse Jetty HTTP web server, async batch engines, parallel accelerator orchestrator services, and event messaging.
 - **Embedded Web Server (Eclipse Jetty)**: Serves Guidewire PCF layout definitions dynamically with modern UI themes.
 - **UI QuickJump & Search Engine (`Search.pcf`)**: Fast direct navigation by Account Number (e.g. `A0001001`), Job Number (e.g. `S0005001`), or Policy Number (`POL-849102`), plus multi-entity search results screen.
 - **Guidewire Marketplace Accelerators**:

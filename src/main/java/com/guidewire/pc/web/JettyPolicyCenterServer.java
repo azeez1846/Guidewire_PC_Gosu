@@ -1,10 +1,13 @@
 package com.guidewire.pc.web;
 
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.thread.QueuedThreadPool;
 
 import java.io.File;
+import java.util.concurrent.Executors;
 
 public class JettyPolicyCenterServer {
     private final int port;
@@ -17,7 +20,14 @@ public class JettyPolicyCenterServer {
     }
 
     public void start() throws Exception {
-        server = new Server(port);
+        QueuedThreadPool threadPool = new QueuedThreadPool();
+        threadPool.setVirtualThreadsExecutor(Executors.newVirtualThreadPerTaskExecutor());
+        threadPool.setName("gw-virtual-jetty-worker");
+
+        server = new Server(threadPool);
+        ServerConnector connector = new ServerConnector(server);
+        connector.setPort(port);
+        server.addConnector(connector);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");

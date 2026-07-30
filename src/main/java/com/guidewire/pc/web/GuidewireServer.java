@@ -35,7 +35,7 @@ public class GuidewireServer {
     public void start() throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/", new MainHandler());
-        server.setExecutor(java.util.concurrent.Executors.newCachedThreadPool());
+        server.setExecutor(java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor());
         server.start();
         System.out.println("===============================================================");
         System.out.println("  Guidewire PolicyCenter Application running on JDK & Gosu!");
