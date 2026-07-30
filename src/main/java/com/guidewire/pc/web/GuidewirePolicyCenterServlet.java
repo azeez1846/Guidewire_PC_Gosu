@@ -4,6 +4,8 @@ import com.guidewire.pc.model.Account;
 import com.guidewire.pc.model.Activity;
 import com.guidewire.pc.model.PolicyPeriod;
 import com.guidewire.pc.pcf.PCFParser;
+import com.guidewire.pc.security.SecurityUtils;
+import com.guidewire.pc.security.SessionManager;
 import com.guidewire.pc.service.DataStoreService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -41,6 +43,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
     private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
+        SecurityUtils.addSecurityHeaders(resp);
 
         String path = req.getRequestURI();
         String method = req.getMethod();
@@ -52,13 +55,17 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
             }
         });
 
-        // Session check
+        // Session check via SessionManager
         boolean loggedIn = false;
+        String currentSessionId = null;
         Cookie[] cookies = req.getCookies();
         if (cookies != null) {
             for (Cookie c : cookies) {
-                if ("SESSIONID".equals(c.getName()) && "gw_su_session".equals(c.getValue())) {
-                    loggedIn = true;
+                if ("SESSIONID".equals(c.getName())) {
+                    currentSessionId = c.getValue();
+                    if (SessionManager.getInstance().validateSession(currentSessionId) != null) {
+                        loggedIn = true;
+                    }
                     break;
                 }
             }
@@ -67,8 +74,9 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
         if ("/api/login".equalsIgnoreCase(path) && "POST".equalsIgnoreCase(method)) {
             String u = params.get("username");
             String p = params.get("password");
-            if ("su".equalsIgnoreCase(u) && "gw".equals(p)) {
-                Cookie sessionCookie = new Cookie("SESSIONID", "gw_su_session");
+            if (u != null && p != null && SecurityUtils.constantTimeEquals("su", u.trim().toLowerCase()) && SecurityUtils.constantTimeEquals("gw", p.trim())) {
+                String token = SessionManager.getInstance().createSession(u);
+                Cookie sessionCookie = new Cookie("SESSIONID", token);
                 sessionCookie.setPath("/");
                 sessionCookie.setHttpOnly(true);
                 resp.addCookie(sessionCookie);
@@ -81,6 +89,9 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
         }
 
         if ("/api/logout".equalsIgnoreCase(path)) {
+            if (currentSessionId != null) {
+                SessionManager.getInstance().invalidateSession(currentSessionId);
+            }
             Cookie sessionCookie = new Cookie("SESSIONID", "");
             sessionCookie.setPath("/");
             sessionCookie.setMaxAge(0);
@@ -267,7 +278,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
 
         if (searchQuery != null && !searchQuery.trim().isEmpty()) {
             sb.append("<div class='gw-card' style='background:#EBF8FF; border-color:#90CDF4; color:#2B6CB0;'>");
-            sb.append("Search Filter Active: <b>\"").append(searchQuery).append("\"</b>. <a href='/?page=desktop' style='color:#2B6CB0; font-weight:bold;'>Clear Filter</a>");
+            sb.append("Search Filter Active: <b>\"").append(SecurityUtils.escapeHtml(searchQuery)).append("\"</b>. <a href='/?page=desktop' style='color:#2B6CB0; font-weight:bold;'>Clear Filter</a>");
             sb.append("</div>");
         }
 

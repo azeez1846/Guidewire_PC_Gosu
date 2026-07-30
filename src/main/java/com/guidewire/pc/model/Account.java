@@ -34,6 +34,7 @@ public class Account {
 
     public String getFein() { return fein; }
     public void setFein(String fein) { this.fein = fein; }
+    public String getMaskedFein() { return com.guidewire.pc.security.SecurityUtils.maskFein(fein); }
 
     public String getAddressLine1() { return addressLine1; }
     public void setAddressLine1(String addressLine1) { this.addressLine1 = addressLine1; }

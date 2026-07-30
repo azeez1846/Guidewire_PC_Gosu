@@ -23,9 +23,9 @@ public class JettyPolicyCenterServer {
         context.setContextPath("/");
         server.setHandler(context);
 
-        // Start official H2 Web Console server on port 8082 (matching OOTB Guidewire setup)
+        // Start official H2 Web Console server on port 8082 (secured to localhost only)
         try {
-            org.h2.tools.Server h2WebServer = org.h2.tools.Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082").start();
+            org.h2.tools.Server h2WebServer = org.h2.tools.Server.createWebServer("-web", "-webPort", "8082").start();
             System.out.println("  H2 Web Console: " + h2WebServer.getURL());
         } catch (Exception e) {
             System.out.println("  H2 Web Console: http://localhost:8082 (Already running or port busy)");

@@ -7,7 +7,10 @@ import com.guidewire.pc.rules.RuleContext;
 import com.guidewire.pc.rules.RulesEngine;
 import com.guidewire.pc.service.DataStoreService;
 import com.guidewire.pc.service.RatingEngine;
+import com.guidewire.pc.security.SecurityUtils;
+import com.guidewire.pc.security.SessionManager;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,14 +24,42 @@ public class GuidewireRestServlet extends HttpServlet {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final DataStoreService dataStore = DataStoreService.getInstance();
 
+    private boolean isAuthenticated(HttpServletRequest req) {
+        String authHeader = req.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring("Bearer ".length()).trim();
+            if (SessionManager.getInstance().validateSession(token) != null) {
+                return true;
+            }
+        }
+        Cookie[] cookies = req.getCookies();
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                if ("SESSIONID".equals(c.getName())) {
+                    if (SessionManager.getInstance().validateSession(c.getValue()) != null) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        SecurityUtils.addSecurityHeaders(resp);
         String path = req.getPathInfo();
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
         if (path == null || path.equals("/") || path.equals("/openapi.json")) {
             serveOpenApiJson(resp);
+            return;
+        }
+
+        if (!isAuthenticated(req)) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            objectMapper.writeValue(resp.getWriter(), Map.of("error", "Unauthorized: Invalid or missing API session token"));
             return;
         }
 
@@ -85,9 +116,16 @@ public class GuidewireRestServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        SecurityUtils.addSecurityHeaders(resp);
         String path = req.getPathInfo();
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
+
+        if (!isAuthenticated(req)) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            objectMapper.writeValue(resp.getWriter(), Map.of("error", "Unauthorized: Invalid or missing API session token"));
+            return;
+        }
 
         if ("/accounts".equals(path)) {
             Account newAccount = objectMapper.readValue(req.getInputStream(), Account.class);
