@@ -7,6 +7,9 @@ import com.guidewire.pc.pcf.PCFParser;
 import com.guidewire.pc.security.SecurityUtils;
 import com.guidewire.pc.security.SessionManager;
 import com.guidewire.pc.service.DataStoreService;
+import com.guidewire.pc.service.SearchService;
+import com.guidewire.pc.service.SearchService.SearchResult;
+import com.guidewire.pc.service.SearchService.SearchResultType;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
@@ -107,9 +110,25 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
 
         String page = params.getOrDefault("page", loggedIn ? "desktop" : "login");
 
+        if ("search".equalsIgnoreCase(page)) {
+            String q = params.get("q");
+            if (q != null && !q.trim().isEmpty()) {
+                SearchResult sr = SearchService.getInstance().executeSearch(q);
+                if (sr.getResultType() == SearchResultType.DIRECT_ACCOUNT && sr.getDirectAccount() != null) {
+                    resp.sendRedirect("/?page=account-detail&accNum=" + sr.getDirectAccount().getAccountNumber());
+                    return;
+                }
+                if (sr.getResultType() == SearchResultType.DIRECT_SUBMISSION && sr.getDirectSubmission() != null) {
+                    resp.sendRedirect("/?page=submission-wizard&jobNum=" + sr.getDirectSubmission().getJobNumber() + "&step=step1");
+                    return;
+                }
+            }
+        }
+
         String html = switch (page) {
             case "login" -> renderLoginPage(params.containsKey("error"));
             case "desktop" -> renderDesktopPage(params.getOrDefault("tab", "submissions"), params.get("q"));
+            case "search" -> renderSearchPage(params.get("q"), params);
             case "new-account" -> renderNewAccountPage(params, resp);
             case "account-detail" -> renderAccountDetailPage(params.get("accNum"));
             case "new-submission" -> renderNewSubmissionPage(params, resp);
@@ -213,7 +232,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
                 "<div class='gw-brand'><span class='gw-brand-logo'>GW</span> Guidewire PolicyCenter <span style='font-size:11px; font-weight:normal; opacity:0.8;'>v10.0 (Jetty)</span></div>" +
                 "<div class='gw-search-box'>" +
                 "<form action='/' method='GET' style='display:flex; gap:6px;'>" +
-                "<input type='hidden' name='page' value='desktop'>" +
+                "<input type='hidden' name='page' value='search'>" +
                 "<input type='text' name='q' class='gw-search-input' placeholder='QuickJump / Search Account or Submission...'>" +
                 "<button type='submit' class='gw-btn gw-btn-secondary' style='padding:5px 10px;'>Search</button>" +
                 "</form>" +
@@ -227,11 +246,126 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
                 "<a href='/?page=desktop&tab=submissions' class='gw-tab " + ("desktop".equals(activeTab) ? "active" : "") + "'>Desktop</a>" +
                 "<a href='/?page=desktop&tab=accounts' class='gw-tab " + ("accounts".equals(activeTab) ? "active" : "") + "'>Accounts</a>" +
                 "<a href='/?page=desktop&tab=submissions' class='gw-tab " + ("submissions".equals(activeTab) ? "active" : "") + "'>Policies &amp; Submissions</a>" +
+                "<a href='/?page=search' class='gw-tab " + ("search".equals(activeTab) ? "active" : "") + "'>🔍 Search</a>" +
                 "<a href='/?page=new-account' class='gw-tab'>+ New Account</a>" +
                 "<a href='/?page=new-submission' class='gw-tab'>+ New Submission</a>" +
                 "<a href='/swagger-ui' target='_blank' class='gw-tab' style='color:#38B6FF;'>⚡ Swagger REST API</a>" +
                 "<a href='http://localhost:8082' target='_blank' class='gw-tab' style='color:#00C853;'>🗄️ H2 DB Console</a>" +
                 "</div>";
+    }
+
+    private String renderSearchPage(String rawQuery, Map<String, String> params) {
+        String query = rawQuery != null ? rawQuery.trim() : "";
+        String entityFilter = params.getOrDefault("entity", "all");
+
+        SearchResult sr = SearchService.getInstance().executeSearch(query);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("<!DOCTYPE html><html><head><title>Search &amp; QuickJump - Guidewire PolicyCenter</title>").append(getHeaderCSS()).append("</head><body>");
+        sb.append(renderHeader("search"));
+
+        sb.append("<div class='gw-main-container'>");
+        sb.append("<div class='gw-content' style='max-width:1100px; margin:0 auto; padding:20px;'>");
+
+        sb.append("<div class='gw-page-header'>");
+        sb.append("<div class='gw-page-title'>Search &amp; QuickJump <span class='gw-pcf-tag'>Search.pcf</span></div>");
+        sb.append("<div>");
+        sb.append("<a href='/?page=new-account' class='gw-btn'>+ New Account</a> ");
+        sb.append("<a href='/?page=new-submission' class='gw-btn gw-btn-secondary'>+ New Submission</a>");
+        sb.append("</div>");
+        sb.append("</div>");
+
+        // Advanced Search Form Card
+        sb.append("<div class='gw-card' style='background:#F8FAFC; border:1px solid #CBD5E0; margin-bottom:20px;'>");
+        sb.append("<form action='/' method='GET' style='display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap;'>");
+        sb.append("<input type='hidden' name='page' value='search'>");
+        sb.append("<div style='flex:2; min-width:260px;'>");
+        sb.append("<label style='font-size:12px; font-weight:700; color:#4A5568; display:block; margin-bottom:4px;'>Search Term (Account #, Job #, Policy #, Name, FEIN)</label>");
+        sb.append("<input type='text' name='q' class='gw-search-input' value='").append(SecurityUtils.escapeHtml(query)).append("' placeholder='e.g. A0001001, S0005001, Acme...' style='width:100%; padding:8px 12px; border:1px solid #CBD5E0; border-radius:4px;'>");
+        sb.append("</div>");
+
+        sb.append("<div style='flex:1; min-width:180px;'>");
+        sb.append("<label style='font-size:12px; font-weight:700; color:#4A5568; display:block; margin-bottom:4px;'>Entity Type Filter</label>");
+        sb.append("<select name='entity' style='width:100%; padding:8px 12px; border:1px solid #CBD5E0; border-radius:4px; background:#fff;'>");
+        sb.append("<option value='all' ").append("all".equals(entityFilter) ? "selected" : "").append(">All Entities</option>");
+        sb.append("<option value='accounts' ").append("accounts".equals(entityFilter) ? "selected" : "").append(">Accounts Only</option>");
+        sb.append("<option value='submissions' ").append("submissions".equals(entityFilter) ? "selected" : "").append(">Submissions Only</option>");
+        sb.append("</select>");
+        sb.append("</div>");
+
+        sb.append("<div>");
+        sb.append("<button type='submit' class='gw-btn' style='padding:8px 20px;'>🔍 Search Records</button>");
+        sb.append("</div>");
+        sb.append("</form>");
+        sb.append("</div>");
+
+        if (!query.isEmpty()) {
+            List<Account> accounts = ("submissions".equals(entityFilter)) ? List.of() : sr.getMatchingAccounts();
+            List<PolicyPeriod> submissions = ("accounts".equals(entityFilter)) ? List.of() : sr.getMatchingSubmissions();
+
+            int totalMatches = accounts.size() + submissions.size();
+
+            if (totalMatches > 0) {
+                sb.append("<div class='gw-card' style='background:#EBF8FF; border-color:#90CDF4; color:#2B6CB0; margin-bottom:20px;'>");
+                sb.append("Found <b>").append(totalMatches).append("</b> matching records (").append(accounts.size()).append(" Accounts, ").append(submissions.size()).append(" Submissions) for <b>\"").append(SecurityUtils.escapeHtml(query)).append("\"</b>.");
+                sb.append("</div>");
+
+                // Matching Accounts Section
+                if (!accounts.isEmpty()) {
+                    sb.append("<div class='gw-card'>");
+                    sb.append("<div style='font-size:16px; font-weight:700; color:#1C2B39; margin-bottom:12px;'>🏢 Matching Accounts (").append(accounts.size()).append(")</div>");
+                    sb.append("<table class='gw-table'>");
+                    sb.append("<thead><tr><th>Account #</th><th>Account Holder Name</th><th>FEIN / Tax ID</th><th>City, State</th><th>Status</th><th>Action</th></tr></thead><tbody>");
+                    for (Account a : accounts) {
+                        sb.append("<tr>");
+                        sb.append("<td><b><a href='/?page=account-detail&accNum=").append(a.getAccountNumber()).append("' style='color:#0073B1; text-decoration:none;'>").append(a.getAccountNumber()).append("</a></b></td>");
+                        sb.append("<td>").append(SecurityUtils.escapeHtml(a.getAccountHolderName())).append("</td>");
+                        sb.append("<td>").append(a.getFein() != null ? SecurityUtils.escapeHtml(a.getFein()) : "N/A").append("</td>");
+                        sb.append("<td>").append(a.getCity() != null ? a.getCity() : "").append(", ").append(a.getState() != null ? a.getState() : "").append("</td>");
+                        sb.append("<td><span class='gw-badge' style='background:#E6FFFA; color:#234E52;'>").append(a.getAccountStatus()).append("</span></td>");
+                        sb.append("<td><a href='/?page=account-detail&accNum=").append(a.getAccountNumber()).append("' class='gw-btn gw-btn-secondary' style='padding:4px 8px; font-size:11px;'>View Account &gt;</a></td>");
+                        sb.append("</tr>");
+                    }
+                    sb.append("</tbody></table>");
+                    sb.append("</div>");
+                }
+
+                // Matching Submissions Section
+                if (!submissions.isEmpty()) {
+                    sb.append("<div class='gw-card'>");
+                    sb.append("<div style='font-size:16px; font-weight:700; color:#1C2B39; margin-bottom:12px;'>📋 Matching Policy Submissions (").append(submissions.size()).append(")</div>");
+                    sb.append("<table class='gw-table'>");
+                    sb.append("<thead><tr><th>Job #</th><th>Policy #</th><th>Product</th><th>Base State</th><th>Status</th><th>Total Premium</th><th>Action</th></tr></thead><tbody>");
+                    for (PolicyPeriod s : submissions) {
+                        sb.append("<tr>");
+                        sb.append("<td><b><a href='/?page=submission-wizard&jobNum=").append(s.getJobNumber()).append("&step=step1' style='color:#0073B1;'>").append(s.getJobNumber()).append("</a></b></td>");
+                        sb.append("<td>").append(s.getPolicyNumber() != null ? s.getPolicyNumber() : "Draft").append("</td>");
+                        sb.append("<td>").append(s.getProductCode()).append("</td>");
+                        sb.append("<td>").append(s.getBaseState()).append("</td>");
+                        sb.append("<td><span class='gw-badge' style='background:#EBF8FF; color:#2B6CB0;'>").append(s.getStatus()).append("</span></td>");
+                        sb.append("<td>$").append(s.getTotalPremium() != null ? s.getTotalPremium() : "0.00").append("</td>");
+                        sb.append("<td><a href='/?page=submission-wizard&jobNum=").append(s.getJobNumber()).append("&step=step1' class='gw-btn gw-btn-secondary' style='padding:4px 8px; font-size:11px;'>Open Wizard &gt;</a></td>");
+                        sb.append("</tr>");
+                    }
+                    sb.append("</tbody></table>");
+                    sb.append("</div>");
+                }
+            } else {
+                sb.append("<div class='gw-card' style='background:#FFF5F5; border-color:#FEB2B2; color:#C53030; text-align:center; padding:30px;'>");
+                sb.append("<div style='font-size:18px; font-weight:700; margin-bottom:8px;'>No records found matching \"").append(SecurityUtils.escapeHtml(query)).append("\"</div>");
+                sb.append("<p style='color:#742A2A; margin-bottom:16px;'>Please check the Account or Submission number and try again, or create a new record.</p>");
+                sb.append("<a href='/?page=new-account' class='gw-btn'>+ Create New Account</a> ");
+                sb.append("<a href='/?page=new-submission' class='gw-btn gw-btn-secondary'>+ New Submission</a>");
+                sb.append("</div>");
+            }
+        } else {
+            sb.append("<div class='gw-card' style='text-align:center; color:#718096; padding:40px;'>");
+            sb.append("Enter an Account Number (e.g. <b>A0001001</b>), Job Number (e.g. <b>S0005001</b>), or Policy Number above to jump directly, or search by name.");
+            sb.append("</div>");
+        }
+
+        sb.append("</div></div></body></html>");
+        return sb.toString();
     }
 
     private String renderDesktopPage(String tab, String searchQuery) {

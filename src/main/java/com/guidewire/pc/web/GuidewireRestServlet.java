@@ -7,6 +7,7 @@ import com.guidewire.pc.rules.RuleContext;
 import com.guidewire.pc.rules.RulesEngine;
 import com.guidewire.pc.service.DataStoreService;
 import com.guidewire.pc.service.RatingEngine;
+import com.guidewire.pc.service.SearchService;
 import com.guidewire.pc.security.SecurityUtils;
 import com.guidewire.pc.security.SessionManager;
 import jakarta.servlet.ServletException;
@@ -73,6 +74,27 @@ public class GuidewireRestServlet extends HttpServlet {
         if (path.equals("/jobs") || path.equals("/submissions")) {
             List<PolicyPeriod> submissions = dataStore.getSubmissions();
             objectMapper.writeValue(resp.getWriter(), submissions);
+            return;
+        }
+
+        if (path.equals("/search")) {
+            String q = req.getParameter("q");
+            SearchService.SearchResult sr = SearchService.getInstance().executeSearch(q);
+            Map<String, Object> result = new HashMap<>();
+            result.put("query", sr.getQuery());
+            result.put("resultType", sr.getResultType().name());
+            result.put("targetUrl", sr.getTargetUrl());
+            result.put("matchingAccountsCount", sr.getMatchingAccounts().size());
+            result.put("matchingSubmissionsCount", sr.getMatchingSubmissions().size());
+            if (sr.getDirectAccount() != null) {
+                result.put("directAccount", sr.getDirectAccount());
+            }
+            if (sr.getDirectSubmission() != null) {
+                result.put("directSubmission", sr.getDirectSubmission());
+            }
+            result.put("matchingAccounts", sr.getMatchingAccounts());
+            result.put("matchingSubmissions", sr.getMatchingSubmissions());
+            objectMapper.writeValue(resp.getWriter(), result);
             return;
         }
 

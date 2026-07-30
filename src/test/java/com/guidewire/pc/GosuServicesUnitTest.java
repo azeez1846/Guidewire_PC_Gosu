@@ -96,6 +96,20 @@ public class GosuServicesUnitTest {
         assertTrue(invalidErrors.contains("Account Holder Name is required"));
     }
 
+    @Test
+    public void testSearchServiceBridge() {
+        Object searchSvc = com.guidewire.pc.service.SearchService.getInstance();
+        assertNotNull(searchSvc);
+
+        com.guidewire.pc.service.SearchService.SearchResult accResult = com.guidewire.pc.service.SearchService.getInstance().executeSearch("A0001001");
+        assertNotNull(accResult);
+        assertEquals(com.guidewire.pc.service.SearchService.SearchResultType.DIRECT_ACCOUNT, accResult.getResultType());
+
+        com.guidewire.pc.service.SearchService.SearchResult subResult = com.guidewire.pc.service.SearchService.getInstance().executeSearch("S0005001");
+        assertNotNull(subResult);
+        assertEquals(com.guidewire.pc.service.SearchService.SearchResultType.DIRECT_SUBMISSION, subResult.getResultType());
+    }
+
     private List<String> validateAccountMock(Account acc) {
         List<String> errors = new ArrayList<>();
         if (acc == null) {
