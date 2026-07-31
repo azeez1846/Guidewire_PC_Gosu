@@ -1,5 +1,6 @@
 package com.guidewire.pc.model;
 
+import com.guidewire.pc.constants.PCConstants;
 import com.guidewire.pc.orm.EffDatedBean;
 import com.guidewire.pc.orm.EffDatedBranch;
 import com.guidewire.pc.orm.FixedId;
@@ -51,9 +52,9 @@ public class PolicyPeriod implements KeyableBean, EffDatedBranch, Coverable {
 
     public PolicyPeriod() {
         this.id = GosuORMSession.getInstance().nextID();
-        this.status = "Draft";
-        this.productCode = "CommercialAuto";
-        this.jobType = "Submission";
+        this.status = com.guidewire.pc.constants.PCConstants.STATUS_DRAFT;
+        this.productCode = com.guidewire.pc.constants.PCConstants.PRODUCT_COMMERCIAL_AUTO;
+        this.jobType = com.guidewire.pc.constants.PCConstants.JOB_TYPE_SUBMISSION;
         this.branchId = GosuORMSession.getInstance().nextID();
         this.policyPeriodFixedId = GosuORMSession.getInstance().nextFixedId(PolicyPeriod.class);
     }
@@ -172,18 +173,18 @@ public class PolicyPeriod implements KeyableBean, EffDatedBranch, Coverable {
     public void setCreateTime(String createTime) { this.createTime = createTime; }
 
     public String getFormattedStatus() {
-        if ("Issued".equalsIgnoreCase(status)) return "In Force (Issued)";
-        if ("Bound".equalsIgnoreCase(status)) return "Bound";
-        if ("Quoted".equalsIgnoreCase(status)) return "Quoted";
-        return "Draft";
+        if (PCConstants.STATUS_ISSUED.equalsIgnoreCase(status)) return "In Force (Issued)";
+        if (PCConstants.STATUS_BOUND.equalsIgnoreCase(status)) return PCConstants.STATUS_BOUND;
+        if (PCConstants.STATUS_QUOTED.equalsIgnoreCase(status)) return PCConstants.STATUS_QUOTED;
+        return PCConstants.STATUS_DRAFT;
     }
 
     public BigDecimal calculatePremium() {
         double rate = 500.0;
-        if ("PersonalAuto".equalsIgnoreCase(productCode)) rate = 650.0;
-        else if ("CommercialAuto".equalsIgnoreCase(productCode)) rate = 1250.0;
-        else if ("CommercialProperty".equalsIgnoreCase(productCode)) rate = 2100.0;
-        else if ("GeneralLiability".equalsIgnoreCase(productCode)) rate = 1800.0;
+        if (PCConstants.PRODUCT_PERSONAL_AUTO.equalsIgnoreCase(productCode)) rate = 650.0;
+        else if (PCConstants.PRODUCT_COMMERCIAL_AUTO.equalsIgnoreCase(productCode)) rate = 1250.0;
+        else if (PCConstants.PRODUCT_COMMERCIAL_PROPERTY.equalsIgnoreCase(productCode)) rate = 2100.0;
+        else if (PCConstants.PRODUCT_GENERAL_LIABILITY.equalsIgnoreCase(productCode)) rate = 1800.0;
 
         if (termMonths == 12) rate *= 1.9;
 
@@ -193,7 +194,7 @@ public class PolicyPeriod implements KeyableBean, EffDatedBranch, Coverable {
         if ("$250k".equals(propertyDamageLimit)) rate += 150.0;
         else if ("$500k".equals(propertyDamageLimit)) rate += 300.0;
 
-        if ("PolicyChange".equalsIgnoreCase(jobType)) {
+        if (PCConstants.JOB_TYPE_POLICY_CHANGE.equalsIgnoreCase(jobType)) {
             rate *= 0.5; // Mid-term proration adjustment
         }
 
@@ -214,8 +215,8 @@ public class PolicyPeriod implements KeyableBean, EffDatedBranch, Coverable {
         newBranch.setPolicyNumber(this.policyNumber);
         newBranch.setAccount(this.account);
         newBranch.setProductCode(this.productCode);
-        newBranch.setJobType("PolicyChange");
-        newBranch.setStatus("Draft");
+        newBranch.setJobType(PCConstants.JOB_TYPE_POLICY_CHANGE);
+        newBranch.setStatus(PCConstants.STATUS_DRAFT);
         newBranch.setEffectiveDate(this.effectiveDateStr);
         newBranch.setExpirationDate(this.expirationDateStr);
         newBranch.setEditEffectiveDate(changeEffDate);
@@ -237,8 +238,8 @@ public class PolicyPeriod implements KeyableBean, EffDatedBranch, Coverable {
         cancelBranch.setPolicyNumber(this.policyNumber);
         cancelBranch.setAccount(this.account);
         cancelBranch.setProductCode(this.productCode);
-        cancelBranch.setJobType("Cancellation");
-        cancelBranch.setStatus("Draft");
+        cancelBranch.setJobType(PCConstants.JOB_TYPE_CANCELLATION);
+        cancelBranch.setStatus(PCConstants.STATUS_DRAFT);
         cancelBranch.setEffectiveDate(this.effectiveDateStr);
         cancelBranch.setExpirationDate(new SimpleDateFormat("yyyy-MM-dd").format(cancelEffDate));
         cancelBranch.setEditEffectiveDate(cancelEffDate);
@@ -252,6 +253,34 @@ public class PolicyPeriod implements KeyableBean, EffDatedBranch, Coverable {
         }
 
         return cancelBranch;
+    }
+
+    public PolicyPeriod copySubmissionBranch(String newJobNum) {
+        PolicyPeriod copy = new PolicyPeriod(); // Generates fresh ID, branchId, and policyPeriodFixedId
+        copy.setJobNumber(newJobNum);
+        copy.setPolicyNumber(null);
+        copy.setAccount(this.account);
+        copy.setProductCode(this.productCode);
+        copy.setJobType(PCConstants.JOB_TYPE_SUBMISSION);
+        copy.setStatus(PCConstants.STATUS_DRAFT);
+        copy.setEffectiveDate(this.effectiveDateStr);
+        copy.setExpirationDate(this.expirationDateStr);
+        copy.setTermMonths(this.termMonths);
+        copy.setBaseState(this.baseState);
+        copy.setProducerCode(this.producerCode);
+        copy.setBodilyInjuryLimit(this.bodilyInjuryLimit);
+        copy.setPropertyDamageLimit(this.propertyDamageLimit);
+        copy.setComprehensiveDeductible(this.comprehensiveDeductible);
+        copy.setCollisionDeductible(this.collisionDeductible);
+
+        Date effDate = this.getPeriodStart();
+        for (EffDatedBean b : this.effDatedBeans) {
+            EffDatedBean cloned = b.cloneSlice(copy, effDate != null ? effDate : new Date());
+            copy.addEffDatedBean(cloned);
+        }
+
+        copy.calculatePremium();
+        return copy;
     }
 
     public com.guidewire.pc.orm.PolicyPeriodSlice getSlice(Date asOfDate) {
@@ -268,8 +297,8 @@ public class PolicyPeriod implements KeyableBean, EffDatedBranch, Coverable {
     public List<Coverage> getCoverages() {
         List<Coverage> list = new ArrayList<>();
         for (EffDatedBean b : effDatedBeans) {
-            if (b instanceof Coverage) {
-                list.add((Coverage) b);
+            if (b instanceof Coverage cov) {
+                list.add(cov);
             }
         }
         return list;

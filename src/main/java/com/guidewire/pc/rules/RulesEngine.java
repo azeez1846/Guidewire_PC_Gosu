@@ -1,9 +1,12 @@
 package com.guidewire.pc.rules;
 
+import com.guidewire.pc.constants.PCConstants;
 import com.guidewire.pc.model.PolicyPeriod;
+import com.guidewire.pc.util.DisplayProperties;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RulesEngine {
@@ -62,12 +65,36 @@ public class RulesEngine {
             public void execute(RuleContext context) {
                 PolicyPeriod period = context.getPolicyPeriod();
                 if (period.getTermMonths() <= 0) {
-                    context.addError("Policy term months must be greater than zero.");
+                    context.addError("Invalid policy term months: " + period.getTermMonths());
                 }
             }
         });
 
-        // Pre-Quote Rule 3: Geospatial Catastrophe Risk Rule
+        // Pre-Quote Rule 3: ClaimCenter Loss History Escalation
+        preQuoteRules.add(new GosuRule() {
+            @Override
+            public String getName() { return "ClaimCenterLossHistoryRule"; }
+
+            @Override
+            public String getDescription() { return "Escalates policy for UW review if open claims exceed $10,000."; }
+
+            @Override
+            public boolean isApplicable(RuleContext context) {
+                return context.getPolicyPeriod() != null && context.getPolicyPeriod().getPolicyNumber() != null;
+            }
+
+            @Override
+            public void execute(RuleContext context) {
+                PolicyPeriod period = context.getPolicyPeriod();
+                java.math.BigDecimal openLoss = com.guidewire.pc.service.ClaimCenterService.getInstance().getTotalOpenLossForPolicy(period.getPolicyNumber());
+                if (openLoss.compareTo(PCConstants.DEFAULT_HIGH_LOSS_THRESHOLD) > 0) {
+                    context.addWarning(DisplayProperties.ERR_UNDERWRITING_REFERRAL_HOLD);
+                    context.triggerUnderwritingHold();
+                }
+            }
+        });
+
+        // Pre-Quote Rule 4: Geospatial Catastrophe Risk Rule
         preQuoteRules.add(new GosuRule() {
             @Override
             public String getName() { return "GeospatialCatastropheRiskRule"; }
@@ -130,7 +157,7 @@ public class RulesEngine {
 
             @Override
             public void execute(RuleContext context) {
-                if (!"Active".equalsIgnoreCase(context.getAccount().getAccountStatus())) {
+                if (!PCConstants.ACCOUNT_STATUS_ACTIVE.equalsIgnoreCase(context.getAccount().getAccountStatus())) {
                     context.addError("Policy cannot be bound because linked Account is not Active.");
                 }
             }
@@ -139,7 +166,7 @@ public class RulesEngine {
 
     public RuleContext evaluatePreQuoteRules(PolicyPeriod period) {
         RuleContext context = new RuleContext(period);
-        LOGGER.log(java.util.logging.Level.INFO, "Evaluating Pre-Quote Rules for submission: {0}", period != null ? period.getJobNumber() : "null");
+        LOGGER.log(Level.INFO, "Evaluating Pre-Quote Rules for submission: {0}", period != null ? period.getJobNumber() : "null");
         for (GosuRule rule : preQuoteRules) {
             if (rule.isApplicable(context)) {
                 rule.execute(context);
@@ -150,7 +177,7 @@ public class RulesEngine {
 
     public RuleContext evaluatePreBindRules(PolicyPeriod period) {
         RuleContext context = new RuleContext(period);
-        LOGGER.log(java.util.logging.Level.INFO, "Evaluating Pre-Bind Rules for submission: {0}", period != null ? period.getJobNumber() : "null");
+        LOGGER.log(Level.INFO, "Evaluating Pre-Bind Rules for submission: {0}", period != null ? period.getJobNumber() : "null");
         for (GosuRule rule : preBindRules) {
             if (rule.isApplicable(context)) {
                 rule.execute(context);

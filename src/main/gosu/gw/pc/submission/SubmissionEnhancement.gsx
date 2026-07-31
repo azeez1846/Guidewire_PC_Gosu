@@ -1,45 +1,46 @@
 package gw.pc.submission
 
 import com.guidewire.pc.model.PolicyPeriod
+import gw.pc.config.PCConstants
 import java.math.BigDecimal
 
 enhancement SubmissionEnhancement : PolicyPeriod {
 
   public property get FormattedStatus() : String {
-    if (this.Status == "Draft") {
-      return "Draft"
-    } else if (this.Status == "Quoted") {
-      return "Quoted"
-    } else if (this.Status == "Bound") {
-      return "Bound"
-    } else if (this.Status == "Issued") {
+    if (this.Status == PCConstants.STATUS_DRAFT) {
+      return PCConstants.STATUS_DRAFT
+    } else if (this.Status == PCConstants.STATUS_QUOTED) {
+      return PCConstants.STATUS_QUOTED
+    } else if (this.Status == PCConstants.STATUS_BOUND) {
+      return PCConstants.STATUS_BOUND
+    } else if (this.Status == PCConstants.STATUS_ISSUED) {
       return "In Force (Issued)"
     }
     return this.Status
   }
 
   public function canQuote() : boolean {
-    return this.Status == "Draft"
+    return this.Status == PCConstants.STATUS_DRAFT
   }
 
   public function canBind() : boolean {
-    return this.Status == "Quoted"
+    return this.Status == PCConstants.STATUS_QUOTED
   }
 
   public function canIssue() : boolean {
-    return this.Status == "Bound"
+    return this.Status == PCConstants.STATUS_BOUND
   }
 
   public function calculatePremium() : BigDecimal {
     var baseRate = 500.0
     
-    if (this.ProductCode == "PersonalAuto") {
+    if (this.ProductCode == PCConstants.PRODUCT_PERSONAL_AUTO) {
       baseRate = 650.0
-    } else if (this.ProductCode == "CommercialAuto") {
+    } else if (this.ProductCode == PCConstants.PRODUCT_COMMERCIAL_AUTO) {
       baseRate = 1250.0
-    } else if (this.ProductCode == "CommercialProperty") {
+    } else if (this.ProductCode == PCConstants.PRODUCT_COMMERCIAL_PROPERTY) {
       baseRate = 2100.0
-    } else if (this.ProductCode == "GeneralLiability") {
+    } else if (this.ProductCode == PCConstants.PRODUCT_GENERAL_LIABILITY) {
       baseRate = 1800.0
     }
 
@@ -69,7 +70,7 @@ enhancement SubmissionEnhancement : PolicyPeriod {
 
   public function quote() {
     this.calculatePremium()
-    this.Status = "Quoted"
+    this.Status = PCConstants.STATUS_QUOTED
   }
 
   public function bindAndIssue() {
@@ -77,7 +78,7 @@ enhancement SubmissionEnhancement : PolicyPeriod {
       var randomId = (int)(java.lang.Math.random() * 900000) + 100000
       this.PolicyNumber = "POL-" + randomId
     }
-    this.Status = "Issued"
+    this.Status = PCConstants.STATUS_ISSUED
   }
 
   public function createPolicyChange(editEffectiveDateStr : String, newJobNum : String) : PolicyPeriod {

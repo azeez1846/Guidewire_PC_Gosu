@@ -1,6 +1,7 @@
 package gw.pc.model
 
 import com.guidewire.pc.model.PolicyPeriod
+import gw.pc.config.PCConstants
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
 
@@ -14,7 +15,7 @@ enhancement PolicyPeriodEnhancement : PolicyPeriod {
   }
 
   public property get IsTermActive() : boolean {
-    if (this.Status != "Issued" and this.Status != "Bound") {
+    if (this.Status != PCConstants.STATUS_ISSUED and this.Status != PCConstants.STATUS_BOUND) {
       return false
     }
     var today = new java.util.Date()

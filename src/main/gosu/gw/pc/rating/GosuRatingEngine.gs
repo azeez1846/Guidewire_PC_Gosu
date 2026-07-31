@@ -1,6 +1,7 @@
 package gw.pc.rating
 
 import com.guidewire.pc.model.PolicyPeriod
+import gw.pc.config.PCConstants
 import java.math.BigDecimal
 
 class GosuRatingEngine {
@@ -11,13 +12,13 @@ class GosuRatingEngine {
     var baseRate = 500.0
 
     // 1. Line-level base rates
-    if ("PersonalAuto".equalsIgnoreCase(period.ProductCode)) {
+    if (PCConstants.PRODUCT_PERSONAL_AUTO.equalsIgnoreCase(period.ProductCode)) {
       baseRate = 650.0
-    } else if ("CommercialAuto".equalsIgnoreCase(period.ProductCode)) {
+    } else if (PCConstants.PRODUCT_COMMERCIAL_AUTO.equalsIgnoreCase(period.ProductCode)) {
       baseRate = 1250.0
-    } else if ("CommercialProperty".equalsIgnoreCase(period.ProductCode)) {
+    } else if (PCConstants.PRODUCT_COMMERCIAL_PROPERTY.equalsIgnoreCase(period.ProductCode)) {
       baseRate = 2100.0
-    } else if ("GeneralLiability".equalsIgnoreCase(period.ProductCode)) {
+    } else if (PCConstants.PRODUCT_GENERAL_LIABILITY.equalsIgnoreCase(period.ProductCode)) {
       baseRate = 1800.0
     }
 
@@ -48,7 +49,7 @@ class GosuRatingEngine {
     }
 
     // 4. Policy Job Proration (Mid-Term Endorsement / MTA adjustment)
-    if ("PolicyChange".equalsIgnoreCase(period.JobType)) {
+    if (PCConstants.JOB_TYPE_POLICY_CHANGE.equalsIgnoreCase(period.JobType)) {
       baseRate = baseRate * 0.5
     }
 

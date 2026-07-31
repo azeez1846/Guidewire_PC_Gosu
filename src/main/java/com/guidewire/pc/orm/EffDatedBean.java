@@ -41,8 +41,7 @@ public abstract class EffDatedBean implements KeyableBean {
     public boolean isEffectiveAt(Date date) {
         if (date == null) return false;
         if (effectiveDate != null && date.before(effectiveDate)) return false;
-        if (expirationDate != null && !date.before(expirationDate)) return false;
-        return true;
+        return expirationDate == null || date.before(expirationDate);
     }
 
     public EffDatedBean getSlice(Date asOfDate) {

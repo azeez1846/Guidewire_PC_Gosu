@@ -1,5 +1,7 @@
 package com.guidewire.pc.model;
 
+import com.guidewire.pc.constants.PCConstants;
+
 public class Account {
     private String accountNumber;
     private String accountHolderName;
@@ -19,7 +21,7 @@ public class Account {
     private String createTime;
 
     public Account() {
-        this.accountStatus = "Active";
+        this.accountStatus = PCConstants.ACCOUNT_STATUS_ACTIVE;
         this.accountHolderType = "Company";
     }
 

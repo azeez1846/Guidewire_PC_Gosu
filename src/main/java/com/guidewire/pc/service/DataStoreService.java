@@ -1,5 +1,6 @@
 package com.guidewire.pc.service;
 
+import com.guidewire.pc.constants.PCConstants;
 import com.guidewire.pc.model.Account;
 import com.guidewire.pc.model.Activity;
 import com.guidewire.pc.model.PolicyPeriod;
@@ -26,8 +27,7 @@ public class DataStoreService {
     private volatile boolean cacheLoaded = false;
 
     private DataStoreService() {
-        seedSampleDataIfEmpty();
-        warmupCacheFromDb();
+        resetToSeedData();
     }
 
     public static synchronized DataStoreService getInstance() {
@@ -68,10 +68,27 @@ public class DataStoreService {
                 }
             }
             cacheLoaded = true;
-            LOGGER.info("[DataStore Performance Cache] In-memory cache pre-warmed successfully. Loaded " +
-                    accountCache.size() + " accounts, " + submissionCache.size() + " submissions.");
+            LOGGER.log(Level.INFO, "[DataStore Performance Cache] In-memory cache pre-warmed successfully. Loaded {0} accounts, {1} submissions.",
+                    new Object[]{accountCache.size(), submissionCache.size()});
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "Error pre-warming DataStore cache from DB", e);
+        }
+    }
+
+    public synchronized void resetToSeedData() {
+        try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
+            stmt.execute("DELETE FROM POLICY_PERIODS");
+            stmt.execute("DELETE FROM ACTIVITIES");
+            stmt.execute("DELETE FROM ACCOUNTS");
+            submissionCache.clear();
+            accountCache.clear();
+            activityCache.clear();
+            cacheLoaded = false;
+            seedSampleDataIfEmpty();
+            warmupCacheFromDb();
+            LOGGER.info("Database reset to clean sample data successfully.");
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to reset H2 database to seed data", e);
         }
     }
 
@@ -98,7 +115,7 @@ public class DataStoreService {
             acc1.setPostalCode("95113");
             acc1.setPhone("(408) 555-0199");
             acc1.setEmail("contact@acmelogistics.com");
-            acc1.setAccountStatus("Active");
+            acc1.setAccountStatus(PCConstants.ACCOUNT_STATUS_ACTIVE);
             acc1.setProducerCode("PR-10928");
             acc1.setIndustryCode("484110 - General Freight");
             acc1.setOrgType("Corporation");
@@ -117,7 +134,7 @@ public class DataStoreService {
             acc2.setPostalCode("97477");
             acc2.setPhone("(541) 555-0142");
             acc2.setEmail("john.mercer@example.com");
-            acc2.setAccountStatus("Active");
+            acc2.setAccountStatus(PCConstants.ACCOUNT_STATUS_ACTIVE);
             acc2.setProducerCode("PR-20451");
             acc2.setIndustryCode("811111 - Automotive Repair");
             acc2.setOrgType("Individual");
@@ -128,8 +145,8 @@ public class DataStoreService {
             PolicyPeriod sub1 = new PolicyPeriod();
             sub1.setJobNumber("S0005001");
             sub1.setPolicyNumber("POL-849102");
-            sub1.setProductCode("CommercialAuto");
-            sub1.setStatus("Issued");
+            sub1.setProductCode(PCConstants.PRODUCT_COMMERCIAL_AUTO);
+            sub1.setStatus(PCConstants.STATUS_ISSUED);
             sub1.setEffectiveDate("2026-03-01");
             sub1.setExpirationDate("2027-03-01");
             sub1.setTermMonths(12);
@@ -149,8 +166,8 @@ public class DataStoreService {
             // Sample Submission 2
             PolicyPeriod sub2 = new PolicyPeriod();
             sub2.setJobNumber("S0005002");
-            sub2.setProductCode("GeneralLiability");
-            sub2.setStatus("Quoted");
+            sub2.setProductCode(PCConstants.PRODUCT_GENERAL_LIABILITY);
+            sub2.setStatus(PCConstants.STATUS_QUOTED);
             sub2.setEffectiveDate("2026-04-01");
             sub2.setExpirationDate("2027-04-01");
             sub2.setTermMonths(12);
@@ -361,15 +378,15 @@ public class DataStoreService {
     }
 
     public int getAccountCount() {
-        return accountCache.size() > 0 ? accountCache.size() : loadAccountsFromDb().size();
+        return !accountCache.isEmpty() ? accountCache.size() : loadAccountsFromDb().size();
     }
 
     public int getSubmissionCount() {
-        return submissionCache.size() > 0 ? submissionCache.size() : loadSubmissionsFromDb().size();
+        return !submissionCache.isEmpty() ? submissionCache.size() : loadSubmissionsFromDb().size();
     }
 
     public int getActivityCount() {
-        return activityCache.size() > 0 ? activityCache.size() : loadActivitiesFromDb().size();
+        return !activityCache.isEmpty() ? activityCache.size() : loadActivitiesFromDb().size();
     }
 
     public Account findAccount(String accountNumber) {
@@ -424,6 +441,54 @@ public class DataStoreService {
         }
         insertAccountToDb(newAccount);
         return newAccount;
+    }
+
+    public PolicyPeriod findPolicyByPolicyNumber(String policyNumber) {
+        if (policyNumber == null) return null;
+        for (PolicyPeriod p : submissionCache.values()) {
+            if (policyNumber.equalsIgnoreCase(p.getPolicyNumber())) {
+                return p;
+            }
+        }
+
+        String sql = "SELECT * FROM POLICY_PERIODS WHERE UPPER(policy_number) = UPPER(?) ORDER BY create_time DESC";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, policyNumber);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    PolicyPeriod p = mapResultSetToPolicyPeriod(rs);
+                    if (p.getJobNumber() != null) {
+                        submissionCache.put(p.getJobNumber().toUpperCase(), p);
+                    }
+                    return p;
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to find policy by policy number in H2: " + policyNumber, e);
+        }
+        return null;
+    }
+
+    public synchronized void updateSubmission(PolicyPeriod period) {
+        if (period == null || period.getJobNumber() == null) return;
+        submissionCache.put(period.getJobNumber().toUpperCase(), period);
+
+        String sql = "UPDATE POLICY_PERIODS SET status = ?, job_type = ?, bodily_injury_limit = ?, " +
+                "collision_deductible = ?, base_premium = ?, taxes_and_fees = ?, total_premium = ? " +
+                "WHERE UPPER(job_number) = UPPER(?)";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, period.getStatus());
+            ps.setString(2, period.getJobType());
+            ps.setString(3, period.getBodilyInjuryLimit());
+            ps.setString(4, period.getCollisionDeductible());
+            ps.setBigDecimal(5, period.getBasePremium());
+            ps.setBigDecimal(6, period.getTaxesAndFees());
+            ps.setBigDecimal(7, period.getTotalPremium());
+            ps.setString(8, period.getJobNumber());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to update policy period in H2: " + period.getJobNumber(), e);
+        }
     }
 
     public synchronized PolicyPeriod createSubmission(PolicyPeriod submission) {

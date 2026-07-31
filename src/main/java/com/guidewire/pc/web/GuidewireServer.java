@@ -97,6 +97,11 @@ public class GuidewireServer {
                 case "account-detail" -> renderAccountDetailPage(params.get("accNum"));
                 case "new-submission" -> renderNewSubmissionPage(params);
                 case "submission-wizard" -> renderSubmissionWizard(params.get("jobNum"), params.getOrDefault("step", "step1"), params);
+                case "copy-submission" -> {
+                    PolicyPeriod copied = com.guidewire.pc.service.PolicyLifecycleService.getInstance().copySubmission(params.get("jobNum"));
+                    redirect(exchange, "/?page=submission-wizard&jobNum=" + copied.getJobNumber() + "&step=step1");
+                    yield "";
+                }
                 case "policy-change" -> renderPolicyChangePage(params.get("jobNum"), params);
                 case "cancellation" -> renderCancellationPage(params.get("jobNum"), params);
                 default -> renderDesktopPage("submissions", null);
@@ -566,14 +571,14 @@ public class GuidewireServer {
                     sub.setCollisionDeductible(params.get("collisionDeductible"));
 
                     sub.calculatePremium();
-                    sub.setStatus("Quoted");
+                    sub.setStatus(com.guidewire.pc.constants.PCConstants.STATUS_QUOTED);
                     step = "step3";
                 }
                 case "bind" -> {
                     if (sub.getPolicyNumber() == null || sub.getPolicyNumber().trim().isEmpty()) {
                         sub.setPolicyNumber("POL-" + (int)(Math.random() * 900000 + 100000));
                     }
-                    sub.setStatus("Issued");
+                    sub.setStatus(com.guidewire.pc.constants.PCConstants.STATUS_ISSUED);
                     step = "step3";
                 }
                 default -> {}
@@ -589,8 +594,23 @@ public class GuidewireServer {
 
         sb.append("<div class='gw-page-header'>");
         sb.append("<div class='gw-page-title'>Submission Wizard: ").append(sub.getJobNumber()).append(" (").append(sub.getProductCode()).append(") <span class='gw-pcf-tag'>SubmissionWizard.pcf</span></div>");
+        sb.append("<div style='display:flex; align-items:center; gap:12px;'>");
         sb.append("<div>Status: <span class='gw-status-badge status-").append(sub.getStatus()).append("'>").append(sub.getFormattedStatus()).append("</span></div>");
+
+        // OOTB Guidewire Actions Dropdown Menu
+        sb.append("<div style='position:relative; display:inline-block;'>");
+        sb.append("<button onclick='toggleActionsMenu()' class='gw-btn gw-btn-secondary' style='display:flex; align-items:center; gap:6px;'>Actions ▾</button>");
+        sb.append("<div id='gwActionsDropdown' style='display:none; position:absolute; right:0; top:100%; background:white; min-width:200px; box-shadow:0 8px 16px rgba(0,0,0,0.15); border-radius:6px; border:1px solid #CBD5E0; z-index:100; padding:6px 0; margin-top:4px;'>");
+        sb.append("<a href='/?page=copy-submission&jobNum=").append(jobNum).append("' style='display:block; padding:8px 16px; color:#2D3748; text-decoration:none; font-size:13px; font-weight:500;' onmouseover=\"this.style.background='#EDF2F7'\" onmouseout=\"this.style.background='transparent'\">📋 Copy Submission</a>");
+        if (com.guidewire.pc.constants.PCConstants.STATUS_ISSUED.equalsIgnoreCase(sub.getStatus())) {
+            sb.append("<a href='/?page=policy-change&jobNum=").append(jobNum).append("' style='display:block; padding:8px 16px; color:#2D3748; text-decoration:none; font-size:13px; font-weight:500;' onmouseover=\"this.style.background='#EDF2F7'\" onmouseout=\"this.style.background='transparent'\">⚡ Policy Change</a>");
+            sb.append("<a href='/?page=cancellation&jobNum=").append(jobNum).append("' style='display:block; padding:8px 16px; color:#C53030; text-decoration:none; font-size:13px; font-weight:500;' onmouseover=\"this.style.background='#FFF5F5'\" onmouseout=\"this.style.background='transparent'\">❌ Cancel Policy</a>");
+        }
         sb.append("</div>");
+        sb.append("<script>function toggleActionsMenu(){var d=document.getElementById('gwActionsDropdown'); d.style.display=d.style.display==='none'?'block':'none';}</script>");
+        sb.append("</div>");
+
+        sb.append("</div></div>");
 
         // Stepper Header
         sb.append("<div class='gw-wizard-steps'>");

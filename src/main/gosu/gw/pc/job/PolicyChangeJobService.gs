@@ -1,14 +1,17 @@
 package gw.pc.job
 
 import com.guidewire.pc.model.PolicyPeriod
+import gw.pc.config.PCConstants
 import gw.pc.rating.GosuRatingEngine
 import java.math.BigDecimal
 
 class PolicyChangeJobService {
 
   public static function startPolicyChange(origPeriod : PolicyPeriod, editEffDateStr : String) : PolicyPeriod {
+    if (origPeriod == null) return null
+
     var changePeriod = new PolicyPeriod()
-    changePeriod.setJobType("PolicyChange")
+    changePeriod.setJobType(PCConstants.JOB_TYPE_POLICY_CHANGE)
     changePeriod.setJobNumber("C000" + (System.currentTimeMillis() % 10000))
     changePeriod.setPolicyNumber(origPeriod.PolicyNumber)
     changePeriod.setProductCode(origPeriod.ProductCode)
@@ -22,7 +25,7 @@ class PolicyChangeJobService {
     changePeriod.setPropertyDamageLimit(origPeriod.PropertyDamageLimit)
     changePeriod.setComprehensiveDeductible(origPeriod.ComprehensiveDeductible)
     changePeriod.setCollisionDeductible(origPeriod.CollisionDeductible)
-    changePeriod.setStatus("Draft")
+    changePeriod.setStatus(PCConstants.STATUS_DRAFT)
 
     if (editEffDateStr != null and editEffDateStr.trim().length() > 0) {
       changePeriod.setEffectiveDate(editEffDateStr)
@@ -33,6 +36,8 @@ class PolicyChangeJobService {
   }
 
   public static function processEndorsement(changePeriod : PolicyPeriod, newLimit : String, newDeductible : String) : PolicyPeriod {
+    if (changePeriod == null) return null
+
     if (newLimit != null and newLimit.trim().length() > 0) {
       changePeriod.setBodilyInjuryLimit(newLimit)
     }
@@ -41,12 +46,14 @@ class PolicyChangeJobService {
     }
 
     GosuRatingEngine.ratePolicy(changePeriod)
-    changePeriod.setStatus("Quoted")
+    changePeriod.setStatus(PCConstants.STATUS_QUOTED)
     return changePeriod
   }
 
   public static function bindEndorsement(changePeriod : PolicyPeriod) : PolicyPeriod {
-    changePeriod.setStatus("Bound")
+    if (changePeriod != null) {
+      changePeriod.setStatus(PCConstants.STATUS_BOUND)
+    }
     return changePeriod
   }
 }

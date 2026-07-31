@@ -33,7 +33,7 @@ public class PerformanceBenchmarkTest {
         assertSame(def1, def2, "Cached PCF instance must be identical to warm-warmed singleton instance");
 
         double millisCached = duration2 / 1_000_000.0;
-        System.out.println("🚀 [PCF Cache Benchmark] Cached PCF retrieval duration: " + String.format("%.4f", millisCached) + " ms");
+        System.out.println("🚀 [PCF Cache Benchmark] Initial: " + String.format("%.4f", duration1 / 1_000_000.0) + " ms, Cached: " + String.format("%.4f", millisCached) + " ms");
         assertTrue(millisCached < 1.0, "Cached PCF retrieval must execute in under 1.0 millisecond");
     }
 

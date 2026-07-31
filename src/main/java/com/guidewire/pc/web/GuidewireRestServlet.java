@@ -6,6 +6,7 @@ import com.guidewire.pc.model.PolicyPeriod;
 import com.guidewire.pc.rules.RuleContext;
 import com.guidewire.pc.rules.RulesEngine;
 import com.guidewire.pc.service.DataStoreService;
+import com.guidewire.pc.service.PolicyLifecycleService;
 import com.guidewire.pc.service.RatingEngine;
 import com.guidewire.pc.service.SearchService;
 import com.guidewire.pc.security.SecurityUtils;
@@ -146,6 +147,59 @@ public class GuidewireRestServlet extends HttpServlet {
             return;
         }
 
+        if (path.startsWith("/claims/")) {
+            String policyNumber = path.substring("/claims/".length());
+            var claims = com.guidewire.pc.service.ClaimCenterService.getInstance().getClaimsForPolicy(policyNumber);
+            objectMapper.writeValue(resp.getWriter(), claims);
+            return;
+        }
+
+        if (path.startsWith("/policies/") && path.endsWith("/invoice")) {
+            String policyNumber = path.replace("/policies/", "").replace("/invoice", "");
+            PolicyPeriod period = dataStore.findPolicyByPolicyNumber(policyNumber);
+            var schedule = com.guidewire.pc.service.BillingCenterService.getInstance().generateSchedule(period, "FourPay");
+            if (req.getHeader("Accept") != null && req.getHeader("Accept").contains("text/html")) {
+                resp.setContentType("text/html");
+                resp.getWriter().write(com.guidewire.pc.service.BillingCenterService.getInstance().generateInvoiceHtml(period, schedule));
+            } else {
+                objectMapper.writeValue(resp.getWriter(), schedule);
+            }
+            return;
+        }
+
+        if (path.startsWith("/policies/") && path.endsWith("/diff")) {
+            String policyNumber = path.replace("/policies/", "").replace("/diff", "");
+            PolicyPeriod current = dataStore.findPolicyByPolicyNumber(policyNumber);
+            String compareJob = req.getParameter("compareJob");
+            PolicyPeriod base = compareJob != null ? dataStore.findSubmission(compareJob) : current;
+            if (current != null && base != null) {
+                var diffReport = com.guidewire.pc.service.PolicyDiffService.getInstance().compareRevisions(base, current);
+                objectMapper.writeValue(resp.getWriter(), diffReport);
+            } else {
+                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                objectMapper.writeValue(resp.getWriter(), Map.of("error", "Policy revision not found for comparison"));
+            }
+            return;
+        }
+
+        if (path.equals("/dashboard/kpis")) {
+            var kpis = com.guidewire.pc.service.UnderwritingDashboardService.getInstance().computeKpis();
+            objectMapper.writeValue(resp.getWriter(), kpis);
+            return;
+        }
+
+        if (path.equals("/system/java-diagnostics")) {
+            var diagnostics = com.guidewire.pc.service.JVMDiagnosticsService.getInstance().getJVMDiagnostics();
+            objectMapper.writeValue(resp.getWriter(), diagnostics);
+            return;
+        }
+
+        if (path.equals("/webhooks")) {
+            var events = com.guidewire.pc.service.WebhookPublisherService.getInstance().getEventLog();
+            objectMapper.writeValue(resp.getWriter(), events);
+            return;
+        }
+
         if (path.startsWith("/jobs/")) {
             String jobNumber = path.substring("/jobs/".length());
             PolicyPeriod period = dataStore.findSubmission(jobNumber);
@@ -208,7 +262,7 @@ public class GuidewireRestServlet extends HttpServlet {
             }
 
             RatingEngine.getInstance().rate(period);
-            period.setStatus("Quoted");
+            period.setStatus(com.guidewire.pc.constants.PCConstants.STATUS_QUOTED);
             objectMapper.writeValue(resp.getWriter(), Map.of(
                     "jobNumber", period.getJobNumber(),
                     "status", period.getStatus(),
@@ -249,8 +303,73 @@ public class GuidewireRestServlet extends HttpServlet {
             return;
         }
 
-        resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        objectMapper.writeValue(resp.getWriter(), Map.of("error", "Action endpoint not found"));
+        if (path != null && path.contains("/policies/") && path.endsWith("/change")) {
+            String policyNumber = path.replace("/policies/", "").replace("/change", "");
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String editEff = (String) reqMap.get("editEffectiveDate");
+            String biLimit = (String) reqMap.get("bodilyInjuryLimit");
+            String collDeduct = (String) reqMap.get("collisionDeductible");
+            PolicyPeriod changeJob = PolicyLifecycleService.getInstance().startPolicyChange(policyNumber, editEff, biLimit, collDeduct);
+            objectMapper.writeValue(resp.getWriter(), changeJob);
+            return;
+        }
+
+        if (path != null && path.contains("/policies/") && path.endsWith("/cancel")) {
+            String policyNumber = path.replace("/policies/", "").replace("/cancel", "");
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String reason = (String) reqMap.getOrDefault("reason", "Underwriting Risk");
+            String calcMethod = (String) reqMap.getOrDefault("calcMethod", "ProRata");
+            String cancelEffDate = (String) reqMap.getOrDefault("effectiveDate", "");
+            PolicyPeriod cancelled = PolicyLifecycleService.getInstance().cancelPolicy(policyNumber, reason, calcMethod, cancelEffDate);
+            objectMapper.writeValue(resp.getWriter(), cancelled);
+            return;
+        }
+
+        if (path != null && path.contains("/policies/") && path.endsWith("/reinstate")) {
+            String policyNumber = path.replace("/policies/", "").replace("/reinstate", "");
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String reason = (String) reqMap.getOrDefault("reason", "Payment Resolved");
+            PolicyPeriod reinstated = PolicyLifecycleService.getInstance().reinstatePolicy(policyNumber, reason);
+            objectMapper.writeValue(resp.getWriter(), reinstated);
+            return;
+        }
+
+        if (path != null && path.contains("/policies/") && path.endsWith("/renew")) {
+            String policyNumber = path.replace("/policies/", "").replace("/renew", "");
+            PolicyPeriod renewal = PolicyLifecycleService.getInstance().renewPolicy(policyNumber);
+            objectMapper.writeValue(resp.getWriter(), renewal);
+            return;
+        }
+
+        if (path != null && path.contains("/policies/") && path.endsWith("/copy")) {
+            String jobNum = path.replace("/policies/", "").replace("/copy", "");
+            PolicyPeriod copied = PolicyLifecycleService.getInstance().copySubmission(jobNum);
+            objectMapper.writeValue(resp.getWriter(), copied);
+            return;
+        }
+
+        if (path != null && path.equals("/gosu/eval")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String expression = (String) reqMap.get("expression");
+            Object evalResult = com.guidewire.pc.gosu.GosuBridge.eval(expression);
+            objectMapper.writeValue(resp.getWriter(), Map.of("expression", expression != null ? expression : "", "result", evalResult != null ? evalResult.toString() : "null"));
+            return;
+        }
+
+        if (path != null && path.equals("/gosu/reload")) {
+            com.guidewire.pc.gosu.GosuBridge.reloadScripts();
+            objectMapper.writeValue(resp.getWriter(), Map.of("status", "Success", "message", "Gosu script directory hot-reloaded successfully."));
+            return;
+        }
+
+        if (path != null && path.equals("/admin/reset-db")) {
+            dataStore.resetToSeedData();
+            objectMapper.writeValue(resp.getWriter(), Map.of("status", "Success", "message", "Database reset to clean sample seed data."));
+        }
     }
 
     private void serveOpenApiJson(HttpServletResponse resp) throws IOException {

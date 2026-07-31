@@ -1,6 +1,8 @@
 package gw.pc.service
 
 import com.guidewire.pc.model.PolicyPeriod
+import gw.pc.config.PCConstants
+import gw.pc.config.DisplayProperties
 import gw.pc.validation.ValidationLevel
 import java.util.List
 import java.util.ArrayList
@@ -24,10 +26,10 @@ class ValidationService {
       errors.add("Submission must be linked to a valid Account.")
     }
     if (sub.ProductCode == null or sub.ProductCode.trim().length() == 0) {
-      errors.add("Product / Policy Line must be selected.")
+      errors.add(DisplayProperties.ERR_INVALID_PRODUCT_CODE)
     }
     if (sub.EffectiveDate == null or sub.EffectiveDate.trim().length() == 0) {
-      errors.add("Effective Date is required.")
+      errors.add(DisplayProperties.ERR_EFFECTIVE_DATE_REQUIRED)
     }
     if (sub.BaseState == null or sub.BaseState.trim().length() == 0) {
       errors.add("Base State is required.")
@@ -65,7 +67,7 @@ class ValidationService {
     if (sub.PolicyNumber == null or sub.PolicyNumber.trim().length() == 0) {
       // Automatic policy number assignment will occur if null, but if provided must match format
     }
-    if (sub.Status != "Bound" and sub.Status != "Issued") {
+    if (sub.Status != PCConstants.STATUS_BOUND and sub.Status != PCConstants.STATUS_ISSUED) {
       errors.add("Policy Period status must be 'Bound' before issuance.")
     }
 

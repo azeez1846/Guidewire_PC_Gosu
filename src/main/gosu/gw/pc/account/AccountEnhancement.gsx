@@ -1,6 +1,8 @@
 package gw.pc.account
 
 import com.guidewire.pc.model.Account
+import gw.pc.config.PCConstants
+import gw.pc.config.DisplayProperties
 
 enhancement AccountEnhancement : Account {
 
@@ -19,13 +21,13 @@ enhancement AccountEnhancement : Account {
   }
 
   public function canCreateSubmission() : boolean {
-    return this.AccountStatus == "Active" or this.AccountStatus == "Pending"
+    return this.AccountStatus == PCConstants.ACCOUNT_STATUS_ACTIVE or this.AccountStatus == PCConstants.ACCOUNT_STATUS_PENDING
   }
 
   public function validateAccount() : java.util.List<String> {
     var errors = new java.util.ArrayList<String>()
     if (this.AccountHolderName == null or this.AccountHolderName.trim().length() == 0) {
-      errors.add("Account Holder Name is required.")
+      errors.add(DisplayProperties.ERR_ACCOUNT_HOLDER_NAME_REQUIRED)
     }
     if (this.AddressLine1 == null or this.AddressLine1.trim().length() == 0) {
       errors.add("Address Line 1 is required.")

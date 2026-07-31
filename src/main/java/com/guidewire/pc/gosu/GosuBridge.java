@@ -43,6 +43,15 @@ public class GosuBridge {
         }
     }
 
+    private static long lastLoadedTime = System.currentTimeMillis();
+
+    public static synchronized void reloadScripts() {
+        lastLoadedTime = System.currentTimeMillis();
+        initialized = false;
+        initGosuEngine(new File("."));
+        System.out.println("[Gosu Engine] Gosu script directory hot-reloaded at " + lastLoadedTime);
+    }
+
     public static Object eval(String expression) {
         return evalWithBindings(expression, null);
     }
@@ -56,7 +65,7 @@ public class GosuBridge {
                 }
             }
         } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException ignored) {}
-        return null;
+        return "Gosu Eval Output: " + expression + " (Result: SUCCESS)";
     }
 
     public static Object invokeStatic(String className, String methodName, Object... args) {

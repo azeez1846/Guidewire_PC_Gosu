@@ -10,9 +10,22 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.BeforeAll;
+import com.guidewire.pc.web.JettyPolicyCenterServer;
+import java.io.File;
+
 public class AppFullWorkflowIntegrationTest {
 
     private static final String BASE_URL = "http://localhost:8085";
+    private static JettyPolicyCenterServer server;
+
+    @BeforeAll
+    public static void setUpServer() throws Exception {
+        try {
+            server = new JettyPolicyCenterServer(8085, new File("."));
+            server.start();
+        } catch (Exception ignored) {}
+    }
 
     @Test
     public void testFullApplicationWorkflowEndToEnd() throws Exception {

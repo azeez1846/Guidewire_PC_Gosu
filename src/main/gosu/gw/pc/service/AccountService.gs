@@ -1,6 +1,7 @@
 package gw.pc.service
 
 import com.guidewire.pc.model.Account
+import gw.pc.config.PCConstants
 import java.util.List
 import java.util.ArrayList
 
@@ -33,7 +34,7 @@ class AccountService {
     acc1.PostalCode = "95113"
     acc1.Phone = "(408) 555-0199"
     acc1.Email = "contact@acmelogistics.com"
-    acc1.AccountStatus = "Active"
+    acc1.AccountStatus = PCConstants.ACCOUNT_STATUS_ACTIVE
     acc1.ProducerCode = "PR-10928"
     acc1.IndustryCode = "484110 - General Freight"
     acc1.OrgType = "Corporation"
@@ -50,7 +51,7 @@ class AccountService {
     acc2.PostalCode = "97477"
     acc2.Phone = "(541) 555-0142"
     acc2.Email = "john.mercer@example.com"
-    acc2.AccountStatus = "Active"
+    acc2.AccountStatus = PCConstants.ACCOUNT_STATUS_ACTIVE
     acc2.ProducerCode = "PR-20451"
     acc2.IndustryCode = "811111 - Automotive Repair"
     acc2.OrgType = "Individual"
@@ -66,8 +67,9 @@ class AccountService {
   }
 
   public function findByNumber(accountNum : String) : Account {
+    if (accountNum == null) return null
     for (acc in _accounts) {
-      if (acc.AccountNumber.equalsIgnoreCase(accountNum)) {
+      if (acc?.AccountNumber != null and acc.AccountNumber.equalsIgnoreCase(accountNum)) {
         return acc
       }
     }
@@ -81,13 +83,13 @@ class AccountService {
   }
 
   public function createAccount(newAcc : Account) : Account {
-    if (newAcc.AccountNumber == null or newAcc.AccountNumber.length() == 0) {
+    if (newAcc?.AccountNumber == null or newAcc.AccountNumber.length() == 0) {
       newAcc.AccountNumber = generateAccountNumber()
     }
-    if (newAcc.AccountStatus == null) {
-      newAcc.AccountStatus = "Active"
+    if (newAcc?.AccountStatus == null) {
+      newAcc.AccountStatus = PCConstants.ACCOUNT_STATUS_ACTIVE
     }
-    if (newAcc.CreateTime == null) {
+    if (newAcc?.CreateTime == null) {
       newAcc.CreateTime = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date())
     }
     _accounts.add(0, newAcc)

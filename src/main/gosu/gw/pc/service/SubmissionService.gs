@@ -2,6 +2,7 @@ package gw.pc.service
 
 import com.guidewire.pc.model.PolicyPeriod
 import com.guidewire.pc.model.Account
+import gw.pc.config.PCConstants
 import java.util.List
 import java.util.ArrayList
 
@@ -28,8 +29,8 @@ class SubmissionService {
       var sub1 = new PolicyPeriod()
       sub1.JobNumber = "S0005001"
       sub1.PolicyNumber = "POL-849102"
-      sub1.ProductCode = "CommercialAuto"
-      sub1.Status = "Issued"
+      sub1.ProductCode = PCConstants.PRODUCT_COMMERCIAL_AUTO
+      sub1.Status = PCConstants.STATUS_ISSUED
       sub1.EffectiveDate = "2026-03-01"
       sub1.ExpirationDate = "2027-03-01"
       sub1.TermMonths = 12
@@ -49,8 +50,8 @@ class SubmissionService {
       var sub2 = new PolicyPeriod()
       sub2.JobNumber = "S0005002"
       sub2.PolicyNumber = null
-      sub2.ProductCode = "GeneralLiability"
-      sub2.Status = "Quoted"
+      sub2.ProductCode = PCConstants.PRODUCT_GENERAL_LIABILITY
+      sub2.Status = PCConstants.STATUS_QUOTED
       sub2.EffectiveDate = "2026-04-01"
       sub2.ExpirationDate = "2027-04-01"
       sub2.TermMonths = 12
@@ -75,8 +76,9 @@ class SubmissionService {
   }
 
   public function findByJobNumber(jobNum : String) : PolicyPeriod {
+    if (jobNum == null) return null
     for (sub in _submissions) {
-      if (sub.JobNumber.equalsIgnoreCase(jobNum)) {
+      if (sub?.JobNumber != null and sub.JobNumber.equalsIgnoreCase(jobNum)) {
         return sub
       }
     }
@@ -85,8 +87,9 @@ class SubmissionService {
 
   public function findSubmissionsForAccount(accountNum : String) : List<PolicyPeriod> {
     var result = new ArrayList<PolicyPeriod>()
+    if (accountNum == null) return result
     for (sub in _submissions) {
-      if (sub.Account != null and sub.Account.AccountNumber.equalsIgnoreCase(accountNum)) {
+      if (sub?.Account?.AccountNumber != null and sub.Account.AccountNumber.equalsIgnoreCase(accountNum)) {
         result.add(sub)
       }
     }
@@ -100,16 +103,25 @@ class SubmissionService {
   }
 
   public function createSubmission(sub : PolicyPeriod) : PolicyPeriod {
-    if (sub.JobNumber == null or sub.JobNumber.length() == 0) {
+    if (sub?.JobNumber == null or sub.JobNumber.length() == 0) {
       sub.JobNumber = generateJobNumber()
     }
-    if (sub.Status == null) {
-      sub.Status = "Draft"
+    if (sub?.Status == null) {
+      sub.Status = PCConstants.STATUS_DRAFT
     }
-    if (sub.CreateTime == null) {
+    if (sub?.CreateTime == null) {
       sub.CreateTime = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date())
     }
     _submissions.add(0, sub)
     return sub
+  }
+
+  public function copySubmission(origJobNum : String) : PolicyPeriod {
+    var orig = findByJobNumber(origJobNum)
+    if (orig == null) return null
+    var newJobNum = generateJobNumber()
+    var copy = orig.copySubmissionBranch(newJobNum)
+    createSubmission(copy)
+    return copy
   }
 }

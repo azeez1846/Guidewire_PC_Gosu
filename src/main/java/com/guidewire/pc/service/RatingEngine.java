@@ -1,5 +1,6 @@
 package com.guidewire.pc.service;
 
+import com.guidewire.pc.constants.PCConstants;
 import com.guidewire.pc.model.Cost;
 import com.guidewire.pc.model.PolicyPeriod;
 import com.guidewire.pc.model.Transaction;
@@ -8,6 +9,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RatingEngine {
@@ -21,21 +23,21 @@ public class RatingEngine {
     }
 
     public List<Cost> rate(PolicyPeriod period) {
-        LOGGER.log(java.util.logging.Level.INFO, "Executing Guidewire Rating Engine for PolicyPeriod: {0}", period != null ? period.getJobNumber() : "null");
+        LOGGER.log(Level.INFO, "Executing Guidewire Rating Engine for PolicyPeriod: {0}", period != null ? period.getJobNumber() : "null");
         List<Cost> costs = new ArrayList<>();
         if (period == null) return costs;
 
         // 1. Base Premium Cost
         double baseRate = 500.0;
-        if ("PersonalAuto".equalsIgnoreCase(period.getProductCode())) baseRate = 650.0;
-        else if ("CommercialAuto".equalsIgnoreCase(period.getProductCode())) baseRate = 1250.0;
-        else if ("CommercialProperty".equalsIgnoreCase(period.getProductCode())) baseRate = 2100.0;
-        else if ("GeneralLiability".equalsIgnoreCase(period.getProductCode())) baseRate = 1800.0;
+        if (PCConstants.PRODUCT_PERSONAL_AUTO.equalsIgnoreCase(period.getProductCode())) baseRate = 650.0;
+        else if (PCConstants.PRODUCT_COMMERCIAL_AUTO.equalsIgnoreCase(period.getProductCode())) baseRate = 1250.0;
+        else if (PCConstants.PRODUCT_COMMERCIAL_PROPERTY.equalsIgnoreCase(period.getProductCode())) baseRate = 2100.0;
+        else if (PCConstants.PRODUCT_GENERAL_LIABILITY.equalsIgnoreCase(period.getProductCode())) baseRate = 1800.0;
 
         if (period.getTermMonths() == 12) baseRate *= 1.9;
 
         BigDecimal baseCostAmt = BigDecimal.valueOf(baseRate).setScale(2, RoundingMode.HALF_UP);
-        Cost baseCost = new Cost("BasePremium", "Base Policy Premium for " + period.getProductCode(), baseCostAmt);
+        Cost baseCost = new Cost(PCConstants.CHARGE_BASE_PREMIUM, "Base Policy Premium for " + period.getProductCode(), baseCostAmt);
         costs.add(baseCost);
 
         // 2. Bodily Injury Coverage Cost
@@ -44,7 +46,7 @@ public class RatingEngine {
         else if ("$1M/$1M".equals(period.getBodilyInjuryLimit())) biAmount = 500.0;
         if (biAmount > 0) {
             BigDecimal biCostAmt = BigDecimal.valueOf(biAmount).setScale(2, RoundingMode.HALF_UP);
-            Cost biCost = new Cost("BodilyInjuryCoverage", "Bodily Injury Limit (" + period.getBodilyInjuryLimit() + ")", biCostAmt);
+            Cost biCost = new Cost(PCConstants.CHARGE_BODILY_INJURY, "Bodily Injury Limit (" + period.getBodilyInjuryLimit() + ")", biCostAmt);
             costs.add(biCost);
         }
 
@@ -59,7 +61,7 @@ public class RatingEngine {
         }
 
         // Mid-term proration for PolicyChange / Cancellation
-        if ("PolicyChange".equalsIgnoreCase(period.getJobType())) {
+        if (PCConstants.JOB_TYPE_POLICY_CHANGE.equalsIgnoreCase(period.getJobType())) {
             for (Cost c : costs) {
                 c.setActualAmount(c.getActualAmount().multiply(new BigDecimal("0.5")).setScale(2, RoundingMode.HALF_UP));
             }
@@ -71,13 +73,27 @@ public class RatingEngine {
             netBasePremium = netBasePremium.add(c.getActualAmount());
         }
 
+        // Multi-Policy Bundling Discount (15% off base premium if account has multiple policies)
+        if (period.getAccount() != null) {
+            String accNum = period.getAccount().getAccountNumber();
+            long accountPolicyCount = DataStoreService.getInstance().getSubmissions().stream()
+                    .filter(p -> p.getAccount() != null && accNum.equalsIgnoreCase(p.getAccount().getAccountNumber()))
+                    .count();
+            if (accountPolicyCount >= 2) {
+                BigDecimal discountAmt = netBasePremium.multiply(BigDecimal.valueOf(-PCConstants.MULTI_POLICY_DISCOUNT_FACTOR)).setScale(2, RoundingMode.HALF_UP);
+                Cost discountCost = new Cost(PCConstants.CHARGE_MULTI_POLICY_DISCOUNT, "Multi-Line Bundling Discount (15%)", discountAmt);
+                costs.add(discountCost);
+                netBasePremium = netBasePremium.add(discountAmt);
+            }
+        }
+
         // 4. Taxes & Fees Costs
         BigDecimal taxAmt = netBasePremium.multiply(new BigDecimal("0.08")).setScale(2, RoundingMode.HALF_UP);
-        Cost taxCost = new Cost("StateTax", "State Statutory Tax (8%)", taxAmt);
+        Cost taxCost = new Cost(PCConstants.CHARGE_STATE_TAX, "State Statutory Tax (8%)", taxAmt);
         costs.add(taxCost);
 
         BigDecimal feeAmt = new BigDecimal("25.00");
-        Cost feeCost = new Cost("PolicyFee", "Standard Policy Issuance Fee", feeAmt);
+        Cost feeCost = new Cost(PCConstants.CHARGE_POLICY_FEE, "Standard Policy Issuance Fee", feeAmt);
         costs.add(feeCost);
 
         // Update PolicyPeriod Financial Summary

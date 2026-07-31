@@ -1,6 +1,7 @@
 package gw.pc.uw
 
 import com.guidewire.pc.model.PolicyPeriod
+import gw.pc.config.PCConstants
 import java.util.List
 import java.util.ArrayList
 
@@ -21,7 +22,7 @@ class UnderwritingRulesEngine {
     }
 
     // Rule 2: Commercial Property Base State FL or CA catastrophe zone inspection
-    if ("CommercialProperty".equalsIgnoreCase(period.ProductCode) and ("FL".equalsIgnoreCase(period.BaseState) or "CA".equalsIgnoreCase(period.BaseState))) {
+    if (PCConstants.PRODUCT_COMMERCIAL_PROPERTY.equalsIgnoreCase(period.ProductCode) and ("FL".equalsIgnoreCase(period.BaseState) or "CA".equalsIgnoreCase(period.BaseState))) {
       issues.add(new UWIssue(
         "UW_CATASTROPHE_ZONE_HIGH_RISK",
         "Property located in high-risk coastal/wildfire state (" + period.BaseState + ") requires catastrophe survey.",
