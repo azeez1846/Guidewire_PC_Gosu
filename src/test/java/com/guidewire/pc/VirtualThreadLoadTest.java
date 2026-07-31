@@ -34,7 +34,7 @@ public class VirtualThreadLoadTest {
                 final int idx = i;
                 futures.add(vExecutor.submit(() -> {
                     try {
-                        Thread.sleep(simulatedIoDelayMs); // Unmounts virtual thread during IO wait
+                        java.util.concurrent.TimeUnit.MILLISECONDS.sleep(simulatedIoDelayMs); // Unmounts thread during IO wait
                     } catch (InterruptedException ignored) {}
                     PolicyPeriod p = new PolicyPeriod();
                     p.setJobNumber("VJOB-" + idx);
@@ -55,7 +55,7 @@ public class VirtualThreadLoadTest {
                 final int idx = i;
                 futures.add(pExecutor.submit(() -> {
                     try {
-                        Thread.sleep(simulatedIoDelayMs); // Blocks OS thread
+                        java.util.concurrent.TimeUnit.MILLISECONDS.sleep(simulatedIoDelayMs); // Blocks OS thread
                     } catch (InterruptedException ignored) {}
                     PolicyPeriod p = new PolicyPeriod();
                     p.setJobNumber("PJOB-" + idx);

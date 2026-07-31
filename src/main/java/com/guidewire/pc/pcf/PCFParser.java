@@ -63,7 +63,7 @@ public class PCFParser {
             String title = root.getAttribute("title");
 
             return new PCFDefinition(id, title, file.getAbsolutePath(), root);
-        } catch (Exception e) {
+        } catch (javax.xml.parsers.ParserConfigurationException | org.xml.sax.SAXException | java.io.IOException e) {
             System.err.println("[PCF Parser Warning] Error parsing PCF " + pcfId + ": " + e.getMessage());
             return null;
         }

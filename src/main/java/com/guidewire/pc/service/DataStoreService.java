@@ -75,7 +75,7 @@ public class DataStoreService {
         }
     }
 
-    public synchronized void resetToSeedData() {
+    public final synchronized void resetToSeedData() {
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
             stmt.execute("DELETE FROM POLICY_PERIODS");
             stmt.execute("DELETE FROM ACTIVITIES");

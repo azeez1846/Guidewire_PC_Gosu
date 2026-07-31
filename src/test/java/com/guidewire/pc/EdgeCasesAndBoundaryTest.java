@@ -38,17 +38,20 @@ public class EdgeCasesAndBoundaryTest {
 
     @Test
     public void testPolicyLifecycleExceptionGuards() {
-        assertThrows(IllegalArgumentException.class, () -> {
+        Throwable ex1 = assertThrows(IllegalArgumentException.class, () -> {
             lifecycleService.startPolicyChange("NON-EXISTENT-POL-999", "2026-06-01", "$500k", "$500");
         });
+        assertNotNull(ex1.getMessage());
 
-        assertThrows(IllegalArgumentException.class, () -> {
+        Throwable ex2 = assertThrows(IllegalArgumentException.class, () -> {
             lifecycleService.cancelPolicy("NON-EXISTENT-POL-999", "NonPayment", "ProRata", "2026-06-01");
         });
+        assertNotNull(ex2.getMessage());
 
-        assertThrows(IllegalArgumentException.class, () -> {
+        Throwable ex3 = assertThrows(IllegalArgumentException.class, () -> {
             lifecycleService.renewPolicy("NON-EXISTENT-POL-999");
         });
+        assertNotNull(ex3.getMessage());
     }
 
     @Test

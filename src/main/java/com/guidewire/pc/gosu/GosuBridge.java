@@ -38,7 +38,7 @@ public class GosuBridge {
             } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException t) {
                 System.out.println("[Gosu Engine] Standard runtime evaluation active: " + t.getMessage());
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             System.err.println("[Gosu Engine Warning] Gosu init fallback: " + e.getMessage());
         }
     }
