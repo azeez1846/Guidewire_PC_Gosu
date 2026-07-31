@@ -39,6 +39,10 @@ class UnderwritingRulesEngine {
       ))
     }
 
+    // Rule 4: Integrate UW Authority Matrix checks
+    var authorityIssues = UWAuthorityMatrix.evaluateAuthorityIssues(period)
+    issues.addAll(authorityIssues)
+
     return issues
   }
 }

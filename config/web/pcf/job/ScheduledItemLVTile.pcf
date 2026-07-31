@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="ScheduledItemLVTile"
+     title="Scheduled Equipment &amp; High Value Items">
+    <ListViewTile id="ScheduledItemsLV">
+        <RowIterator value="PolicyPeriod.ScheduledItems" var="item">
+            <Row id="ScheduledItemRow">
+                <TextCell id="ItemNumber" label="#" value="item.ItemNumber"/>
+                <TextCell id="Category" label="Category" value="item.Category" required="true"/>
+                <TextCell id="Description" label="Item Description" value="item.Description" required="true"/>
+                <TextCell id="SerialNumber" label="Serial / VIN #" value="item.SerialNumber"/>
+                <TextCell id="StatedValue" label="Stated Value ($)" value="item.StatedValue" required="true"/>
+                <TextCell id="ItemPremium" label="Item Premium ($)" value="item.ItemPremium" editable="false"/>
+            </Row>
+        </RowIterator>
+    </ListViewTile>
+</PCF>

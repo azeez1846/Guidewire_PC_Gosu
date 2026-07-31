@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel"
+        entity="ScheduledItem"
+        table="scheduled_item"
+        type="retireable"
+        desc="Scheduled high-value items attached to PolicyPeriod for commercial/inland marine lines.">
+  <column name="ItemNumber" type="integer" nullok="false" desc="Sequence item index"/>
+  <column name="Description" type="shorttext" nullok="false" desc="Detailed description of the scheduled item"/>
+  <column name="SerialNumber" type="shorttext" nullok="true" desc="Manufacturer serial number or VIN"/>
+  <column name="Category" type="shorttext" nullok="false" desc="Category e.g. FineArt, HeavyEquipment, Jewelry, Camera"/>
+  <column name="StatedValue" type="decimal" precision="12" scale="2" nullok="false" desc="Appraised or stated value"/>
+  <column name="ItemDeductible" type="decimal" precision="12" scale="2" nullok="true" desc="Deductible for this specific item"/>
+  <column name="ItemPremium" type="decimal" precision="12" scale="2" nullok="true" desc="Calculated premium for this item"/>
+</entity>

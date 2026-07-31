@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="RenewalWizard"
+     title="Renewal Wizard - Guidewire PolicyCenter">
+    <Wizard id="RenewalWizardFlow">
+        <WizardStep id="RenewalInfo" title="Step 1: Renewal Term Info">
+            <Screen id="RenewalInfoScreen">
+                <Toolbar id="WizardToolbar1">
+                    <ToolbarButton id="NextBtn1" action="Wizard.nextStep()" label="Next &gt; Rate Comparison"/>
+                </Toolbar>
+                <DetailViewPanel id="RenewalInfoDV">
+                    <InputColumn title="Policy &amp; Renewal Term Details">
+                        <TextInput id="PolicyNumber" label="Prior Policy #" value="Renewal.PolicyNumber" editable="false"/>
+                        <DateInput id="EffectiveDate" label="Renewal Effective Date" value="Renewal.EffectiveDate" required="true"/>
+                        <DateInput id="ExpirationDate" label="Renewal Expiration Date" value="Renewal.ExpirationDate" required="true"/>
+                        <SelectInput id="TermMonths" label="Term Length" value="Renewal.TermMonths"/>
+                        <TextInput id="BaseState" label="Base State" value="Renewal.BaseState" required="true"/>
+                    </InputColumn>
+                </DetailViewPanel>
+            </Screen>
+        </WizardStep>
+
+        <WizardStep id="RenewalQuote" title="Step 2: Renewal Premium &amp; Rate Difference">
+            <Screen id="RenewalQuoteScreen">
+                <Toolbar id="WizardToolbar2">
+                    <ToolbarButton id="CalculateBtn" action="gw.pc.job.RenewalJobService.calculateRenewalQuote(Renewal, PriorPeriod)" label="Calculate Renewal Quote"/>
+                    <ToolbarButton id="BindBtn" action="gw.pc.job.RenewalJobService.bindRenewal(Renewal)" label="Bind Renewal Policy"/>
+                </Toolbar>
+                <DetailViewPanel id="RenewalQuoteDV">
+                    <InputColumn title="Renewal Pricing Breakdown">
+                        <TextInput id="BasePremium" label="Base Written Premium" value="Renewal.BasePremium" editable="false"/>
+                        <TextInput id="TaxesAndFees" label="Taxes &amp; Surcharges" value="Renewal.TaxesAndFees" editable="false"/>
+                        <TextInput id="TotalPremium" label="Total Renewal Premium" value="Renewal.TotalPremium" editable="false"/>
+                        <TextInput id="Status" label="Renewal Status" value="Renewal.Status" editable="false"/>
+                    </InputColumn>
+                </DetailViewPanel>
+            </Screen>
+        </WizardStep>
+    </Wizard>
+</PCF>

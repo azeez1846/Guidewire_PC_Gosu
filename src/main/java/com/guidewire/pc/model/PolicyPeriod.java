@@ -50,6 +50,20 @@ public class PolicyPeriod implements KeyableBean, EffDatedBranch, Coverable {
     private BigDecimal totalPremium = BigDecimal.ZERO;
     private String createTime;
 
+    // Scheduled Items
+    private final List<ScheduledItem> scheduledItems = new ArrayList<>();
+
+    public List<ScheduledItem> getScheduledItems() {
+        return scheduledItems;
+    }
+
+    public void addScheduledItem(ScheduledItem item) {
+        if (item != null) {
+            item.setItemNumber(scheduledItems.size() + 1);
+            scheduledItems.add(item);
+        }
+    }
+
     public PolicyPeriod() {
         this.id = GosuORMSession.getInstance().nextID();
         this.status = com.guidewire.pc.constants.PCConstants.STATUS_DRAFT;

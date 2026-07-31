@@ -3,6 +3,9 @@ package gw.pc.job
 import com.guidewire.pc.model.PolicyPeriod
 import gw.pc.config.PCConstants
 import java.math.BigDecimal
+import java.math.RoundingMode
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 class CancellationJobService {
 
@@ -12,19 +15,38 @@ class CancellationJobService {
     period.setStatus(PCConstants.STATUS_CANCELED)
     period.setJobType(PCConstants.JOB_TYPE_CANCELLATION)
 
-    // Calculate unearned returned premium
     var originalPrem = period?.TotalPremium != null ? period.TotalPremium.doubleValue() : 0.0
     var returnedPrem = 0.0
 
-    if ("ShortRate".equalsIgnoreCase(calcMethod)) {
-      // Short-rate retention penalty
-      returnedPrem = (originalPrem * 0.5) * PCConstants.SHORT_RATE_RETENTION_FACTOR
-    } else {
-      // Standard Pro-Rata return (50% unearned mid-term)
-      returnedPrem = originalPrem * 0.50
+    // Exact calendar day count calculation if dates present
+    var unearnedFactor = 0.50
+    if (period.EffectiveDate != null and period.ExpirationDate != null and cancelEffDateStr != null) {
+      try {
+        var startDate = LocalDate.parse(period.EffectiveDate)
+        var endDate = LocalDate.parse(period.ExpirationDate)
+        var cancelDate = LocalDate.parse(cancelEffDateStr)
+
+        var totalDays = ChronoUnit.DAYS.between(startDate, endDate)
+        var elapsedDays = ChronoUnit.DAYS.between(startDate, cancelDate)
+
+        if (totalDays > 0 and elapsedDays >= 0 and elapsedDays <= totalDays) {
+          var earnedRatio = (double)elapsedDays / (double)totalDays
+          unearnedFactor = 1.0 - earnedRatio
+        }
+      } catch (e : Exception) {
+        unearnedFactor = 0.50
+      }
     }
 
-    var returnedBD = new BigDecimal(String.format("%.2f", {returnedPrem}))
+    if ("ShortRate".equalsIgnoreCase(calcMethod)) {
+      // Short-rate applies 90% factor to unearned premium (10% penalty retained by carrier)
+      returnedPrem = (originalPrem * unearnedFactor) * PCConstants.SHORT_RATE_RETENTION_FACTOR
+    } else {
+      // Standard Pro-Rata return
+      returnedPrem = originalPrem * unearnedFactor
+    }
+
+    var returnedBD = new BigDecimal(String.format("%.2f", {returnedPrem})).setScale(2, RoundingMode.HALF_UP)
     period.setBasePremium(returnedBD.negate())
     period.setTaxesAndFees(BigDecimal.ZERO)
     period.setTotalPremium(returnedBD.negate())
@@ -32,10 +54,17 @@ class CancellationJobService {
     return period
   }
 
-  public static function reinstatePolicy(period : PolicyPeriod, reinstatementReason : String) : PolicyPeriod {
+  public static function reinstatePolicy(period : PolicyPeriod, reinstatementReason : String, hasLapse : boolean, feeAmount : BigDecimal) : PolicyPeriod {
     if (period != null) {
       period.setStatus(PCConstants.STATUS_ISSUED)
       period.setJobType(PCConstants.JOB_TYPE_REINSTATEMENT)
+      if (feeAmount != null and feeAmount.compareTo(BigDecimal.ZERO) > 0) {
+        period.setTaxesAndFees(feeAmount)
+        period.setTotalPremium(feeAmount)
+      } else {
+        period.setTaxesAndFees(BigDecimal.ZERO)
+        period.setTotalPremium(BigDecimal.ZERO)
+      }
     }
     return period
   }
