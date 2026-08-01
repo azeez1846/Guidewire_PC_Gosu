@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel"
+        entity="RIAgreement"
+        table="ri_agreement"
+        type="retireable"
+        desc="Reinsurance Agreement defining treaty type, net retention limits, attachment points, and ceding percentages.">
+  <column name="AgreementNumber" type="shorttext" nullok="false" desc="Unique Reinsurance Treaty Number"/>
+  <column name="AgreementName" type="shorttext" nullok="false" desc="Name of the Reinsurance Treaty"/>
+  <column name="AgreementType" type="shorttext" nullok="false" desc="Type e.g. QuotaShare, ExcessOfLoss, Facultative"/>
+  <column name="GrossRetentionLimit" type="decimal" precision="12" scale="2" nullok="false" desc="Carrier gross retention limit"/>
+  <column name="AttachmentPoint" type="decimal" precision="12" scale="2" nullok="true" desc="Attachment point for Excess of Loss treaties"/>
+  <column name="CedingPercentage" type="decimal" precision="5" scale="2" nullok="false" desc="Percentage of risk ceded to reinsurer"/>
+  <column name="EffectiveDate" type="shorttext" nullok="false" desc="Effective date of agreement"/>
+  <column name="ExpirationDate" type="shorttext" nullok="false" desc="Expiration date of agreement"/>
+</entity>

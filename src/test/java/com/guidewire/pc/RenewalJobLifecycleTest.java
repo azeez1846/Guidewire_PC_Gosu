@@ -29,23 +29,20 @@ public class RenewalJobLifecycleTest {
         period.setTotalPremium(new BigDecimal("1200.00"));
 
         Object renewalObj = GosuBridge.invokeStatic("gw.pc.job.RenewalJobService", "startRenewal", period);
-        if (renewalObj instanceof PolicyPeriod) {
-            PolicyPeriod renewal = (PolicyPeriod) renewalObj;
+        if (renewalObj instanceof PolicyPeriod renewal) {
             assertEquals("Renewal", renewal.getJobType());
             assertEquals("Draft", renewal.getStatus());
             assertEquals("POL-994821", renewal.getPolicyNumber());
             assertEquals("2027-01-01", renewal.getEffectiveDate());
 
             Object quotedObj = GosuBridge.invokeStatic("gw.pc.job.RenewalJobService", "calculateRenewalQuote", renewal, period);
-            if (quotedObj instanceof PolicyPeriod) {
-                PolicyPeriod quoted = (PolicyPeriod) quotedObj;
+            if (quotedObj instanceof PolicyPeriod quoted) {
                 assertEquals("Quoted", quoted.getStatus());
                 assertNotNull(quoted.getTotalPremium());
                 assertTrue(quoted.getTotalPremium().compareTo(BigDecimal.ZERO) > 0);
 
                 Object boundObj = GosuBridge.invokeStatic("gw.pc.job.RenewalJobService", "bindRenewal", quoted);
-                if (boundObj instanceof PolicyPeriod) {
-                    PolicyPeriod bound = (PolicyPeriod) boundObj;
+                if (boundObj instanceof PolicyPeriod bound) {
                     assertEquals("Bound", bound.getStatus());
                 }
             }

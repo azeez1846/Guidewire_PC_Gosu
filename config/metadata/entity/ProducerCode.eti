@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel"
+        entity="ProducerCode"
+        table="producer_code"
+        type="retireable"
+        desc="Producer Code entity tracking agency producer code, license status, producer tier, and commission schedules.">
+  <column name="Code" type="shorttext" nullok="false" desc="Producer Code identifier e.g. PR-1001"/>
+  <column name="ProducerStatus" type="shorttext" nullok="false" desc="Status e.g. Active, Suspended, Terminated"/>
+  <column name="Tier" type="shorttext" nullok="false" desc="Producer Tier e.g. Gold, Silver, Bronze, Preferred"/>
+  <column name="NewBusinessCommissionRate" type="decimal" precision="5" scale="2" nullok="false" desc="Commission % rate for New Business"/>
+  <column name="RenewalCommissionRate" type="decimal" precision="5" scale="2" nullok="false" desc="Commission % rate for Policy Renewals"/>
+  <column name="LicensedStates" type="shorttext" nullok="false" desc="Comma separated list of licensed state jurisdictions"/>
+</entity>

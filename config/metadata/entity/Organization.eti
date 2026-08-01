@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel"
+        entity="Organization"
+        table="organization"
+        type="retireable"
+        desc="Agency organization hierarchy entity.">
+  <column name="Name" type="shorttext" nullok="false" desc="Name of the insurance brokerage/agency"/>
+  <column name="AgencyFEIN" type="shorttext" nullok="false" desc="Federal Employer Identification Number"/>
+  <column name="ProducerType" type="shorttext" nullok="false" desc="Agency Producer Type e.g. Independent, Captive, Broker"/>
+  <column name="Address" type="shorttext" nullok="true" desc="Agency primary office address"/>
+</entity>

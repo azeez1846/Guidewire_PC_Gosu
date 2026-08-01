@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="AuditInformationDVTile"
+     title="Policy Final Audit Details">
+    <DetailViewTile id="AuditInformationDVTileInner">
+        <InputColumn title="Audit Information Summary">
+            <TextInput id="AuditType" label="Audit Type" value="AuditInfo.AuditType"/>
+            <TextInput id="AuditMethod" label="Audit Method" value="AuditInfo.AuditMethod"/>
+            <TextInput id="AuditStatus" label="Audit Status" value="AuditInfo.AuditStatus"/>
+            <TextInput id="EstimatedExposure" label="Estimated Basis" value="AuditInfo.EstimatedExposure"/>
+            <TextInput id="AuditedExposure" label="Audited Basis" value="AuditInfo.AuditedExposure"/>
+            <TextInput id="AuditPremiumAdjustment" label="Audit Premium Adjustment" value="AuditInfo.AuditPremiumAdjustment"/>
+            <TextInput id="AuditDueDate" label="Due Date" value="AuditInfo.AuditDueDate"/>
+            <TextInput id="AuditCompleteDate" label="Completed Date" value="AuditInfo.AuditCompleteDate"/>
+        </InputColumn>
+    </DetailViewTile>
+</PCF>

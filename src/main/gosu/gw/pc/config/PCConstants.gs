@@ -20,6 +20,13 @@ class PCConstants {
   public static final var JOB_TYPE_CANCELLATION: String = "Cancellation"
   public static final var JOB_TYPE_REINSTATEMENT: String = "Reinstatement"
   public static final var JOB_TYPE_RENEWAL: String = "Renewal"
+  public static final var JOB_TYPE_AUDIT: String = "Audit"
+
+  // Audit Statuses
+  public static final var AUDIT_STATUS_DRAFT: String = "Draft"
+  public static final var AUDIT_STATUS_IN_PROCESS: String = "InProcess"
+  public static final var AUDIT_STATUS_COMPLETE: String = "Complete"
+  public static final var AUDIT_STATUS_CLOSED: String = "Closed"
 
   // Product Codes
   public static final var PRODUCT_PERSONAL_AUTO: String = "PersonalAuto"

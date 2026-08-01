@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="AuditWizard"
+     title="Final Audit Wizard - Guidewire PolicyCenter">
+    <Wizard id="AuditWizardFlow">
+        <WizardStep id="AuditDetails" title="Step 1: Audit Exposure Entry">
+            <Screen id="AuditDetailsScreen">
+                <Toolbar id="AuditToolbar1">
+                    <ToolbarButton id="CalculateAuditBtn" action="gw.pc.job.AuditJobService.calculateAuditAdjustment(AuditInfo, PolicyPeriod)" label="Calculate Audit Adjustment"/>
+                    <ToolbarButton id="CloseAuditBtn" action="gw.pc.job.AuditJobService.closeAudit(AuditInfo, PolicyPeriod)" label="Complete &amp; Close Audit"/>
+                </Toolbar>
+                <DetailViewPanel id="AuditDetailsDV">
+                    <InputColumn title="Audit Basis &amp; Exposure Details">
+                        <TextInput id="AuditType" label="Audit Type" value="AuditInfo.AuditType" editable="false"/>
+                        <TextInput id="AuditMethod" label="Audit Method" value="AuditInfo.AuditMethod"/>
+                        <TextInput id="EstimatedExposure" label="Estimated Exposure" value="AuditInfo.EstimatedExposure" editable="false"/>
+                        <TextInput id="AuditedExposure" label="Audited Exposure Basis" value="AuditInfo.AuditedExposure" required="true"/>
+                        <TextInput id="AuditPremiumAdjustment" label="Audit Premium Adjustment" value="AuditInfo.AuditPremiumAdjustment" editable="false"/>
+                        <TextInput id="AuditStatus" label="Audit Status" value="AuditInfo.AuditStatus" editable="false"/>
+                    </InputColumn>
+                </DetailViewPanel>
+            </Screen>
+        </WizardStep>
+    </Wizard>
+</PCF>

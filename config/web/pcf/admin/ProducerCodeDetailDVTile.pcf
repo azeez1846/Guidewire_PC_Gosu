@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="ProducerCodeDetailDVTile"
+     title="Producer Code &amp; Agency Commission Details">
+    <DetailViewTile id="ProducerCodeDetailDVTileInner">
+        <InputColumn title="Producer Information &amp; Commission Matrix">
+            <TextInput id="Code" label="Producer Code" value="ProducerCode.Code"/>
+            <TextInput id="ProducerStatus" label="Producer Status" value="ProducerCode.ProducerStatus"/>
+            <TextInput id="Tier" label="Producer Tier" value="ProducerCode.Tier"/>
+            <TextInput id="NewBusinessCommissionRate" label="New Business Commission %" value="ProducerCode.NewBusinessCommissionRate"/>
+            <TextInput id="RenewalCommissionRate" label="Renewal Commission %" value="ProducerCode.RenewalCommissionRate"/>
+            <TextInput id="LicensedStates" label="Licensed State Jurisdictions" value="ProducerCode.LicensedStates"/>
+        </InputColumn>
+    </DetailViewTile>
+</PCF>

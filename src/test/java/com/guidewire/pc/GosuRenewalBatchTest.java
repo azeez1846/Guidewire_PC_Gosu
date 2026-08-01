@@ -31,8 +31,7 @@ public class GosuRenewalBatchTest {
         Object batchObj = GosuBridge.construct("gw.pc.batch.RenewalBatchProcess");
         if (batchObj != null) {
             Object resultObj = GosuBridge.invokeMethod(batchObj, "run");
-            if (resultObj instanceof BatchProcessResult) {
-                BatchProcessResult res = (BatchProcessResult) resultObj;
+            if (resultObj instanceof BatchProcessResult res) {
                 assertTrue(res.isSuccess());
                 assertEquals("GosuRenewalBatch", res.getProcessType());
                 assertTrue(res.getItemsProcessed() >= 1);

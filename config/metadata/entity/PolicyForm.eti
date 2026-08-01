@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel"
+        entity="PolicyForm"
+        table="policy_form"
+        type="retireable"
+        desc="Policy Form entity tracking inferred and selected policy endorsements, notices, and legal disclosures.">
+  <column name="FormNumber" type="shorttext" nullok="false" desc="Standard ISO or custom form code e.g. CG 00 01, IL 00 17"/>
+  <column name="FormName" type="shorttext" nullok="false" desc="Title of the policy form endorsement"/>
+  <column name="EditionDate" type="shorttext" nullok="false" desc="Edition date string e.g. 01 18"/>
+  <column name="IsMandatory" type="bit" nullok="false" desc="True if form is required by state regulation or underwriting rule"/>
+  <column name="InferredState" type="shorttext" nullok="true" desc="State jurisdiction triggering form inference"/>
+  <column name="FormDescription" type="shorttext" nullok="true" desc="Description of form applicability"/>
+</entity>

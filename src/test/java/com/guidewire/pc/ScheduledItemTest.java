@@ -35,8 +35,7 @@ public class ScheduledItemTest {
         assertEquals(2, excavator.getItemNumber());
 
         Object totalSchedPrem = GosuBridge.invokeStatic("gw.pc.rating.ScheduledItemRatingEngine", "rateScheduledItems", period);
-        if (totalSchedPrem instanceof BigDecimal) {
-            BigDecimal prem = (BigDecimal) totalSchedPrem;
+        if (totalSchedPrem instanceof BigDecimal prem) {
             assertTrue(prem.compareTo(BigDecimal.ZERO) > 0);
             assertEquals(0, new BigDecimal("3300.00").compareTo(prem));
             assertEquals(0, new BigDecimal("300.00").compareTo(ring.getItemPremium()));

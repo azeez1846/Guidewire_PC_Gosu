@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="PolicyReinsuranceDVTile"
+     title="Policy Reinsurance Attachment &amp; Risk Cessions">
+    <DetailViewTile id="PolicyReinsuranceDVTileInner">
+        <InputColumn title="Reinsurance Treaty &amp; Cession Summary">
+            <TextInput id="AgreementNumber" label="Treaty Agreement #" value="RIAgreement.AgreementNumber"/>
+            <TextInput id="AgreementType" label="Agreement Type" value="RIAgreement.AgreementType"/>
+            <TextInput id="GrossRetentionLimit" label="Gross Retention Limit" value="RIAgreement.GrossRetentionLimit"/>
+            <TextInput id="CedingPercentage" label="Ceding %" value="RIAgreement.CedingPercentage"/>
+            <TextInput id="GrossRiskExposure" label="Policy Exposure Limit" value="RICession.GrossRiskExposure"/>
+            <TextInput id="RetainedExposure" label="Carrier Retained Exposure" value="RICession.RetainedExposure"/>
+            <TextInput id="CededExposure" label="Reinsurer Ceded Exposure" value="RICession.CededExposure"/>
+            <TextInput id="GrossWrittenPremium" label="Gross Written Premium" value="RICession.GrossWrittenPremium"/>
+            <TextInput id="CededPremium" label="Ceded Reinsurance Premium" value="RICession.CededPremium"/>
+            <CheckBoxInput id="RequiresFacultative" label="Requires Facultative Placement" value="RICession.RequiresFacultative"/>
+        </InputColumn>
+    </DetailViewTile>
+</PCF>

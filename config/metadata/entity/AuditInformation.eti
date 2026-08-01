@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel"
+        entity="AuditInformation"
+        table="audit_information"
+        type="retireable"
+        desc="Audit information tracking audited exposure, audit method, and premium adjustments for commercial policy final audits.">
+  <column name="AuditType" type="shorttext" nullok="false" desc="Type of audit e.g. FinalAudit, CheckingAudit, VoluntaryAudit"/>
+  <column name="AuditStatus" type="shorttext" nullok="false" desc="Audit status e.g. Draft, InProcess, Complete, Closed"/>
+  <column name="AuditMethod" type="shorttext" nullok="false" desc="Method e.g. Physical, Voluntary, Phone"/>
+  <column name="EstimatedExposure" type="decimal" precision="12" scale="2" nullok="false" desc="Original policy estimated exposure basis"/>
+  <column name="AuditedExposure" type="decimal" precision="12" scale="2" nullok="false" desc="Actual verified exposure basis"/>
+  <column name="AuditPremiumAdjustment" type="decimal" precision="12" scale="2" nullok="true" desc="Net premium adjustment calculated from audit"/>
+  <column name="AuditDueDate" type="shorttext" nullok="true" desc="Due date for audit completion"/>
+  <column name="AuditCompleteDate" type="shorttext" nullok="true" desc="Completion date of audit"/>
+</entity>

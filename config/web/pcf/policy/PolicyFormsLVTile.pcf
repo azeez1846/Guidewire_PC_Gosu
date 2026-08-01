@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="PolicyFormsLVTile"
+     title="Attached Policy Forms &amp; Endorsements">
+    <ListViewTile id="PolicyFormsLVTileInner">
+        <RowIterator value="PolicyForms" var="Form">
+            <Row>
+                <TextCell id="FormNumber" label="Form #" value="Form.FormNumber"/>
+                <TextCell id="FormName" label="Form Title" value="Form.FormName"/>
+                <TextCell id="EditionDate" label="Edition Date" value="Form.EditionDate"/>
+                <CheckBoxCell id="IsMandatory" label="Mandatory" value="Form.IsMandatory"/>
+                <TextCell id="InferredState" label="State" value="Form.InferredState"/>
+                <TextCell id="FormDescription" label="Description" value="Form.FormDescription"/>
+            </Row>
+        </RowIterator>
+    </ListViewTile>
+</PCF>

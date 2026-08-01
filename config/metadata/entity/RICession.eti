@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel"
+        entity="RICession"
+        table="ri_cession"
+        type="retireable"
+        desc="Policy risk cession calculating retained vs ceded exposure and ceded premium.">
+  <column name="CessionNumber" type="shorttext" nullok="false" desc="Cession transaction identifier"/>
+  <column name="GrossRiskExposure" type="decimal" precision="12" scale="2" nullok="false" desc="Total policy period gross exposure limit"/>
+  <column name="RetainedExposure" type="decimal" precision="12" scale="2" nullok="false" desc="Exposure retained by primary insurer"/>
+  <column name="CededExposure" type="decimal" precision="12" scale="2" nullok="false" desc="Exposure ceded to reinsurer"/>
+  <column name="GrossWrittenPremium" type="decimal" precision="12" scale="2" nullok="false" desc="Gross written premium of policy period"/>
+  <column name="CededPremium" type="decimal" precision="12" scale="2" nullok="false" desc="Net premium ceded to reinsurer"/>
+  <column name="RequiresFacultative" type="bit" nullok="false" desc="True if policy exceeds treaty retention and requires facultative RI"/>
+</entity>

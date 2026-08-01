@@ -28,8 +28,7 @@ public class EnhancedCancellationTest {
         Object result = GosuBridge.invokeStatic("gw.pc.job.CancellationJobService", "cancelPolicy",
                 period, "Insured Request", "ProRata", "2026-07-02");
 
-        if (result instanceof PolicyPeriod) {
-            PolicyPeriod canceled = (PolicyPeriod) result;
+        if (result instanceof PolicyPeriod canceled) {
             assertEquals("Canceled", canceled.getStatus());
             assertEquals("Cancellation", canceled.getJobType());
             assertNotNull(canceled.getTotalPremium());
@@ -52,8 +51,7 @@ public class EnhancedCancellationTest {
         Object result = GosuBridge.invokeStatic("gw.pc.job.CancellationJobService", "cancelPolicy",
                 period, "Insured Request", "ShortRate", "2026-07-02");
 
-        if (result instanceof PolicyPeriod) {
-            PolicyPeriod canceled = (PolicyPeriod) result;
+        if (result instanceof PolicyPeriod canceled) {
             assertTrue(canceled.getTotalPremium().compareTo(new BigDecimal("-500.00")) > 0);
         }
     }
@@ -67,8 +65,7 @@ public class EnhancedCancellationTest {
         Object result = GosuBridge.invokeStatic("gw.pc.job.CancellationJobService", "reinstatePolicy",
                 period, "Payment Received", Boolean.TRUE, new BigDecimal("25.00"));
 
-        if (result instanceof PolicyPeriod) {
-            PolicyPeriod reinstated = (PolicyPeriod) result;
+        if (result instanceof PolicyPeriod reinstated) {
             assertEquals("Issued", reinstated.getStatus());
             assertEquals("Reinstatement", reinstated.getJobType());
             assertEquals(new BigDecimal("25.00"), reinstated.getTaxesAndFees());
