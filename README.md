@@ -1,4 +1,4 @@
-# Guidewire PolicyCenter (Gosu Engine + Eclipse Jetty Web Application)
+# Guidewire_PC_Java_Gosu (Gosu Engine + Eclipse Jetty Web Application)
 
 A full-stack insurance policy administration system built on **Guidewire PolicyCenter** architecture, featuring an embedded **Gosu Language Engine (`gosu-core`)**, PCF web rendering engine on Eclipse Jetty, H2 embedded relational database, 6 Guidewire Marketplace Accelerators, Security Hardening, and complete Gosu Unit Test (gUnit) coverage.
 

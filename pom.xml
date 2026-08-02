@@ -6,6 +6,7 @@
 
     <groupId>com.guidewire.pc</groupId>
     <artifactId>guidewire-policycenter</artifactId>
+    <name>Guidewire_PC_Java_Gosu</name>
     <version>1.0.0-SNAPSHOT</version>
 
     <properties>
