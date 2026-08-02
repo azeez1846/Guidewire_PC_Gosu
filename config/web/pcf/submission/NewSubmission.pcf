@@ -10,9 +10,11 @@
                     <SelectInput id="SelectAccount" label="Account" value="Submission.Account.AccountNumber" required="true"/>
                     <SelectInput id="ProductCode" label="Product / Line of Business" value="Submission.ProductCode" required="true">
                         <Choice value="PersonalAuto" label="Personal Auto"/>
+                        <Choice value="WorkersComp" label="Workers Compensation"/>
                         <Choice value="CommercialAuto" label="Commercial Auto"/>
-                        <Choice value="CommercialProperty" label="Commercial Property"/>
                         <Choice value="GeneralLiability" label="General Liability"/>
+                        <Choice value="CommercialProperty" label="Commercial Property (Select)"/>
+                        <Choice value="CommercialUmbrella" label="Commercial Umbrella"/>
                     </SelectInput>
                     <ButtonInput id="CreateSubmissionBtn" action="SubmissionWizard.go(Submission)" value="Create &amp; Enter Policy Wizard"/>
                 </InputColumn>
