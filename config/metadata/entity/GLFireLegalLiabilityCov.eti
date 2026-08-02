@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="GLFireLegalLiabilityCov" table="gl_fire_legal" type="effdated" desc="Damage to Premises Rented to You (Fire Legal Liability) limit.">
+  <column name="FireLegalLimit" type="shorttext" nullok="false" desc="Limit e.g. $100,000, $300,000, $500,000, $1,000,000"/>
+</entity>

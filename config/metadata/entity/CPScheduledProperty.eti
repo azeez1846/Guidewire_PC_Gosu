@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CPScheduledProperty" table="cp_schd_prop" type="effdated" desc="Scheduled high value property items attached to Commercial Property policy line.">
+  <column name="ItemNumber" type="integer" nullok="false" desc="Item sequence number"/>
+  <column name="Description" type="shorttext" nullok="false" desc="Description of scheduled property"/>
+  <column name="Limit" type="decimal" precision="12" scale="2" nullok="false" desc="Stated value / limit"/>
+  <column name="Deductible" type="decimal" precision="12" scale="2" nullok="true" desc="Item deductible"/>
+</entity>

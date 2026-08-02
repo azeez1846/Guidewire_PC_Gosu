@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="AutoInterstatePermit" table="auto_interstate_permit" type="retireable" desc="Interstate transportation permit and ICC/MC filing status.">
+  <column name="MCFilingNumber" type="shorttext" nullok="false" desc="Motor Carrier MC filing number"/>
+  <column name="FilingState" type="shorttext" nullok="false" desc="Filing state jurisdiction"/>
+  <column name="FilingStatus" type="shorttext" nullok="false" desc="Active, Pending, Suspended"/>
+</entity>

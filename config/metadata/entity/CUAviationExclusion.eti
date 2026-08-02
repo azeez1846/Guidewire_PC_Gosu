@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CUAviationExclusion" table="cu_aviation_excl" type="retireable" desc="Aviation, Aircraft, and Airport operations exclusion.">
+  <column name="ExcludeAircraftOwnership" type="bit" nullok="false" desc="Exclude ownership or operation of aircraft"/>
+</entity>

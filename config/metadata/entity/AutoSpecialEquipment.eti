@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="AutoSpecialEquipment" table="auto_special_equip" type="effdated" desc="Attached commercial vehicle equipment (Hydraulic lift, Crane, Winch, Snow plow).">
+  <column name="VehicleVIN" type="shorttext" nullok="false" desc="Vehicle VIN"/>
+  <column name="EquipmentType" type="shorttext" nullok="false" desc="HydraulicLift, Crane, Winch, RefrigerationUnit, SnowPlow"/>
+  <column name="StatedValue" type="decimal" precision="12" scale="2" nullok="false" desc="Equipment stated value"/>
+</entity>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="CPBuildingsLVTile"
+     title="Insured Commercial Property Buildings">
+    <ListViewTile id="CPBuildingsLVTileInner">
+        <RowIterator value="CPBuildings" var="Bldg">
+            <Row>
+                <TextCell id="BuildingNumber" label="#" value="Bldg.BuildingNumber"/>
+                <TextCell id="ConstructionType" label="Construction" value="Bldg.ConstructionType"/>
+                <TextCell id="OccupancyType" label="Occupancy" value="Bldg.OccupancyType"/>
+                <TextCell id="SquareFootage" label="Sq Ft" value="Bldg.SquareFootage"/>
+                <TextCell id="YearBuilt" label="Year Built" value="Bldg.YearBuilt"/>
+                <TextCell id="NumberOfStories" label="Stories" value="Bldg.NumberOfStories"/>
+                <TextCell id="BuildingLimit" label="Building Limit" value="Bldg.BuildingLimit"/>
+            </Row>
+        </RowIterator>
+    </ListViewTile>
+</PCF>

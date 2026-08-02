@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCScheduleCredit" table="wc_schedule_credit" type="retireable" desc="Schedule credit itemized breakdown (Premises, Equipment, Safety, Management).">
+  <column name="Category" type="shorttext" nullok="false" desc="Category e.g. Premises, SafetyOrganization, Training"/>
+  <column name="CreditPercentage" type="decimal" precision="5" scale="2" nullok="false" desc="Credit or debit percentage e.g. -5.00 for credit, +3.00 for debit"/>
+  <column name="Comments" type="shorttext" nullok="true" desc="Underwriter notes"/>
+</entity>

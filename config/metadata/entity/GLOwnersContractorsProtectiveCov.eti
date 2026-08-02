@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="GLOwnersContractorsProtectiveCov" table="gl_ocp_cov" type="effdated" desc="Owners &amp; Contractors Protective Liability (OCP) coverage endorsement.">
+  <column name="DesignatedContractor" type="shorttext" nullok="false" desc="Contractor name"/>
+  <column name="JobLocation" type="shorttext" nullok="false" desc="Project jobsite location"/>
+  <column name="Limit" type="shorttext" nullok="false" desc="OCP Limit e.g. $1,000,000/$2,000,000"/>
+</entity>

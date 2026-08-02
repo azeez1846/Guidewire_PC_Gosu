@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CPExtendedCoverage" table="cp_extended_cov" type="effdated" desc="Vandalism, Sprinkler Leakage, Windstorm extended coverages.">
+  <column name="VandalismIncluded" type="bit" nullok="false" desc="Vandalism &amp; malicious mischief inclusion"/>
+  <column name="SprinklerLeakageIncluded" type="bit" nullok="false" desc="Sprinkler leakage inclusion"/>
+  <column name="WindstormIncluded" type="bit" nullok="false" desc="Windstorm &amp; hail inclusion"/>
+</entity>

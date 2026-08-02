@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CUExclusion" table="cu_exclusion" type="retireable" desc="Commercial Umbrella general exclusion endorsement.">
+  <column name="ExclusionCode" type="shorttext" nullok="false" desc="CU_EMPLOYMENT_PRACTICES_EXCL, CU_CYBER_EXCL"/>
+  <column name="Description" type="shorttext" nullok="false" desc="Exclusion description"/>
+</entity>

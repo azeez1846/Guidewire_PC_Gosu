@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="GLContractualLiabCov" table="gl_contractual_liab" type="effdated" desc="Blanket Contractual Liability coverage endorsement.">
+  <column name="ContractType" type="shorttext" nullok="false" desc="BlanketContractual, InsuredContractsOnly"/>
+  <column name="Limit" type="shorttext" nullok="false" desc="Contractual liability limit e.g. $1,000,000"/>
+</entity>

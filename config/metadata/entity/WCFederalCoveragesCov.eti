@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCFederalCoveragesCov" table="wc_federal_cov" type="effdated" desc="Federal Employers Liability Act (FELA) coverage endorsement.">
+  <column name="ProgramType" type="shorttext" nullok="false" desc="Railroad, CoalMineDust, DefenseBaseAct"/>
+  <column name="LimitPerAccident" type="shorttext" nullok="false" desc="FELA Liability limit e.g. $1,000,000"/>
+  <column name="StateCode" type="shorttext" nullok="false" desc="State jurisdiction"/>
+</entity>

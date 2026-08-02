@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CPTenantsImprovementCov" table="cp_tenants_imp" type="effdated" desc="Tenants Improvements and Betterments coverage endorsement.">
+  <column name="ImprovementLimit" type="decimal" precision="14" scale="2" nullok="false" desc="Improvements coverage limit e.g. 150000.00"/>
+  <column name="ValuationBasis" type="shorttext" nullok="false" desc="ReplacementCost, ActualCashValue"/>
+</entity>

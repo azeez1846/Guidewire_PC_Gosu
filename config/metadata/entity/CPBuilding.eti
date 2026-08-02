@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CPBuilding" table="cp_building" type="effdated" desc="Commercial Property building details, construction class, occupancy, and square footage.">
+  <column name="BuildingNumber" type="integer" nullok="false" desc="Building sequence index"/>
+  <column name="ConstructionType" type="shorttext" nullok="false" desc="Frame, JoistedMasonry, NonCombustible, FireResistive"/>
+  <column name="OccupancyType" type="shorttext" nullok="false" desc="Office, Retail, Warehouse, Manufacturing, Restaurant"/>
+  <column name="SquareFootage" type="integer" nullok="false" desc="Total building area in square feet"/>
+  <column name="YearBuilt" type="integer" nullok="false" desc="Year constructed"/>
+  <column name="NumberOfStories" type="integer" nullok="false" desc="Number of stories"/>
+  <column name="BuildingLimit" type="decimal" precision="14" scale="2" nullok="false" desc="Building coverage limit"/>
+</entity>

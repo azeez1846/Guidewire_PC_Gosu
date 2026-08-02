@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CommercialAutoExcl" table="comm_auto_excl" type="retireable" desc="Commercial Auto exclusion clause.">
+  <column name="ExclusionCode" type="shorttext" nullok="false" desc="AUTO_RACING_EXCL, AUTO_EXEMPLARY_DAMAGES_EXCL"/>
+  <column name="ExclusionDescription" type="shorttext" nullok="false" desc="Description of exclusion"/>
+</entity>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCRetrospectiveRating" table="wc_retro_rating" type="retireable" desc="Retrospective rating plan parameters for Workers Compensation.">
+  <column name="PlanType" type="shorttext" nullok="false" desc="Plan type e.g. Plan A, Plan B, Plan C"/>
+  <column name="MinPremiumFactor" type="decimal" precision="5" scale="3" nullok="false" desc="Minimum premium ratio e.g. 0.600"/>
+  <column name="MaxPremiumFactor" type="decimal" precision="5" scale="3" nullok="false" desc="Maximum premium ratio e.g. 1.300"/>
+  <column name="LossConversionFactor" type="decimal" precision="5" scale="3" nullok="false" desc="Loss conversion factor e.g. 1.120"/>
+  <column name="BasicPremiumFactor" type="decimal" precision="5" scale="3" nullok="false" desc="Basic premium factor"/>
+</entity>

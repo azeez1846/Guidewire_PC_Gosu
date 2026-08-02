@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CommercialVehicleCov" table="comm_vehicle_cov" type="effdated" desc="Vehicle-level physical damage coverages (Comprehensive &amp; Collision).">
+  <column name="VehicleID" type="long" nullok="false" desc="Foreign key to CommercialVehicle"/>
+  <column name="ComprehensiveDeductible" type="shorttext" nullok="true" desc="Comprehensive deductible e.g. $500, $1,000, $2,500"/>
+  <column name="CollisionDeductible" type="shorttext" nullok="true" desc="Collision deductible e.g. $500, $1,000, $2,500"/>
+  <column name="TowingAndLabor" type="bit" nullok="false" desc="Towing &amp; labor inclusion"/>
+</entity>

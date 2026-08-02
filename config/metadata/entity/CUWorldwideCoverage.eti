@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CUWorldwideCoverage" table="cu_worldwide_cov" type="retireable" desc="Worldwide territory expansion clause for suit brought in US/Canada.">
+  <column name="WorldwideTerritory" type="bit" nullok="false" desc="True if worldwide territory extension applies"/>
+  <column name="SuitBroughtInUSOnly" type="bit" nullok="false" desc="True if suit must be brought in US or Canada court"/>
+</entity>

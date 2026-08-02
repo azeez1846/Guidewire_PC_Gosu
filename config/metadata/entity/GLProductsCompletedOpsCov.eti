@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="GLProductsCompletedOpsCov" table="gl_products_comp_ops" type="effdated" desc="Products &amp; Completed Operations aggregate extension.">
+  <column name="AggregateLimit" type="shorttext" nullok="false" desc="Limit e.g. $1,000,000, $2,000,000"/>
+  <column name="IncludedInGeneralAgg" type="bit" nullok="false" desc="True if included in general aggregate limit"/>
+</entity>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCWaiverOfSubrogation" table="wc_waiver_subro" type="retireable" desc="Waiver of subrogation endorsement for Workers Comp.">
+  <column name="WaiverType" type="shorttext" nullok="false" desc="Blanket, Specific"/>
+  <column name="EntityName" type="shorttext" nullok="true" desc="Third party entity name for specific waiver"/>
+  <column name="FlatCharge" type="decimal" precision="12" scale="2" nullok="false" desc="Flat fee or percentage charge"/>
+  <column name="StateCode" type="shorttext" nullok="false" desc="State code"/>
+</entity>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="CommercialUmbrellaSubmissionWizard"
+     title="Commercial Umbrella Submission Wizard">
+    <Wizard id="CommercialUmbrellaWizardFlow">
+        <WizardStep id="UmbrellaLineDetails" title="Step 1: Umbrella Limits &amp; Retained Limits">
+            <Screen id="UmbrellaLineScreen">
+                <Toolbar id="UmbrellaToolbar1">
+                    <ToolbarButton id="RateUmbrellaBtn" action="gw.pc.line.umbrella.CURatingEngine.rateCommercialUmbrella(PolicyPeriod, EachOccurrenceLimit, SelfInsuredRetention, UnderlyingPolicyCount)" label="Calculate Umbrella Premium"/>
+                </Toolbar>
+                <DetailViewPanel id="UmbrellaLineDV">
+                    <InputColumn title="Commercial Umbrella Rating &amp; Limits">
+                        <TextInput id="EachOccurrenceLimit" label="Occurrence Limit" value="CommercialUmbrellaLine.EachOccurrenceLimit" required="true"/>
+                        <TextInput id="AggregateLimit" label="Aggregate Limit" value="CommercialUmbrellaLine.AggregateLimit" required="true"/>
+                        <TextInput id="SelfInsuredRetention" label="Self-Insured Retention (SIR)" value="CommercialUmbrellaLine.SelfInsuredRetention" required="true"/>
+                        <TextInput id="TotalLinePremium" label="Umbrella Line Premium" value="CommercialUmbrellaLine.TotalLinePremium" editable="false"/>
+                    </InputColumn>
+                </DetailViewPanel>
+            </Screen>
+        </WizardStep>
+    </Wizard>
+</PCF>

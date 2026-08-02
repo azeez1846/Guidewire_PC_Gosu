@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CPFireProtection" table="cp_fire_prot" type="retireable" desc="Building fire protection features (Central Station Alarm, Fire Hydrant distance).">
+  <column name="AlarmType" type="shorttext" nullok="false" desc="CentralStation, LocalAlarm, Proprietary"/>
+  <column name="HydrantDistanceFeet" type="integer" nullok="false" desc="Distance to nearest fire hydrant in feet e.g. 250"/>
+</entity>

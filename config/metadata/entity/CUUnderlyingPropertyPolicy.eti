@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CUUnderlyingPropertyPolicy" table="cu_und_property" type="effdated" desc="Underlying Property policy schedule details.">
+  <column name="PropertyLimit" type="decimal" precision="14" scale="2" nullok="false" desc="Underlying Property limit e.g. 5000000.00"/>
+  <column name="CarrierName" type="shorttext" nullok="false" desc="Underlying property carrier name"/>
+</entity>

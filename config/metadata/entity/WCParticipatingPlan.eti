@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCParticipatingPlan" table="wc_part_plan" type="retireable" desc="Participating dividend plan definition.">
+  <column name="PlanID" type="shorttext" nullok="false" desc="Plan identifier e.g. DIV-PLAN-01"/>
+  <column name="PlanName" type="shorttext" nullok="false" desc="Plan name e.g. Standard Dividend Plan"/>
+  <column name="RetentionFactor" type="decimal" precision="5" scale="3" nullok="false" desc="Carrier retention factor"/>
+  <column name="EstimatedDividendRate" type="decimal" precision="5" scale="2" nullok="true" desc="Estimated dividend payout rate"/>
+</entity>

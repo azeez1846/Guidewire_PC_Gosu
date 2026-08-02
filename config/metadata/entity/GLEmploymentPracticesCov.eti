@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="GLEmploymentPracticesCov" table="gl_epli_cov" type="effdated" desc="Employment Practices Liability (EPLI) extension endorsement.">
+  <column name="EPLILimit" type="shorttext" nullok="false" desc="Limit e.g. $100,000, $250,000, $500,000"/>
+  <column name="EPLIDeductible" type="decimal" precision="12" scale="2" nullok="false" desc="Self-Insured Retention / Deductible e.g. 5000.00"/>
+  <column name="ThirdPartyEPLI" type="bit" nullok="false" desc="Third party discrimination coverage flag"/>
+</entity>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCMaritimeCov" table="wc_maritime_cov" type="effdated" desc="Maritime / Jones Act coverage endorsement.">
+  <column name="CoverageType" type="shorttext" nullok="false" desc="TransportationWages, MaintenanceAndCure"/>
+  <column name="LimitPerSeaman" type="decimal" precision="12" scale="2" nullok="false" desc="Limit per seaman e.g. 500000.00"/>
+  <column name="VesselCount" type="integer" nullok="false" desc="Number of covered vessels"/>
+</entity>

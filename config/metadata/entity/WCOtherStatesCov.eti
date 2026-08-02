@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCOtherStatesCov" table="wc_other_states" type="effdated" desc="Other States insurance coverage extension clause.">
+  <column name="CoverageType" type="shorttext" nullok="false" desc="AllStatesExceptMonopolistic, SpecifiedStatesOnly"/>
+  <column name="SpecifiedStates" type="shorttext" nullok="true" desc="Comma separated list of included states"/>
+  <column name="AutomaticExtension" type="bit" nullok="false" desc="True if automatic coverage applies upon employee hire"/>
+</entity>

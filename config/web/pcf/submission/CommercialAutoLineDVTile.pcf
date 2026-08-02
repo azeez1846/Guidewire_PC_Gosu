@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="CommercialAutoLineDVTile"
+     title="Commercial Auto Policy Line Summary">
+    <DetailViewTile id="CommercialAutoLineDVTileInner">
+        <InputColumn title="Fleet &amp; Operation Details">
+            <TextInput id="FleetStatus" label="Fleet Status" value="CommercialAutoLine.FleetStatus"/>
+            <TextInput id="PrimaryRadius" label="Operation Radius" value="CommercialAutoLine.PrimaryRadius"/>
+            <TextInput id="VehicleCount" label="Vehicles" value="CommercialAutoLine.VehicleCount"/>
+            <TextInput id="DriverCount" label="Authorized Drivers" value="CommercialAutoLine.DriverCount"/>
+            <TextInput id="TotalLinePremium" label="Commercial Auto Line Premium" value="CommercialAutoLine.TotalLinePremium"/>
+        </InputColumn>
+    </DetailViewTile>
+</PCF>

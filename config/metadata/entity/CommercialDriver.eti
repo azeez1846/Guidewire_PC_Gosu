@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CommercialDriver" table="comm_driver" type="effdated" desc="Commercial driver details, MVR status, and driving history.">
+  <column name="DriverName" type="shorttext" nullok="false" desc="Full legal driver name"/>
+  <column name="LicenseNumber" type="shorttext" nullok="false" desc="Drivers license number"/>
+  <column name="LicenseState" type="shorttext" nullok="false" desc="State issuing license"/>
+  <column name="DateOfBirth" type="shorttext" nullok="false" desc="Date of birth"/>
+  <column name="CDLStatus" type="bit" nullok="false" desc="True if driver holds Commercial Driver's License (CDL)"/>
+  <column name="ViolationsCount" type="integer" nullok="false" desc="Moving violations count in past 3 years"/>
+</entity>

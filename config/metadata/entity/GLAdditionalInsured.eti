@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="GLAdditionalInsured" table="gl_add_insured" type="effdated" desc="Additional Insured endorsement (Blanket vs Scheduled).">
+  <column name="InsuredType" type="shorttext" nullok="false" desc="Blanket, Scheduled, ManagerOrLessor, Vendor, GrantorOfPermit"/>
+  <column name="EntityName" type="shorttext" nullok="true" desc="Scheduled entity legal name"/>
+  <column name="FormNumber" type="shorttext" nullok="false" desc="ISO endorsement form e.g. CG 20 10, CG 20 37"/>
+</entity>

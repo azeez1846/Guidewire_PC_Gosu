@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="CommercialUmbrellaLineDVTile"
+     title="Commercial Umbrella Policy Line Summary">
+    <DetailViewTile id="CommercialUmbrellaLineDVTileInner">
+        <InputColumn title="Limits &amp; SIR Summary">
+            <TextInput id="LineCode" label="Line Code" value="CommercialUmbrellaLine.LineCode"/>
+            <TextInput id="EachOccurrenceLimit" label="Occurrence Limit" value="CommercialUmbrellaLine.EachOccurrenceLimit"/>
+            <TextInput id="AggregateLimit" label="Aggregate Limit" value="CommercialUmbrellaLine.AggregateLimit"/>
+            <TextInput id="SelfInsuredRetention" label="SIR Amount" value="CommercialUmbrellaLine.SelfInsuredRetention"/>
+            <TextInput id="TotalLinePremium" label="Umbrella Line Premium" value="CommercialUmbrellaLine.TotalLinePremium"/>
+        </InputColumn>
+    </DetailViewTile>
+</PCF>

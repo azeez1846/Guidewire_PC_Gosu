@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="GLExposure" table="gl_exposure" type="effdated" desc="General Liability classification exposure, basis type, and manual rating.">
+  <column name="ClassCode" type="shorttext" nullok="false" desc="ISO GL class code e.g. 51833, 91580, 61212"/>
+  <column name="ClassDescription" type="shorttext" nullok="false" desc="Classification description"/>
+  <column name="BasisType" type="shorttext" nullok="false" desc="GrossSales, Payroll, SquareFootage, Units"/>
+  <column name="BasisAmount" type="decimal" precision="14" scale="2" nullok="false" desc="Exposure amount"/>
+  <column name="BaseRate" type="decimal" precision="6" scale="3" nullok="false" desc="Rate per $1,000 exposure"/>
+  <column name="ClassPremium" type="decimal" precision="12" scale="2" nullok="true" desc="Class premium"/>
+</entity>

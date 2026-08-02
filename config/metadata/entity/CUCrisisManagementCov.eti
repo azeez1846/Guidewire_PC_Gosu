@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CUCrisisManagementCov" table="cu_crisis_mgmt" type="retireable" desc="Crisis Management public relations response coverage endorsement.">
+  <column name="CrisisLimit" type="decimal" precision="12" scale="2" nullok="false" desc="Crisis PR response limit e.g. 50000.00, 100000.00"/>
+</entity>

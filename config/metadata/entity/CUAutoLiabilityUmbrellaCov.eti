@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CUAutoLiabilityUmbrellaCov" table="cu_auto_umb_cov" type="effdated" desc="Auto liability excess coverage extension under Commercial Umbrella.">
+  <column name="ExcessLimit" type="shorttext" nullok="false" desc="Excess Auto limit e.g. $5,000,000"/>
+  <column name="BroadenedPollutionExtension" type="bit" nullok="false" desc="True if broadened pollution applies excess"/>
+</entity>

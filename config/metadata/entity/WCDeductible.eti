@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCDeductible" table="wc_deductible" type="retireable" desc="Medical and Indemnity deductible per claim.">
+  <column name="DeductibleType" type="shorttext" nullok="false" desc="Medical, Indemnity, Combined"/>
+  <column name="DeductibleAmount" type="decimal" precision="12" scale="2" nullok="false" desc="Deductible amount per claim e.g. 1000.00, 2500.00"/>
+  <column name="CreditFactor" type="decimal" precision="5" scale="3" nullok="false" desc="Premium discount factor for deductible"/>
+  <column name="StateCode" type="shorttext" nullok="false" desc="State code"/>
+</entity>

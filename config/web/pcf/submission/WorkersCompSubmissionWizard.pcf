@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="WorkersCompSubmissionWizard"
+     title="Workers Compensation Submission Wizard">
+    <Wizard id="WorkersCompWizardFlow">
+        <WizardStep id="WCLineDetails" title="Step 1: Workers Comp Line Details">
+            <Screen id="WCLineScreen">
+                <Toolbar id="WCToolbar1">
+                    <ToolbarButton id="RateWCBtn" action="gw.pc.line.wc.WCRatingEngine.rateWorkersComp(PolicyPeriod, Payroll, ExpMod, Rate)" label="Calculate WC Premium"/>
+                </Toolbar>
+                <DetailViewPanel id="WCLineDV">
+                    <InputColumn title="Payroll Exposure &amp; Experience Rating">
+                        <TextInput id="BaseState" label="Primary State" value="PolicyPeriod.BaseState" required="true"/>
+                        <TextInput id="TotalPayroll" label="Estimated Annual Payroll" value="WCPolicyLine.TotalPayrollExposure" required="true"/>
+                        <TextInput id="ExperienceMod" label="Experience Modifier" value="WCPolicyLine.ExperienceMod" required="true"/>
+                        <TextInput id="TotalLinePremium" label="Workers Comp Line Premium" value="WCPolicyLine.TotalLinePremium" editable="false"/>
+                    </InputColumn>
+                </DetailViewPanel>
+            </Screen>
+        </WizardStep>
+    </Wizard>
+</PCF>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCAuditPayroll" table="wc_audit_payroll" type="effdated" desc="Audited actual payroll basis per class code for Workers Comp audit.">
+  <column name="ClassCode" type="shorttext" nullok="false" desc="Class code"/>
+  <column name="EstimatedPayroll" type="decimal" precision="14" scale="2" nullok="false" desc="Original estimated payroll"/>
+  <column name="AuditedPayroll" type="decimal" precision="14" scale="2" nullok="false" desc="Audited actual payroll"/>
+  <column name="AuditDifference" type="decimal" precision="14" scale="2" nullok="true" desc="Payroll variance"/>
+  <column name="StateCode" type="shorttext" nullok="false" desc="State code"/>
+</entity>

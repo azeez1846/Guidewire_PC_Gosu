@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="GLPersonalAdvertisingInjuryCov" table="gl_personal_adv_inj" type="effdated" desc="Personal &amp; Advertising Injury coverage limit.">
+  <column name="Limit" type="shorttext" nullok="false" desc="Limit e.g. $1,000,000"/>
+  <column name="ExcludeAdvertisingInjury" type="bit" nullok="false" desc="Exclusion flag for advertising injury"/>
+</entity>

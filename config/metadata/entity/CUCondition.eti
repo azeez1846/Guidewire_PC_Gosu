@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CUCondition" table="cu_condition" type="retireable" desc="Commercial Umbrella policy condition clause.">
+  <column name="ConditionCode" type="shorttext" nullok="false" desc="CU_MAINTAIN_UNDERLYING_COND, CU_NOTICE_OF_OCCURRENCE_COND"/>
+  <column name="Description" type="shorttext" nullok="false" desc="Description"/>
+</entity>

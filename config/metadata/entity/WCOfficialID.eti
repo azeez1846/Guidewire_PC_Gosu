@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCOfficialID" table="wc_official_id" type="retireable" desc="Official statutory state employer identification number.">
+  <column name="OfficialIDType" type="shorttext" nullok="false" desc="Type e.g. FEIN, StateEmployerID, NCCIRiskID"/>
+  <column name="OfficialIDValue" type="shorttext" nullok="false" desc="Official ID value e.g. 12-3456789"/>
+  <column name="StateCode" type="shorttext" nullok="true" desc="Jurisdiction state code"/>
+</entity>

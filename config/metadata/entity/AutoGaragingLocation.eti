@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="AutoGaragingLocation" table="auto_garaging_loc" type="effdated" desc="Primary and secondary vehicle garaging addresses and territory codes.">
+  <column name="LocationNumber" type="integer" nullok="false" desc="Location sequence number"/>
+  <column name="StreetAddress" type="shorttext" nullok="false" desc="Street address"/>
+  <column name="City" type="shorttext" nullok="false" desc="City"/>
+  <column name="State" type="shorttext" nullok="false" desc="State"/>
+  <column name="ZipCode" type="shorttext" nullok="false" desc="ZIP code"/>
+  <column name="TerritoryCode" type="shorttext" nullok="false" desc="Rating territory code e.g. 001, 002"/>
+</entity>

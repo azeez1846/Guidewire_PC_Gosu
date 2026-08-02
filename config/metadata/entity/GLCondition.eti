@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="GLCondition" table="gl_condition" type="retireable" desc="General Liability policy condition clause.">
+  <column name="ConditionCode" type="shorttext" nullok="false" desc="GL_AUDIT_COND, GL_SUBCONTRACTOR_COND"/>
+  <column name="Description" type="shorttext" nullok="false" desc="Description"/>
+</entity>

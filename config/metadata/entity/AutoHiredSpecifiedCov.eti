@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="AutoHiredSpecifiedCov" table="auto_hired_cov" type="effdated" desc="Hired Auto physical damage and liability coverage extension.">
+  <column name="HiredCostOfHire" type="decimal" precision="12" scale="2" nullok="false" desc="Annual cost of hired vehicles"/>
+  <column name="HiredCompDeductible" type="shorttext" nullok="true" desc="Comprehensive deductible for hired auto"/>
+  <column name="HiredCollDeductible" type="shorttext" nullok="true" desc="Collision deductible for hired auto"/>
+</entity>

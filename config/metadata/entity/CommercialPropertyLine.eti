@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CommercialPropertyLine" table="comm_prop_line" type="effdated" desc="Commercial Property policy line tracking buildings, coinsurance %, valuation, and line premium.">
+  <column name="LineCode" type="shorttext" nullok="false" desc="Line Code e.g. CommercialPropertyLine"/>
+  <column name="CoinsurancePercentage" type="integer" nullok="false" desc="Coinsurance percentage e.g. 80, 90, 100"/>
+  <column name="ValuationMethod" type="shorttext" nullok="false" desc="ReplacementCost, ActualCashValue, AgreedValue"/>
+  <column name="TotalBuildingCount" type="integer" nullok="false" desc="Total insured buildings count"/>
+  <column name="TotalLinePremium" type="decimal" precision="12" scale="2" nullok="false" desc="Total Commercial Property line premium"/>
+</entity>

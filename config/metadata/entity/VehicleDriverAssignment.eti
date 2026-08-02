@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="VehicleDriverAssignment" table="veh_driver_assign" type="effdated" desc="Primary driver assignment to specific commercial vehicle.">
+  <column name="VehicleVIN" type="shorttext" nullok="false" desc="Vehicle VIN"/>
+  <column name="DriverLicenseNumber" type="shorttext" nullok="false" desc="Driver license number"/>
+  <column name="PercentageUse" type="integer" nullok="false" desc="Percentage of vehicle usage by driver e.g. 100"/>
+</entity>

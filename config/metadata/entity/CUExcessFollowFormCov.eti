@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CUExcessFollowFormCov" table="cu_follow_form" type="retireable" desc="Follow-Form Excess Liability terms matching underlying policy conditions.">
+  <column name="FollowFormStatus" type="bit" nullok="false" desc="True if umbrella follows terms and conditions of underlying policy"/>
+</entity>

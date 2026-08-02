@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CommercialAutoLine" table="comm_auto_line" type="effdated" desc="Commercial Auto policy line tracking fleet status, radius of operation, and total auto line premium.">
+  <column name="LineCode" type="shorttext" nullok="false" desc="Line Code e.g. CommercialAutoLine"/>
+  <column name="FleetStatus" type="shorttext" nullok="false" desc="Fleet, NonFleet"/>
+  <column name="PrimaryRadius" type="shorttext" nullok="false" desc="Local (0-50 miles), Intermediate (51-200 miles), LongDistance (200+ miles)"/>
+  <column name="VehicleCount" type="integer" nullok="false" desc="Total registered vehicles in fleet"/>
+  <column name="DriverCount" type="integer" nullok="false" desc="Total authorized commercial drivers"/>
+  <column name="TotalLinePremium" type="decimal" precision="12" scale="2" nullok="false" desc="Calculated total Commercial Auto line premium"/>
+</entity>

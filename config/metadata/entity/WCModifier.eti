@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCModifier" table="wc_modifier" type="retireable" desc="Workers Comp rating modifier (Experience Mod, Schedule Rating, Safety Credit).">
+  <column name="ModifierCode" type="shorttext" nullok="false" desc="Code e.g. WC_EXP_MOD, WC_SCHED_CREDIT, WC_SAFETY_CREDIT"/>
+  <column name="ModifierValue" type="decimal" precision="6" scale="3" nullok="false" desc="Modifier multiplier e.g. 0.950"/>
+  <column name="Reason" type="shorttext" nullok="true" desc="Justification for modifier credit/debit"/>
+  <column name="StateCode" type="shorttext" nullok="false" desc="State code"/>
+</entity>

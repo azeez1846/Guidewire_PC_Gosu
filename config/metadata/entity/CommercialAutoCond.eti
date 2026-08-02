@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CommercialAutoCond" table="comm_auto_cond" type="retireable" desc="Commercial Auto policy condition clause.">
+  <column name="ConditionCode" type="shorttext" nullok="false" desc="AUTO_INSPECTION_COND, AUTO_GARAGING_COND"/>
+  <column name="ConditionDescription" type="shorttext" nullok="false" desc="Description of condition"/>
+</entity>

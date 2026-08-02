@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CPFloodCoverage" table="cp_flood_cov" type="effdated" desc="Commercial Property Flood Coverage endorsement and NFIP zone.">
+  <column name="FloodLimit" type="decimal" precision="14" scale="2" nullok="false" desc="Flood coverage limit e.g. 500000.00"/>
+  <column name="FloodZone" type="shorttext" nullok="false" desc="FEMA Flood Zone e.g. ZoneA, ZoneAE, ZoneX, ZoneV"/>
+  <column name="FloodDeductible" type="decimal" precision="12" scale="2" nullok="false" desc="Flood deductible e.g. 10000.00"/>
+</entity>

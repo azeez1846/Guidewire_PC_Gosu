@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="AutoGaragekeepersCov" table="auto_garagekeepers" type="effdated" desc="Garagekeepers legal liability coverage for customer vehicles in care, custody, or control.">
+  <column name="CoverageOption" type="shorttext" nullok="false" desc="LegalLiability, DirectPrimary, DirectExcess"/>
+  <column name="LimitPerLocation" type="decimal" precision="12" scale="2" nullok="false" desc="Limit per location e.g. 500000.00"/>
+  <column name="DeductiblePerAuto" type="decimal" precision="12" scale="2" nullok="false" desc="Deductible per customer vehicle e.g. 500.00"/>
+</entity>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCStateCovered" table="wc_state_covered" type="effdated" desc="State jurisdiction covered under Workers Compensation policy.">
+  <column name="StateCode" type="shorttext" nullok="false" desc="Two-letter state postal abbreviation e.g. TX, FL, CA"/>
+  <column name="StatutoryLimit" type="shorttext" nullok="false" desc="Statutory WC benefit limit status e.g. Statutory"/>
+  <column name="StateTaxRate" type="decimal" precision="5" scale="3" nullok="false" desc="State assessment/tax percentage rate"/>
+  <column name="StateFundStatus" type="shorttext" nullok="true" desc="State fund participation type e.g. Competitive, Monopolistic"/>
+  <column name="StatePayrollBasis" type="decimal" precision="14" scale="2" nullok="false" desc="Total estimated payroll in this state jurisdiction"/>
+  <column name="StateManualPremium" type="decimal" precision="12" scale="2" nullok="true" desc="Calculated manual premium for state"/>
+</entity>

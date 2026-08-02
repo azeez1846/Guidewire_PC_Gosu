@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CPWindstormExclusion" table="cp_wind_excl" type="retireable" desc="Coastal Windstorm Exclusion &amp; Named Storm Deductible parameters.">
+  <column name="ExcludedInTier1" type="bit" nullok="false" desc="True if windstorm is excluded in coastal tier 1 county"/>
+  <column name="NamedStormDeductiblePercent" type="decimal" precision="5" scale="2" nullok="true" desc="Named storm percentage deductible e.g. 2.00, 5.00"/>
+</entity>

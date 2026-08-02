@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCPremiseExposition" table="wc_premise_exp" type="effdated" desc="Workplace location physical premise exposure and safety inspection details.">
+  <column name="LocationNumber" type="integer" nullok="false" desc="Location sequence number"/>
+  <column name="StreetAddress" type="shorttext" nullok="false" desc="Street address"/>
+  <column name="City" type="shorttext" nullok="false" desc="City"/>
+  <column name="State" type="shorttext" nullok="false" desc="State abbreviation"/>
+  <column name="ZipCode" type="shorttext" nullok="false" desc="Postal ZIP code"/>
+  <column name="InspectionStatus" type="shorttext" nullok="true" desc="Passed, Pending, Recommended"/>
+</entity>

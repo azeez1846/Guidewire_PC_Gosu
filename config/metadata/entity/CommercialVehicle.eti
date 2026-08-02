@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CommercialVehicle" table="comm_vehicle" type="effdated" desc="Commercial vehicle details, VIN, garaging location, and valuation.">
+  <column name="VehicleNumber" type="integer" nullok="false" desc="Vehicle sequence index"/>
+  <column name="VIN" type="shorttext" nullok="false" desc="Vehicle Identification Number"/>
+  <column name="Make" type="shorttext" nullok="false" desc="Vehicle Make e.g. Ford, Freightliner, Volvo, Peterbilt"/>
+  <column name="Model" type="shorttext" nullok="false" desc="Vehicle Model e.g. F-550, Cascadia, VNL 860"/>
+  <column name="Year" type="integer" nullok="false" desc="Model Year"/>
+  <column name="VehicleType" type="shorttext" nullok="false" desc="Truck, Tractor, SemiTrailer, ServiceVan, Bus"/>
+  <column name="StatedValue" type="decimal" precision="12" scale="2" nullok="false" desc="Stated or appraised value"/>
+  <column name="GaragingZip" type="shorttext" nullok="false" desc="Primary garaging ZIP code"/>
+</entity>

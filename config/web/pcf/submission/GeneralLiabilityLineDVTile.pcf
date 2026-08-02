@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="GeneralLiabilityLineDVTile"
+     title="General Liability Policy Line Summary">
+    <DetailViewTile id="GeneralLiabilityLineDVTileInner">
+        <InputColumn title="Coverage Form &amp; Exposure Summary">
+            <TextInput id="LineCode" label="Line Code" value="GLLine.LineCode"/>
+            <TextInput id="CoverageForm" label="Coverage Form" value="GLLine.CoverageForm"/>
+            <TextInput id="TotalExposureAmount" label="Gross Exposure Basis" value="GLLine.TotalExposureAmount"/>
+            <TextInput id="TotalLinePremium" label="General Liability Premium" value="GLLine.TotalLinePremium"/>
+        </InputColumn>
+    </DetailViewTile>
+</PCF>

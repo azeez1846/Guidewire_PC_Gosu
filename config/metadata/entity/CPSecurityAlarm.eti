@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CPSecurityAlarm" table="cp_security_alarm" type="retireable" desc="Burglar alarm systems and security guard service details.">
+  <column name="SystemGrade" type="shorttext" nullok="false" desc="GradeA, GradeB, CentralStationWithRunner"/>
+  <column name="SecurityGuardHours" type="shorttext" nullok="true" desc="24/7 Patrol, NightWatchmanOnly"/>
+  <column name="DiscountPercent" type="decimal" precision="5" scale="2" nullok="false" desc="Security discount percentage e.g. 5.00"/>
+</entity>

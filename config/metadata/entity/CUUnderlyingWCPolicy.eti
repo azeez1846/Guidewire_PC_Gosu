@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CUUnderlyingWCPolicy" table="cu_und_wc" type="effdated" desc="Underlying Employers Liability limit minimum verification.">
+  <column name="BIAccidentLimit" type="shorttext" nullok="false" desc="EL limit e.g. $500,000/$500,000/$500,000"/>
+  <column name="MeetsMinimumRequirement" type="bit" nullok="false" desc="True if underlying EL meets carrier minimum requirement ($500k)"/>
+</entity>

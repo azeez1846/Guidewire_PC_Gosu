@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CPExclusion" table="cp_exclusion" type="retireable" desc="Commercial Property exclusion endorsement.">
+  <column name="ExclusionCode" type="shorttext" nullok="false" desc="CP_ORDINANCE_LAW_EXCL, CP_WAR_EXCL, CP_NUCLEAR_EXCL"/>
+  <column name="Description" type="shorttext" nullok="false" desc="Exclusion description"/>
+</entity>

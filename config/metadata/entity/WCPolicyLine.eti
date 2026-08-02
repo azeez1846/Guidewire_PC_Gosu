@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCPolicyLine" table="wc_policy_line" type="effdated" desc="Workers Compensation policy line entity tracking payroll exposure, experience mod, tax mod, and line total premium.">
+  <column name="LineCode" type="shorttext" nullok="false" desc="Policy Line Code e.g. WorkersCompLine"/>
+  <column name="ExperienceMod" type="decimal" precision="5" scale="3" nullok="false" desc="Experience Modification factor e.g. 0.950"/>
+  <column name="StateRatingMod" type="decimal" precision="5" scale="3" nullok="true" desc="State specific modifier"/>
+  <column name="ExpenseConstant" type="decimal" precision="12" scale="2" nullok="true" desc="Standard expense constant fee"/>
+  <column name="MinimumPremium" type="decimal" precision="12" scale="2" nullok="true" desc="Policy minimum premium threshold"/>
+  <column name="TotalPayrollExposure" type="decimal" precision="14" scale="2" nullok="false" desc="Total estimated payroll exposure across covered classes"/>
+  <column name="StandardPremium" type="decimal" precision="12" scale="2" nullok="true" desc="Standard earned premium before taxes"/>
+  <column name="TotalLinePremium" type="decimal" precision="12" scale="2" nullok="false" desc="Total Workers Comp line premium"/>
+</entity>

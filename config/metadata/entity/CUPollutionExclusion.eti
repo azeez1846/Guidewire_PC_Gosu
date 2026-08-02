@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CUPollutionExclusion" table="cu_pollution_excl" type="retireable" desc="Commercial Umbrella pollution exclusion and hostile fire exception.">
+  <column name="AbsolutePollutionExclusion" type="bit" nullok="false" desc="True if absolute pollution exclusion applies"/>
+  <column name="HostileFireException" type="bit" nullok="false" desc="True if hostile fire exception applies"/>
+</entity>

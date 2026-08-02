@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="GLDeductible" table="gl_deductible" type="retireable" desc="General Liability property damage / bodily injury deductible.">
+  <column name="DeductibleBasis" type="shorttext" nullok="false" desc="PerClaim, PerOccurrence"/>
+  <column name="DeductibleType" type="shorttext" nullok="false" desc="BodilyInjury, PropertyDamage, Combined"/>
+  <column name="DeductibleAmount" type="decimal" precision="12" scale="2" nullok="false" desc="Deductible amount e.g. 1000.00, 2500.00, 5000.00"/>
+</entity>

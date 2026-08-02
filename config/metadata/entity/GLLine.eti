@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="GLLine" table="gl_line" type="effdated" desc="General Liability policy line tracking coverage form type, exposure basis, and total GL line premium.">
+  <column name="LineCode" type="shorttext" nullok="false" desc="Line Code e.g. GLLine"/>
+  <column name="CoverageForm" type="shorttext" nullok="false" desc="Occurrence, ClaimsMade"/>
+  <column name="SplitLimits" type="bit" nullok="false" desc="True if split limits apply vs CSL"/>
+  <column name="TotalExposureAmount" type="decimal" precision="14" scale="2" nullok="false" desc="Total estimated sales or payroll exposure"/>
+  <column name="TotalLinePremium" type="decimal" precision="12" scale="2" nullok="false" desc="Calculated total General Liability line premium"/>
+</entity>

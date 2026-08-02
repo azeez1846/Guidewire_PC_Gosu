@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="GLExclusion" table="gl_exclusion" type="retireable" desc="General Liability exclusion endorsement.">
+  <column name="ExclusionCode" type="shorttext" nullok="false" desc="GL_POLLUTION_EXCL, GL_ASBESTOS_EXCL, GL_LEAD_EXCL"/>
+  <column name="Description" type="shorttext" nullok="false" desc="Exclusion description"/>
+</entity>

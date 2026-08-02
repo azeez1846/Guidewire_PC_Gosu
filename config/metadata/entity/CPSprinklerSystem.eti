@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CPSprinklerSystem" table="cp_sprinkler_sys" type="retireable" desc="Automatic fire sprinkler system certification and discount rate.">
+  <column name="CoveragePercent" type="integer" nullok="false" desc="Percent of building area sprinklered e.g. 100"/>
+  <column name="SprinklerType" type="shorttext" nullok="false" desc="WetPipe, DryPipe, PreAction, Deluge"/>
+  <column name="DiscountRate" type="decimal" precision="5" scale="2" nullok="false" desc="Sprinkler premium discount percentage e.g. 15.00"/>
+</entity>

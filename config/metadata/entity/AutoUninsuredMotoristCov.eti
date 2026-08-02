@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="AutoUninsuredMotoristCov" table="auto_um_cov" type="effdated" desc="Uninsured Motorist (UM) liability limit endorsement.">
+  <column name="UMLimit" type="shorttext" nullok="false" desc="UM Limit e.g. $100,000/$300,000, $500,000 CSL, $1,000,000 CSL"/>
+  <column name="Stacked" type="bit" nullok="false" desc="Stacked coverage flag"/>
+  <column name="RejectionSigned" type="bit" nullok="false" desc="True if written lower limit or rejection selection is signed"/>
+  <column name="StateCode" type="shorttext" nullok="false" desc="State postal code"/>
+</entity>

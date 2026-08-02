@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="CommercialVehiclesLVTile"
+     title="Commercial Fleet Vehicles">
+    <ListViewTile id="CommercialVehiclesLVTileInner">
+        <RowIterator value="CommercialVehicles" var="Veh">
+            <Row>
+                <TextCell id="VehicleNumber" label="#" value="Veh.VehicleNumber"/>
+                <TextCell id="VIN" label="VIN" value="Veh.VIN"/>
+                <TextCell id="Make" label="Make" value="Veh.Make"/>
+                <TextCell id="Model" label="Model" value="Veh.Model"/>
+                <TextCell id="Year" label="Year" value="Veh.Year"/>
+                <TextCell id="VehicleType" label="Type" value="Veh.VehicleType"/>
+                <TextCell id="StatedValue" label="Stated Value" value="Veh.StatedValue"/>
+                <TextCell id="GaragingZip" label="Garaging ZIP" value="Veh.GaragingZip"/>
+            </Row>
+        </RowIterator>
+    </ListViewTile>
+</PCF>

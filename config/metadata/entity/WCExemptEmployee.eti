@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCExemptEmployee" table="wc_exempt_employee" type="retireable" desc="Executive officers and sole proprietors excluded from Workers Comp coverage.">
+  <column name="OfficerName" type="shorttext" nullok="false" desc="Name of officer or partner"/>
+  <column name="Title" type="shorttext" nullok="false" desc="Title e.g. President, Vice President, Partner"/>
+  <column name="OwnershipPercentage" type="decimal" precision="5" scale="2" nullok="false" desc="Ownership percentage e.g. 50.00"/>
+  <column name="ExemptionStatus" type="shorttext" nullok="false" desc="Exempt or Included"/>
+  <column name="StateCode" type="shorttext" nullok="false" desc="State jurisdiction"/>
+</entity>

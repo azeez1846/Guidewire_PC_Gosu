@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="GLCyberExtensionCov" table="gl_cyber_ext" type="effdated" desc="Data Compromise and Cyber Liability extension endorsement.">
+  <column name="CyberLimit" type="shorttext" nullok="false" desc="Limit e.g. $50,000, $100,000, $250,000"/>
+  <column name="NotificationExpenseLimit" type="decimal" precision="12" scale="2" nullok="false" desc="Breach notification expense limit"/>
+  <column name="Deductible" type="decimal" precision="12" scale="2" nullok="false" desc="Cyber deductible e.g. 1000.00"/>
+</entity>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="GLLiquorLiabilityCov" table="gl_liquor_liab" type="effdated" desc="Liquor Liability endorsement for establishments serving alcohol.">
+  <column name="EachCommonCauseLimit" type="shorttext" nullok="false" desc="Limit per common cause e.g. $1,000,000"/>
+  <column name="AggregateLimit" type="shorttext" nullok="false" desc="Liquor liability aggregate limit e.g. $2,000,000"/>
+  <column name="AnnualAlcoholReceipts" type="decimal" precision="14" scale="2" nullok="false" desc="Annual gross alcohol sales receipts"/>
+</entity>

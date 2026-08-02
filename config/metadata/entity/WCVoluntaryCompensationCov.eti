@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCVoluntaryCompensationCov" table="wc_voluntary_comp" type="effdated" desc="Voluntary compensation endorsement for exempt employees.">
+  <column name="DesignatedEmployees" type="shorttext" nullok="false" desc="Designated employee groups e.g. Executive Officers, Farm Workers"/>
+  <column name="StateCode" type="shorttext" nullok="false" desc="State jurisdiction"/>
+  <column name="AdditionalPremium" type="decimal" precision="12" scale="2" nullok="true" desc="Endorsement premium"/>
+</entity>

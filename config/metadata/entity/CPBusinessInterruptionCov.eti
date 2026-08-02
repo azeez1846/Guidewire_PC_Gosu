@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CPBusinessInterruptionCov" table="cp_bus_interrupt" type="effdated" desc="Business Interruption monthly recovery limit parameters.">
+  <column name="MonthlyLimitFraction" type="shorttext" nullok="false" desc="1/3, 1/4, 1/6 monthly indemnity fraction"/>
+  <column name="RestorationPeriodMonths" type="integer" nullok="false" desc="Max period of restoration months e.g. 12"/>
+</entity>

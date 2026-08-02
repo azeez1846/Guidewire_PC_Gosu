@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="GLLocation" table="gl_location" type="effdated" desc="General Liability premise location address and territory.">
+  <column name="LocationNumber" type="integer" nullok="false" desc="Location sequence number"/>
+  <column name="Address" type="shorttext" nullok="false" desc="Street address"/>
+  <column name="City" type="shorttext" nullok="false" desc="City"/>
+  <column name="State" type="shorttext" nullok="false" desc="State abbreviation"/>
+  <column name="TerritoryCode" type="shorttext" nullok="false" desc="GL rating territory code e.g. 001"/>
+</entity>

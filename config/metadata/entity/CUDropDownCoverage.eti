@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CUDropDownCoverage" table="cu_drop_down" type="effdated" desc="Drop-down coverage endorsement over exhausted underlying aggregate limits.">
+  <column name="ExhaustedAggregateDrop" type="bit" nullok="false" desc="True if umbrella drops down upon exhaustion of underlying aggregate limit"/>
+</entity>

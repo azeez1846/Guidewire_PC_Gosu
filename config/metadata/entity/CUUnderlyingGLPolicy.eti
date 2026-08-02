@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CUUnderlyingGLPolicy" table="cu_und_gl" type="effdated" desc="Underlying General Liability limit minimum verification.">
+  <column name="OccurrenceLimit" type="shorttext" nullok="false" desc="GL Occurrence limit e.g. $1,000,000"/>
+  <column name="AggregateLimit" type="shorttext" nullok="false" desc="GL Aggregate limit e.g. $2,000,000"/>
+  <column name="MeetsMinimumRequirement" type="bit" nullok="false" desc="True if underlying GL meets carrier minimum requirement ($1M/$2M)"/>
+</entity>

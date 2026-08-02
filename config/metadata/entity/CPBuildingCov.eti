@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CPBuildingCov" table="cp_building_cov" type="effdated" desc="Building structure coverage limit, deductible, and cause of loss form.">
+  <column name="BuildingID" type="long" nullok="false" desc="Foreign key to CPBuilding"/>
+  <column name="Limit" type="decimal" precision="14" scale="2" nullok="false" desc="Building coverage limit e.g. 1000000.00"/>
+  <column name="Deductible" type="decimal" precision="12" scale="2" nullok="false" desc="Property deductible e.g. 1000.00, 2500.00, 5000.00"/>
+  <column name="CauseOfLossForm" type="shorttext" nullok="false" desc="Basic, Broad, Special"/>
+</entity>

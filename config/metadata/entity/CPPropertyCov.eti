@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CPPropertyCov" table="cp_property_cov" type="effdated" desc="Business Personal Property (BPP) contents coverage limit and deductible.">
+  <column name="BuildingID" type="long" nullok="false" desc="Foreign key to CPBuilding"/>
+  <column name="BPPLimit" type="decimal" precision="14" scale="2" nullok="false" desc="BPP coverage limit e.g. 500000.00"/>
+  <column name="BPPDeductible" type="decimal" precision="12" scale="2" nullok="false" desc="BPP deductible e.g. 1000.00"/>
+</entity>

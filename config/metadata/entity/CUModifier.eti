@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CUModifier" table="cu_modifier" type="retireable" desc="Commercial Umbrella experience and underlying carrier AM Best rating modifier.">
+  <column name="ModifierCode" type="shorttext" nullok="false" desc="CU_CARRIER_RATING_MOD, CU_LOSS_FREE_MOD"/>
+  <column name="ModifierValue" type="decimal" precision="6" scale="3" nullok="false" desc="Modifier multiplier e.g. 0.900"/>
+  <column name="Notes" type="shorttext" nullok="true" desc="Underwriter notes"/>
+</entity>

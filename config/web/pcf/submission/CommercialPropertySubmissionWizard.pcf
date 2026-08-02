@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="CommercialPropertySubmissionWizard"
+     title="Commercial Property Submission Wizard">
+    <Wizard id="CommercialPropertyWizardFlow">
+        <WizardStep id="CPLineDetails" title="Step 1: Building &amp; BPP Coverage Details">
+            <Screen id="CPLineScreen">
+                <Toolbar id="CPToolbar1">
+                    <ToolbarButton id="RateCPBtn" action="gw.pc.line.cp.CPRatingEngine.rateCommercialProperty(PolicyPeriod, BuildingLimit, BPPLimit, ProtectionClass)" label="Calculate Property Premium"/>
+                </Toolbar>
+                <DetailViewPanel id="CPLineDV">
+                    <InputColumn title="Property Rating &amp; Coinsurance">
+                        <TextInput id="CoinsurancePercentage" label="Coinsurance %" value="CommercialPropertyLine.CoinsurancePercentage" required="true"/>
+                        <TextInput id="ValuationMethod" label="Valuation Method" value="CommercialPropertyLine.ValuationMethod" required="true"/>
+                        <TextInput id="TotalBuildingCount" label="Building Count" value="CommercialPropertyLine.TotalBuildingCount" required="true"/>
+                        <TextInput id="TotalLinePremium" label="Property Line Premium" value="CommercialPropertyLine.TotalLinePremium" editable="false"/>
+                    </InputColumn>
+                </DetailViewPanel>
+            </Screen>
+        </WizardStep>
+    </Wizard>
+</PCF>

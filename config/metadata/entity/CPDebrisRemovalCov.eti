@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CPDebrisRemovalCov" table="cp_debris_removal" type="effdated" desc="Debris Removal additional limit coverage endorsement.">
+  <column name="AdditionalLimit" type="decimal" precision="12" scale="2" nullok="false" desc="Additional limit above 25% policy limit e.g. 25000.00, 50000.00"/>
+</entity>

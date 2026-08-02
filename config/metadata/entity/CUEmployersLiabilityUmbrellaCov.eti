@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CUEmployersLiabilityUmbrellaCov" table="cu_el_umb_cov" type="effdated" desc="Employers Liability excess coverage extension under Commercial Umbrella.">
+  <column name="ExcessLimit" type="shorttext" nullok="false" desc="Excess EL limit e.g. $5,000,000"/>
+</entity>

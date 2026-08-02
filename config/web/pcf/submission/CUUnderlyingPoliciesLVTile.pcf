@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="CUUnderlyingPoliciesLVTile"
+     title="Scheduled Underlying Policies">
+    <ListViewTile id="CUUnderlyingPoliciesLVTileInner">
+        <RowIterator value="UnderlyingPolicies" var="Pol">
+            <Row>
+                <TextCell id="PolicyType" label="LOB / Policy Type" value="Pol.PolicyType"/>
+                <TextCell id="CarrierName" label="Underlying Carrier" value="Pol.CarrierName"/>
+                <TextCell id="PolicyNumber" label="Policy #" value="Pol.PolicyNumber"/>
+                <TextCell id="EffectiveDate" label="Effective Date" value="Pol.EffectiveDate"/>
+                <TextCell id="ExpirationDate" label="Expiration Date" value="Pol.ExpirationDate"/>
+                <TextCell id="UnderlyingLimit" label="Underlying Limit" value="Pol.UnderlyingLimit"/>
+            </Row>
+        </RowIterator>
+    </ListViewTile>
+</PCF>

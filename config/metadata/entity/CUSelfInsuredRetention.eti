@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CUSelfInsuredRetention" table="cu_sir_amount" type="retireable" desc="Self-Insured Retention (SIR) amount for uninsured claims under umbrella.">
+  <column name="SIRAmount" type="decimal" precision="12" scale="2" nullok="false" desc="SIR amount e.g. 10000.00, 25000.00"/>
+  <column name="AppliesToUninsuredLossesOnly" type="bit" nullok="false" desc="True if SIR applies only when underlying policy has no coverage"/>
+</entity>

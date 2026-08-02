@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="AutoNonOwnedCov" table="auto_non_owned" type="effdated" desc="Non-Owned Auto liability coverage extension for employee vehicle use.">
+  <column name="NumEmployees" type="integer" nullok="false" desc="Number of employees using personal vehicles for business"/>
+  <column name="NonOwnedLimit" type="shorttext" nullok="false" desc="Liability limit for non-owned auto"/>
+</entity>

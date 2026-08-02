@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCEarningsBasis" table="wc_earnings_basis" type="retireable" desc="Payroll earnings basis rules and overtime caps.">
+  <column name="OvertimeRule" type="shorttext" nullok="false" desc="ExcludeOvertime, IncludeOneThird, Standard"/>
+  <column name="OfficerCap" type="decimal" precision="12" scale="2" nullok="false" desc="Annual officer maximum payroll cap e.g. 150000.00"/>
+  <column name="OfficerMinimum" type="decimal" precision="12" scale="2" nullok="false" desc="Annual officer minimum payroll floor e.g. 50000.00"/>
+  <column name="StateCode" type="shorttext" nullok="false" desc="State jurisdiction"/>
+</entity>

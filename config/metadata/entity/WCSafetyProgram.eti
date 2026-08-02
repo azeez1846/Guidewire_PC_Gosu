@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCSafetyProgram" table="wc_safety_program" type="retireable" desc="Certified safety program and drug-free workplace credit.">
+  <column name="ProgramType" type="shorttext" nullok="false" desc="SafetyCommittee, DrugFreeWorkplace, ReturnToWork"/>
+  <column name="CertificationNumber" type="shorttext" nullok="true" desc="State safety certification number"/>
+  <column name="CreditPercentage" type="decimal" precision="5" scale="2" nullok="false" desc="Discount percentage e.g. 5.00"/>
+  <column name="StateCode" type="shorttext" nullok="false" desc="State code"/>
+</entity>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="AutoSafetyEquipment" table="auto_safety_equip" type="retireable" desc="Vehicle safety equipment features (Anti-lock brakes, Automatic emergency braking, Collision avoidance).">
+  <column name="VehicleVIN" type="shorttext" nullok="false" desc="Vehicle VIN"/>
+  <column name="HasABS" type="bit" nullok="false" desc="Anti-lock braking system"/>
+  <column name="HasCollisionAvoidance" type="bit" nullok="false" desc="Automatic collision avoidance system"/>
+  <column name="HasLaneDeparture" type="bit" nullok="false" desc="Lane departure warning system"/>
+</entity>

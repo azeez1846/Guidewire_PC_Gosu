@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="GLWaiverOfSubrogation" table="gl_waiver_subro" type="effdated" desc="Waiver of Transfer of Rights of Recovery against Others to Us (Waiver of Subrogation).">
+  <column name="WaiverType" type="shorttext" nullok="false" desc="Blanket, Scheduled"/>
+  <column name="EntityName" type="shorttext" nullok="true" desc="Scheduled person or organization"/>
+</entity>

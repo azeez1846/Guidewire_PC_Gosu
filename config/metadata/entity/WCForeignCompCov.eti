@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCForeignCompCov" table="wc_foreign_comp" type="effdated" desc="Foreign voluntary compensation coverage endorsement for overseas operations.">
+  <column name="TerritoryScope" type="shorttext" nullok="false" desc="Worldwide, Europe, AsiaPacific, LatinAmerica"/>
+  <column name="TravelLimitDays" type="integer" nullok="false" desc="Maximum continuous travel days limit e.g. 90, 180"/>
+  <column name="RepatriationExpenseLimit" type="decimal" precision="12" scale="2" nullok="false" desc="Medical repatriation limit e.g. 250000.00"/>
+</entity>

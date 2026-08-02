@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CPBusinessIncomeCov" table="cp_bus_income" type="effdated" desc="Business Income and Extra Expense coverage endorsement.">
+  <column name="IncomeLimit" type="decimal" precision="14" scale="2" nullok="false" desc="Business income limit e.g. 250000.00"/>
+  <column name="WaitingPeriodHours" type="integer" nullok="false" desc="Waiting period hours e.g. 24, 48, 72"/>
+  <column name="ExtraExpenseLimit" type="decimal" precision="12" scale="2" nullok="true" desc="Extra expense limit"/>
+</entity>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CUUnderlyingPolicy" table="cu_underlying_policy" type="effdated" desc="Schedule of underlying insurance policies supporting Commercial Umbrella.">
+  <column name="PolicyType" type="shorttext" nullok="false" desc="GeneralLiability, CommercialAuto, EmployersLiability, CommercialProperty"/>
+  <column name="CarrierName" type="shorttext" nullok="false" desc="Underlying carrier insurance company name"/>
+  <column name="PolicyNumber" type="shorttext" nullok="false" desc="Underlying policy number"/>
+  <column name="EffectiveDate" type="shorttext" nullok="false" desc="Underlying policy effective date"/>
+  <column name="ExpirationDate" type="shorttext" nullok="false" desc="Underlying policy expiration date"/>
+  <column name="UnderlyingLimit" type="shorttext" nullok="false" desc="Underlying policy limit e.g. $1,000,000/$2,000,000"/>
+</entity>

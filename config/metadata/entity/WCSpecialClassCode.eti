@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCSpecialClassCode" table="wc_special_class" type="retireable" desc="High-risk or seasonal special class codes for Workers Comp.">
+  <column name="SpecialCode" type="shorttext" nullok="false" desc="Special class code identifier e.g. 7380, 9101"/>
+  <column name="Description" type="shorttext" nullok="false" desc="High risk operations description"/>
+  <column name="SurchargeFactor" type="decimal" precision="5" scale="3" nullok="false" desc="Rating surcharge multiplier e.g. 1.150"/>
+  <column name="StateCode" type="shorttext" nullok="false" desc="State code"/>
+</entity>

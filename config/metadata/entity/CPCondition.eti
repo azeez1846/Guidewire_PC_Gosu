@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CPCondition" table="cp_condition" type="retireable" desc="Commercial Property policy condition clause.">
+  <column name="ConditionCode" type="shorttext" nullok="false" desc="CP_VACANCY_COND, CP_PROTECTIVE_SAFEGUARD_COND"/>
+  <column name="Description" type="shorttext" nullok="false" desc="Description"/>
+</entity>

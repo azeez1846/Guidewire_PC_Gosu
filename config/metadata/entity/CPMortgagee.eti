@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CPMortgagee" table="cp_mortgagee" type="retireable" desc="Property Mortgagee / Loss Payee details and loan reference.">
+  <column name="MortgageeName" type="shorttext" nullok="false" desc="Mortgage bank legal name"/>
+  <column name="LoanNumber" type="shorttext" nullok="false" desc="Loan reference number"/>
+  <column name="Address" type="shorttext" nullok="true" desc="Mortgagee mailing address"/>
+</entity>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="CommercialPropertyLineDVTile"
+     title="Commercial Property Policy Line Summary">
+    <DetailViewTile id="CommercialPropertyLineDVTileInner">
+        <InputColumn title="Valuation &amp; Coinsurance Summary">
+            <TextInput id="LineCode" label="Line Code" value="CommercialPropertyLine.LineCode"/>
+            <TextInput id="CoinsurancePercentage" label="Coinsurance %" value="CommercialPropertyLine.CoinsurancePercentage"/>
+            <TextInput id="ValuationMethod" label="Valuation Method" value="CommercialPropertyLine.ValuationMethod"/>
+            <TextInput id="TotalBuildingCount" label="Buildings Insured" value="CommercialPropertyLine.TotalBuildingCount"/>
+            <TextInput id="TotalLinePremium" label="Property Line Premium" value="CommercialPropertyLine.TotalLinePremium"/>
+        </InputColumn>
+    </DetailViewTile>
+</PCF>

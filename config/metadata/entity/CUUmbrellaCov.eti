@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CUUmbrellaCov" table="cu_umbrella_cov" type="effdated" desc="Umbrella excess coverage limits and primary policy concurrency.">
+  <column name="LimitAmount" type="shorttext" nullok="false" desc="Umbrella limit e.g. $1M, $2M, $5M, $10M, $25M"/>
+  <column name="ConcurrencyStatus" type="bit" nullok="false" desc="True if effective dates match underlying policies"/>
+</entity>

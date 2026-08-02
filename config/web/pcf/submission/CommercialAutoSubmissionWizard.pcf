@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="CommercialAutoSubmissionWizard"
+     title="Commercial Auto Submission Wizard">
+    <Wizard id="CommercialAutoWizardFlow">
+        <WizardStep id="AutoLineDetails" title="Step 1: Fleet &amp; Vehicle Details">
+            <Screen id="AutoLineScreen">
+                <Toolbar id="AutoToolbar1">
+                    <ToolbarButton id="RateAutoBtn" action="gw.pc.line.auto.CommercialAutoRatingEngine.rateCommercialAuto(PolicyPeriod, VehicleCount, FleetStatus, Radius)" label="Calculate Auto Premium"/>
+                </Toolbar>
+                <DetailViewPanel id="AutoLineDV">
+                    <InputColumn title="Commercial Auto Fleet Information">
+                        <TextInput id="FleetStatus" label="Fleet Status" value="CommercialAutoLine.FleetStatus" required="true"/>
+                        <TextInput id="PrimaryRadius" label="Radius of Operation" value="CommercialAutoLine.PrimaryRadius" required="true"/>
+                        <TextInput id="VehicleCount" label="Vehicle Count" value="CommercialAutoLine.VehicleCount" required="true"/>
+                        <TextInput id="TotalLinePremium" label="Commercial Auto Line Premium" value="CommercialAutoLine.TotalLinePremium" editable="false"/>
+                    </InputColumn>
+                </DetailViewPanel>
+            </Screen>
+        </WizardStep>
+    </Wizard>
+</PCF>

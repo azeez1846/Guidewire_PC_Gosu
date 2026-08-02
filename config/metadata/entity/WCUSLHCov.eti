@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCUSLHCov" table="wc_uslh_cov" type="effdated" desc="Longshore and Harbor Workers Compensation Act (USL&amp;H) endorsement.">
+  <column name="PercentageRatingFactor" type="decimal" precision="5" scale="3" nullok="false" desc="Rating surcharge percentage e.g. 1.250"/>
+  <column name="EstimatedUSLHPayroll" type="decimal" precision="14" scale="2" nullok="false" desc="USL&amp;H payroll basis"/>
+  <column name="StateCode" type="shorttext" nullok="false" desc="State code"/>
+</entity>

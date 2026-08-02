@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="GLClassCode" table="gl_class_code" type="retireable" desc="ISO General Liability classification codes and hazard groups.">
+  <column name="ClassCode" type="shorttext" nullok="false" desc="ISO classification code e.g. 51833"/>
+  <column name="CodeDescription" type="shorttext" nullok="false" desc="Description"/>
+  <column name="HazardGroup" type="shorttext" nullok="false" desc="Hazard group 1-10"/>
+</entity>

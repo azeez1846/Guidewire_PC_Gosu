@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CUWatercraftExclusion" table="cu_watercraft_excl" type="retireable" desc="Watercraft length and horsepower exclusion clause.">
+  <column name="ExemptLengthFeet" type="integer" nullok="false" desc="Watercraft length exclusion threshold feet e.g. 26"/>
+</entity>

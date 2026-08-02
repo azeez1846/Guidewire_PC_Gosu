@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CUSchdUnderlyingCarrier" table="cu_schd_carrier" type="retireable" desc="Underlying insurance carrier AM Best rating and financial size category lookup.">
+  <column name="CarrierName" type="shorttext" nullok="false" desc="Insurance company legal name"/>
+  <column name="AMBestRating" type="shorttext" nullok="false" desc="AM Best rating e.g. A++, A+, A, A-"/>
+  <column name="FinancialSizeCategory" type="shorttext" nullok="false" desc="Financial size category e.g. XV, XIV, XIII"/>
+</entity>

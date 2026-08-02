@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="AutoDealerLiabilityCov" table="auto_dealer_liab" type="retireable" desc="Auto dealer operational liability coverage endorsement.">
+  <column name="DealerType" type="shorttext" nullok="false" desc="FranchisedNew, UsedCarDealer, ServiceBodyShop"/>
+  <column name="AggregateLimit" type="shorttext" nullok="false" desc="General Aggregate limit"/>
+  <column name="EstimatedPlateCount" type="integer" nullok="false" desc="Number of dealer plates issued"/>
+</entity>

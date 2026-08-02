@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CPLocation" table="cp_location" type="effdated" desc="Commercial Property location address, protection class, and fire station distance.">
+  <column name="LocationNumber" type="integer" nullok="false" desc="Location sequence number"/>
+  <column name="StreetAddress" type="shorttext" nullok="false" desc="Street address"/>
+  <column name="City" type="shorttext" nullok="false" desc="City"/>
+  <column name="State" type="shorttext" nullok="false" desc="State abbreviation"/>
+  <column name="ZipCode" type="shorttext" nullok="false" desc="ZIP code"/>
+  <column name="ProtectionClass" type="shorttext" nullok="false" desc="ISO Public Protection Class (1-10)"/>
+  <column name="DistanceToFireStationMiles" type="decimal" precision="5" scale="2" nullok="false" desc="Distance to nearest fire station in miles"/>
+</entity>

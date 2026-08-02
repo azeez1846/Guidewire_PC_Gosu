@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="GLHazard" table="gl_hazard" type="retireable" desc="Premise hazard classification and rating multiplier.">
+  <column name="HazardType" type="shorttext" nullok="false" desc="FlammableStorage, HeavyAssembly, HighFootTraffic"/>
+  <column name="SeverityRating" type="shorttext" nullok="false" desc="Low, Medium, High"/>
+  <column name="SurchargeRate" type="decimal" precision="5" scale="3" nullok="false" desc="Surcharge factor e.g. 1.100"/>
+</entity>

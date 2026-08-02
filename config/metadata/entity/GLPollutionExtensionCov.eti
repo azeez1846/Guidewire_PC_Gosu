@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="GLPollutionExtensionCov" table="gl_pollution_ext" type="effdated" desc="Limited pollution liability extension for sudden and accidental events.">
+  <column name="PollutionLimit" type="shorttext" nullok="false" desc="Pollution limit e.g. $250,000, $500,000"/>
+  <column name="DiscoveryWindowDays" type="integer" nullok="false" desc="Discovery window days e.g. 7 days, 14 days"/>
+</entity>

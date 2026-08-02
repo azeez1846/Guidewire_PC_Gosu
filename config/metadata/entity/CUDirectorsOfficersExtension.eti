@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CUDirectorsOfficersExtension" table="cu_do_ext" type="retireable" desc="Directors &amp; Officers excess extension endorsement.">
+  <column name="ExcessDOLimit" type="shorttext" nullok="false" desc="Excess D&amp;O Limit e.g. $1,000,000"/>
+</entity>

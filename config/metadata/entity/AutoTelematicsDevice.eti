@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="AutoTelematicsDevice" table="auto_telematics" type="retireable" desc="Vehicle telematics OBD-II device serial number and driving score.">
+  <column name="DeviceSerialNumber" type="shorttext" nullok="false" desc="Telematics serial number"/>
+  <column name="VehicleVIN" type="shorttext" nullok="false" desc="Vehicle VIN"/>
+  <column name="DrivingScore" type="integer" nullok="false" desc="Safety driving score e.g. 85 (0-100 scale)"/>
+  <column name="DiscountPercentage" type="decimal" precision="5" scale="2" nullok="false" desc="Telematics discount percentage e.g. 10.00"/>
+</entity>

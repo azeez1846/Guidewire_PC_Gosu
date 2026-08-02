@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCOwnersContact" table="wc_owners_contact" type="retireable" desc="Executive officer contact details and ownership share.">
+  <column name="ContactName" type="shorttext" nullok="false" desc="Full legal name of owner/officer"/>
+  <column name="SSN" type="shorttext" nullok="false" desc="Social security number"/>
+  <column name="Relationship" type="shorttext" nullok="false" desc="President, CEO, ManagingMember, Partner"/>
+  <column name="Duties" type="shorttext" nullok="true" desc="Operational duties description"/>
+</entity>

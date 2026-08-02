@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="AutoPIPCoverage" table="auto_pip_cov" type="effdated" desc="Personal Injury Protection (PIP) state statutory coverage details.">
+  <column name="PIPLimit" type="shorttext" nullok="false" desc="PIP Limit e.g. $10,000, $50,000, Statutory"/>
+  <column name="PIPDeductible" type="shorttext" nullok="true" desc="PIP deductible amount"/>
+  <column name="WorkLossExclusion" type="bit" nullok="false" desc="Work loss benefit exclusion flag"/>
+  <column name="StateCode" type="shorttext" nullok="false" desc="State postal code"/>
+</entity>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CPEarthquakeCoverage" table="cp_eq_cov" type="effdated" desc="Commercial Property Earthquake Coverage endorsement and seismic zone.">
+  <column name="EarthquakeLimit" type="decimal" precision="14" scale="2" nullok="false" desc="Earthquake coverage limit e.g. 1000000.00"/>
+  <column name="SeismicZone" type="shorttext" nullok="false" desc="Seismic Zone e.g. Zone1, Zone2, Zone3, Zone4"/>
+  <column name="PercentageDeductible" type="decimal" precision="5" scale="2" nullok="false" desc="Percentage deductible e.g. 5.00, 10.00, 15.00"/>
+</entity>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CPBlanketCoverage" table="cp_blanket_cov" type="effdated" desc="Blanket Property coverage across multiple buildings and locations.">
+  <column name="BlanketNumber" type="integer" nullok="false" desc="Blanket identifier index"/>
+  <column name="BlanketType" type="shorttext" nullok="false" desc="BuildingAndBPP, BuildingOnly, BPPOnly"/>
+  <column name="BlanketLimit" type="decimal" precision="14" scale="2" nullok="false" desc="Total blanket limit e.g. 5000000.00"/>
+</entity>

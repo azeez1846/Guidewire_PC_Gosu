@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="GLModifier" table="gl_modifier" type="retireable" desc="General Liability schedule credit and risk modifier.">
+  <column name="ModifierCode" type="shorttext" nullok="false" desc="GL_SCHED_CREDIT, GL_SAFETY_MOD, GL_LOSS_MOD"/>
+  <column name="ModifierValue" type="decimal" precision="6" scale="3" nullok="false" desc="Modifier value e.g. 0.950"/>
+  <column name="Notes" type="shorttext" nullok="true" desc="Underwriter notes"/>
+</entity>

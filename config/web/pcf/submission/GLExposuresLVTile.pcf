@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="GLExposuresLVTile"
+     title="General Liability Class Code Exposures">
+    <ListViewTile id="GLExposuresLVTileInner">
+        <RowIterator value="GLExposures" var="Exp">
+            <Row>
+                <TextCell id="ClassCode" label="Class Code" value="Exp.ClassCode"/>
+                <TextCell id="ClassDescription" label="Description" value="Exp.ClassDescription"/>
+                <TextCell id="BasisType" label="Basis Type" value="Exp.BasisType"/>
+                <TextCell id="BasisAmount" label="Exposure Basis" value="Exp.BasisAmount"/>
+                <TextCell id="BaseRate" label="Rate / $1,000" value="Exp.BaseRate"/>
+                <TextCell id="ClassPremium" label="Class Premium" value="Exp.ClassPremium"/>
+            </Row>
+        </RowIterator>
+    </ListViewTile>
+</PCF>

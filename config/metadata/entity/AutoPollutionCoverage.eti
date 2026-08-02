@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="AutoPollutionCoverage" table="auto_pollution_cov" type="effdated" desc="Broadened Transportation Pollution Liability coverage endorsement.">
+  <column name="PollutionLimit" type="shorttext" nullok="false" desc="Pollution liability limit e.g. $1,000,000"/>
+  <column name="HazmatTier" type="shorttext" nullok="false" desc="Hazmat Classification e.g. NonHazmat, LowRisk, HighHazmat"/>
+  <column name="AdditionalPremium" type="decimal" precision="12" scale="2" nullok="true" desc="Pollution endorsement premium"/>
+</entity>

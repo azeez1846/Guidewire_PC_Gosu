@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="WorkersCompLineDVTile"
+     title="Workers Compensation Policy Line Details">
+    <DetailViewTile id="WorkersCompLineDVTileInner">
+        <InputColumn title="WC Rating &amp; Exposure Summary">
+            <TextInput id="LineCode" label="Line Code" value="WCPolicyLine.LineCode"/>
+            <TextInput id="TotalPayrollExposure" label="Total Payroll Exposure" value="WCPolicyLine.TotalPayrollExposure"/>
+            <TextInput id="ExperienceMod" label="Experience Mod" value="WCPolicyLine.ExperienceMod"/>
+            <TextInput id="ExpenseConstant" label="Expense Constant" value="WCPolicyLine.ExpenseConstant"/>
+            <TextInput id="TotalLinePremium" label="Workers Comp Line Premium" value="WCPolicyLine.TotalLinePremium"/>
+        </InputColumn>
+    </DetailViewTile>
+</PCF>

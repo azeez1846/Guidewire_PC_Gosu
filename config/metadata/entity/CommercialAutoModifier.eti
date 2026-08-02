@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CommercialAutoModifier" table="comm_auto_mod" type="retireable" desc="Commercial Auto rating modifier (Fleet Discount, Telematics Modifier, Driver Training).">
+  <column name="ModifierCode" type="shorttext" nullok="false" desc="AUTO_FLEET_DISCOUNT, AUTO_TELEMATICS_MOD, AUTO_SAFETY_MOD"/>
+  <column name="ModifierValue" type="decimal" precision="6" scale="3" nullok="false" desc="Modifier multiplier e.g. 0.900"/>
+  <column name="Justification" type="shorttext" nullok="true" desc="Underwriter notes"/>
+</entity>

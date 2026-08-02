@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CommercialAutoCov" table="comm_auto_cov" type="effdated" desc="Line-level Commercial Auto liability coverages.">
+  <column name="CombinedSingleLimit" type="shorttext" nullok="false" desc="CSL Liability limit e.g. $500,000, $1,000,000, $2,000,000"/>
+  <column name="MedicalPaymentsLimit" type="shorttext" nullok="true" desc="Auto MedPay limit e.g. $5,000, $10,000"/>
+  <column name="HiredAutoLiability" type="bit" nullok="false" desc="Hired Auto Liability inclusion flag"/>
+  <column name="NonOwnedAutoLiability" type="bit" nullok="false" desc="Non-Owned Auto Liability inclusion flag"/>
+</entity>

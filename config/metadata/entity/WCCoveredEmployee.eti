@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCCoveredEmployee" table="wc_covered_employee" type="effdated" desc="Covered employee class code, payroll, and manual rating.">
+  <column name="ClassCode" type="shorttext" nullok="false" desc="NCCI / State class code e.g. 8810, 8742, 5183, 8832"/>
+  <column name="ClassDescription" type="shorttext" nullok="false" desc="Description of employee classification"/>
+  <column name="EmployeeCount" type="integer" nullok="false" desc="Estimated number of full-time equivalent employees"/>
+  <column name="Payroll" type="decimal" precision="14" scale="2" nullok="false" desc="Estimated annual payroll basis"/>
+  <column name="ManualRate" type="decimal" precision="6" scale="3" nullok="false" desc="Base rate per $100 of payroll"/>
+  <column name="ClassPremium" type="decimal" precision="12" scale="2" nullok="true" desc="Calculated manual premium for class code"/>
+  <column name="StateCode" type="shorttext" nullok="false" desc="State location of classification"/>
+</entity>

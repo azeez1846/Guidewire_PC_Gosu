@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="GLDesignatedProjectCov" table="gl_designated_project" type="effdated" desc="Designated Location or Project Aggregate endorsement.">
+  <column name="ProjectName" type="shorttext" nullok="false" desc="Project or location designation"/>
+  <column name="AggregateLimit" type="shorttext" nullok="false" desc="Separate aggregate limit"/>
+</entity>

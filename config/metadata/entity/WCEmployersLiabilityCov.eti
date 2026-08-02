@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCEmployersLiabilityCov" table="wc_emp_liab_cov" type="effdated" desc="Employers Liability policy coverage limits (Bodily Injury by Accident, Disease Policy Limit, Disease Each Employee).">
+  <column name="BIAccidentLimit" type="shorttext" nullok="false" desc="Limit per accident e.g. $100,000, $500,000, $1,000,000"/>
+  <column name="BIDiseaseLimit" type="shorttext" nullok="false" desc="Disease policy limit e.g. $500,000, $1,000,000"/>
+  <column name="BIDiseaseEmployeeLimit" type="shorttext" nullok="false" desc="Disease limit per employee e.g. $100,000, $500,000"/>
+  <column name="IncreasedLimitFactor" type="decimal" precision="5" scale="3" nullok="false" desc="Rating factor for increased limits"/>
+</entity>

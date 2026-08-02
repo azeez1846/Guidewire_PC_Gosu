@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="CPBoilerMachineryCov" table="cp_boiler_machinery" type="effdated" desc="Equipment Breakdown / Boiler and Machinery coverage endorsement.">
+  <column name="BreakdownLimit" type="decimal" precision="14" scale="2" nullok="false" desc="Breakdown limit e.g. 1000000.00"/>
+  <column name="SpoilageLimit" type="decimal" precision="12" scale="2" nullok="true" desc="Perishable food / goods spoilage limit"/>
+  <column name="Deductible" type="decimal" precision="12" scale="2" nullok="false" desc="Equipment breakdown deductible e.g. 2500.00"/>
+</entity>

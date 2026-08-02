@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="AutoTrailerInfo" table="auto_trailer_info" type="effdated" desc="Commercial trailer physical damage and liability info.">
+  <column name="TrailerVIN" type="shorttext" nullok="false" desc="Trailer VIN"/>
+  <column name="TrailerType" type="shorttext" nullok="false" desc="DryVan, Refrigerated, Flatbed, Lowboy, Tanker"/>
+  <column name="StatedValue" type="decimal" precision="12" scale="2" nullok="false" desc="Trailer stated value"/>
+</entity>

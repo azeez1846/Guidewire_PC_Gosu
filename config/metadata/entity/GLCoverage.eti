@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="GLCoverage" table="gl_coverage" type="effdated" desc="General Liability primary limits (Occurrence Limit, General Aggregate, Products Aggregate).">
+  <column name="EachOccurrenceLimit" type="shorttext" nullok="false" desc="Limit per occurrence e.g. $1,000,000, $2,000,000"/>
+  <column name="GeneralAggregateLimit" type="shorttext" nullok="false" desc="General Aggregate limit e.g. $2,000,000, $3,000,000"/>
+  <column name="ProductsAggLimit" type="shorttext" nullok="false" desc="Products &amp; Completed Operations Aggregate limit e.g. $2,000,000"/>
+  <column name="PersonalAdvInjuryLimit" type="shorttext" nullok="false" desc="Personal &amp; Advertising Injury limit e.g. $1,000,000"/>
+</entity>

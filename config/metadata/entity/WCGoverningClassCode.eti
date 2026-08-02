@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="WCGoverningClassCode" table="wc_governing_class" type="retireable" desc="Governing NCCI class code for location.">
+  <column name="ClassCode" type="shorttext" nullok="false" desc="Governing NCCI Class Code e.g. 8810"/>
+  <column name="Description" type="shorttext" nullok="false" desc="Governing class description"/>
+  <column name="HazardGroup" type="shorttext" nullok="false" desc="NCCI Hazard Group e.g. A, B, C, D, E, F, G"/>
+  <column name="StateCode" type="shorttext" nullok="false" desc="State code"/>
+</entity>

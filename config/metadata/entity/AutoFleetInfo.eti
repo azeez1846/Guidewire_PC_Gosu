@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity xmlns="http://guidewire.com/datamodel" entity="AutoFleetInfo" table="auto_fleet_info" type="retireable" desc="Commercial fleet organization details, safety manager, and US DOT number.">
+  <column name="FleetName" type="shorttext" nullok="false" desc="Name of fleet operation"/>
+  <column name="USDOTNumber" type="shorttext" nullok="true" desc="US Department of Transportation USDOT Number"/>
+  <column name="SafetyManagerName" type="shorttext" nullok="true" desc="Name of designated safety manager"/>
+  <column name="SafetyRating" type="shorttext" nullok="true" desc="Satisfactory, Conditional, Unsat"/>
+</entity>

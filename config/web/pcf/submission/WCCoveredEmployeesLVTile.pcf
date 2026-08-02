@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="WCCoveredEmployeesLVTile"
+     title="Covered Employees &amp; NCCI Class Codes">
+    <ListViewTile id="WCCoveredEmployeesLVTileInner">
+        <RowIterator value="CoveredEmployees" var="Emp">
+            <Row>
+                <TextCell id="ClassCode" label="Class Code" value="Emp.ClassCode"/>
+                <TextCell id="ClassDescription" label="Description" value="Emp.ClassDescription"/>
+                <TextCell id="EmployeeCount" label="Employees" value="Emp.EmployeeCount"/>
+                <TextCell id="Payroll" label="Payroll Basis" value="Emp.Payroll"/>
+                <TextCell id="ManualRate" label="Rate / $100" value="Emp.ManualRate"/>
+                <TextCell id="ClassPremium" label="Manual Premium" value="Emp.ClassPremium"/>
+            </Row>
+        </RowIterator>
+    </ListViewTile>
+</PCF>
