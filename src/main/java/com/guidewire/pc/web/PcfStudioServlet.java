@@ -40,6 +40,11 @@ public class PcfStudioServlet extends HttpServlet {
             return;
         }
 
+        if (pathInfo.equals("/api/validate")) {
+            validateDrop(req, resp);
+            return;
+        }
+
         resp.sendError(HttpServletResponse.SC_NOT_FOUND, "PCF Studio endpoint not found: " + pathInfo);
     }
 
