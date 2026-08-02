@@ -57,6 +57,7 @@ public class JettyPolicyCenterServer {
         // REST API & Swagger UI Endpoints
         context.addServlet(new ServletHolder(new GuidewireRestServlet()), "/rest/v1/*");
         context.addServlet(new ServletHolder(new SwaggerUiServlet()), "/swagger-ui/*");
+        context.addServlet(new ServletHolder(new PcfStudioServlet(rootDir)), "/pcf-studio/*");
 
         GuidewirePolicyCenterServlet servlet = new GuidewirePolicyCenterServlet(rootDir);
         context.addServlet(new ServletHolder(servlet), "/*");
