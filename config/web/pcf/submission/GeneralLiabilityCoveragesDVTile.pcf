@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="GeneralLiabilityCoveragesDVTile"
+     title="General Liability Primary Coverages &amp; Endorsements">
+    <DetailViewTile id="GeneralLiabilityCoveragesDVTileInner">
+        <InputColumn title="Primary Policy Limits">
+            <SelectInput id="EachOccurrenceLimit" label="Each Occurrence Limit" value="GLLine.EachOccurrenceLimit">
+                <Choice value="$1M" label="$1,000,000"/>
+                <Choice value="$2M" label="$2,000,000"/>
+            </SelectInput>
+            <SelectInput id="GeneralAggregateLimit" label="General Aggregate Limit" value="GLLine.GeneralAggregateLimit">
+                <Choice value="$2M" label="$2,000,000"/>
+                <Choice value="$3M" label="$3,000,000"/>
+                <Choice value="$5M" label="$5,000,000"/>
+            </SelectInput>
+            <SelectInput id="ProductsAggLimit" label="Products &amp; Completed Ops Aggregate" value="GLLine.ProductsAggLimit">
+                <Choice value="$1M" label="$1,000,000"/>
+                <Choice value="$2M" label="$2,000,000"/>
+            </SelectInput>
+            <SelectInput id="FireLegalLimit" label="Damage to Rented Premises (Fire Legal)" value="GLLine.FireLegalLimit">
+                <Choice value="$100k" label="$100,000"/>
+                <Choice value="$300k" label="$300,000"/>
+                <Choice value="$500k" label="$500,000"/>
+                <Choice value="$1M" label="$1,000,000"/>
+            </SelectInput>
+        </InputColumn>
+        <InputColumn title="Special Liability Endorsements">
+            <CheckBoxInput id="BlanketContractual" label="Blanket Contractual Liability" value="GLLine.BlanketContractual"/>
+            <CheckBoxInput id="EmployeeBenefits" label="Employee Benefits Liability ($1M)" value="GLLine.EmployeeBenefitsLiability"/>
+            <CheckBoxInput id="LiquorLiability" label="Liquor Liability Endorsement" value="GLLine.LiquorLiability"/>
+            <CheckBoxInput id="StopGapCoverage" label="Stop Gap Employers Liability" value="GLLine.StopGapCoverage"/>
+            <CheckBoxInput id="CyberExtension" label="Cyber Liability Extension ($100k)" value="GLLine.CyberExtension"/>
+        </InputColumn>
+    </DetailViewTile>
+</PCF>

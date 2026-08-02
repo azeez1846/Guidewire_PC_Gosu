@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="CommercialUmbrellaCoveragesDVTile"
+     title="Commercial Umbrella Excess Coverages &amp; SIR">
+    <DetailViewTile id="CommercialUmbrellaCoveragesDVTileInner">
+        <InputColumn title="Umbrella Excess Limits &amp; Retention">
+            <SelectInput id="EachOccurrenceLimit" label="Excess Occurrence Limit" value="CommercialUmbrellaLine.EachOccurrenceLimit">
+                <Choice value="$1M" label="$1,000,000"/>
+                <Choice value="$2M" label="$2,000,000"/>
+                <Choice value="$5M" label="$5,000,000"/>
+                <Choice value="$10M" label="$10,000,000"/>
+                <Choice value="$25M" label="$25,000,000"/>
+            </SelectInput>
+            <SelectInput id="SIRAmount" label="Self-Insured Retention (SIR)" value="CommercialUmbrellaLine.SelfInsuredRetention">
+                <Choice value="$10000" label="$10,000"/>
+                <Choice value="$25000" label="$25,000"/>
+                <Choice value="$50000" label="$50,000"/>
+            </SelectInput>
+        </InputColumn>
+        <InputColumn title="Excess Follow-Form Terms &amp; Endorsements">
+            <CheckBoxInput id="FollowFormTerms" label="Follow-Form Excess Terms &amp; Conditions" value="CommercialUmbrellaLine.FollowFormTerms"/>
+            <CheckBoxInput id="DropDownExhausted" label="Drop-Down Over Exhausted Aggregates" value="CommercialUmbrellaLine.DropDownExhausted"/>
+            <CheckBoxInput id="WorldwideTerritory" label="Worldwide Territory Extension" value="CommercialUmbrellaLine.WorldwideTerritory"/>
+            <CheckBoxInput id="CrisisManagement" label="Crisis Management Public Relations ($50k)" value="CommercialUmbrellaLine.CrisisManagement"/>
+            <CheckBoxInput id="ExcessDOExtension" label="Excess Directors &amp; Officers (D&amp;O)" value="CommercialUmbrellaLine.ExcessDOExtension"/>
+        </InputColumn>
+    </DetailViewTile>
+</PCF>

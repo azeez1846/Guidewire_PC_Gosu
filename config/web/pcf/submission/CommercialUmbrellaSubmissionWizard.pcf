@@ -6,7 +6,7 @@
         <WizardStep id="UmbrellaLineDetails" title="Step 1: Umbrella Limits &amp; Retained Limits">
             <Screen id="UmbrellaLineScreen">
                 <Toolbar id="UmbrellaToolbar1">
-                    <ToolbarButton id="RateUmbrellaBtn" action="gw.pc.line.umbrella.CURatingEngine.rateCommercialUmbrella(PolicyPeriod, EachOccurrenceLimit, SelfInsuredRetention, UnderlyingPolicyCount)" label="Calculate Umbrella Premium"/>
+                    <ToolbarButton id="NextBtn1" action="Wizard.nextStep()" label="Next &gt; Coverages"/>
                 </Toolbar>
                 <DetailViewPanel id="UmbrellaLineDV">
                     <InputColumn title="Commercial Umbrella Rating &amp; Limits">
@@ -16,6 +16,16 @@
                         <TextInput id="TotalLinePremium" label="Umbrella Line Premium" value="CommercialUmbrellaLine.TotalLinePremium" editable="false"/>
                     </InputColumn>
                 </DetailViewPanel>
+            </Screen>
+        </WizardStep>
+
+        <WizardStep id="UmbrellaCoverages" title="Step 2: Excess Follow-Form &amp; Drop-Down Coverages">
+            <Screen id="UmbrellaCoveragesScreen">
+                <Toolbar id="UmbrellaToolbar2">
+                    <ToolbarButton id="BackBtn2" action="Wizard.previousStep()" label="&lt; Back"/>
+                    <ToolbarButton id="RateUmbrellaBtn" action="gw.pc.line.umbrella.CURatingEngine.rateCommercialUmbrella(PolicyPeriod, EachOccurrenceLimit, SelfInsuredRetention, UnderlyingPolicyCount)" label="Calculate Umbrella Premium"/>
+                </Toolbar>
+                <PanelRef def="CommercialUmbrellaCoveragesDVTile"/>
             </Screen>
         </WizardStep>
     </Wizard>

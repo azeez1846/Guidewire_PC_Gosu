@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="WorkersCompCoveragesDVTile"
+     title="Workers Compensation Coverages &amp; Statutory Limits">
+    <DetailViewTile id="WorkersCompCoveragesDVTileInner">
+        <InputColumn title="Employers Liability Statutory Limits (Part Two)">
+            <SelectInput id="EmployersLiabilityLimit" label="Employers Liability Limit" value="WCPolicyLine.EmployersLiabilityLimit">
+                <Choice value="$100k/$500k/$100k" label="$100,000 / $500,000 / $100,000"/>
+                <Choice value="$500k/$500k/$500k" label="$500,000 / $500,000 / $500,000"/>
+                <Choice value="$1M/$1M/$1M" label="$1,000,000 / $1,000,000 / $1,000,000"/>
+            </SelectInput>
+            <CheckBoxInput id="OtherStatesCoverage" label="Other States Coverage (Part Three)" value="WCPolicyLine.OtherStatesCoverage"/>
+            <CheckBoxInput id="USLHCoverage" label="US Longshore &amp; Harbor Workers (USL&amp;H)" value="WCPolicyLine.USLHCoverage"/>
+            <CheckBoxInput id="VoluntaryCompCoverage" label="Voluntary Compensation Endorsement" value="WCPolicyLine.VoluntaryCompCoverage"/>
+            <CheckBoxInput id="ForeignCompCoverage" label="Foreign Voluntary Compensation" value="WCPolicyLine.ForeignCompCoverage"/>
+        </InputColumn>
+        <InputColumn title="Deductible &amp; Dividend Plan Selection">
+            <SelectInput id="WCDeductible" label="Medical &amp; Indemnity Deductible" value="WCPolicyLine.DeductibleAmount">
+                <Choice value="$0" label="None (Statutory Full Coverage)"/>
+                <Choice value="$1000" label="$1,000 per claim"/>
+                <Choice value="$2500" label="$2,500 per claim"/>
+                <Choice value="$5000" label="$5,000 per claim"/>
+            </SelectInput>
+            <SelectInput id="ParticipatingPlan" label="Dividend Plan" value="WCPolicyLine.ParticipatingPlan">
+                <Choice value="StandardPlan" label="Standard Safety Dividend Plan"/>
+                <Choice value="SlidingScale" label="Sliding Scale Loss Ratio Plan"/>
+                <Choice value="FlatDividend" label="Flat 5% Dividend Plan"/>
+            </SelectInput>
+        </InputColumn>
+    </DetailViewTile>
+</PCF>

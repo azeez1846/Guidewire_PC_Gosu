@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="CommercialPropertyCoveragesDVTile"
+     title="Commercial Property Forms, Limits &amp; Deductibles">
+    <DetailViewTile id="CommercialPropertyCoveragesDVTileInner">
+        <InputColumn title="Building &amp; Personal Property Coverage">
+            <SelectInput id="CauseOfLossForm" label="Cause of Loss Form" value="CommercialPropertyLine.CauseOfLossForm">
+                <Choice value="Basic" label="Basic Form (Named Perils)"/>
+                <Choice value="Broad" label="Broad Form (Extended Perils)"/>
+                <Choice value="Special" label="Special Form (All-Risk)"/>
+            </SelectInput>
+            <SelectInput id="PropertyDeductible" label="Property Deductible" value="CommercialPropertyLine.PropertyDeductible">
+                <Choice value="$1000" label="$1,000"/>
+                <Choice value="$2500" label="$2,500"/>
+                <Choice value="$5000" label="$5,000"/>
+                <Choice value="$10000" label="$10,000"/>
+            </SelectInput>
+            <SelectInput id="NamedStormDeductible" label="Windstorm / Named Storm Deductible" value="CommercialPropertyLine.NamedStormDeductible">
+                <Choice value="Flat" label="Standard Policy Deductible"/>
+                <Choice value="2%" label="2% Building Value Deductible"/>
+                <Choice value="5%" label="5% Building Value Deductible"/>
+            </SelectInput>
+        </InputColumn>
+        <InputColumn title="Business Income &amp; Optional Endorsements">
+            <SelectInput id="BusinessIncomeWaitingPeriod" label="Business Income Waiting Period" value="CommercialPropertyLine.WaitingPeriod">
+                <Choice value="24Hrs" label="24 Hours"/>
+                <Choice value="48Hrs" label="48 Hours"/>
+                <Choice value="72Hrs" label="72 Hours"/>
+            </SelectInput>
+            <CheckBoxInput id="EquipmentBreakdown" label="Equipment Breakdown / Boiler &amp; Machinery" value="CommercialPropertyLine.EquipmentBreakdown"/>
+            <CheckBoxInput id="FloodCoverage" label="Commercial Flood Coverage Endorsement" value="CommercialPropertyLine.FloodCoverage"/>
+            <CheckBoxInput id="EarthquakeCoverage" label="Earthquake Coverage Endorsement" value="CommercialPropertyLine.EarthquakeCoverage"/>
+            <CheckBoxInput id="DebrisRemovalExt" label="Debris Removal Additional Limit ($25k)" value="CommercialPropertyLine.DebrisRemovalExt"/>
+        </InputColumn>
+    </DetailViewTile>
+</PCF>

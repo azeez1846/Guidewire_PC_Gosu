@@ -3,10 +3,10 @@
      id="WorkersCompSubmissionWizard"
      title="Workers Compensation Submission Wizard">
     <Wizard id="WorkersCompWizardFlow">
-        <WizardStep id="WCLineDetails" title="Step 1: Workers Comp Line Details">
+        <WizardStep id="WCLineDetails" title="Step 1: Workers Comp Line &amp; Payroll">
             <Screen id="WCLineScreen">
                 <Toolbar id="WCToolbar1">
-                    <ToolbarButton id="RateWCBtn" action="gw.pc.line.wc.WCRatingEngine.rateWorkersComp(PolicyPeriod, Payroll, ExpMod, Rate)" label="Calculate WC Premium"/>
+                    <ToolbarButton id="NextBtn1" action="Wizard.nextStep()" label="Next &gt; Coverages"/>
                 </Toolbar>
                 <DetailViewPanel id="WCLineDV">
                     <InputColumn title="Payroll Exposure &amp; Experience Rating">
@@ -16,6 +16,16 @@
                         <TextInput id="TotalLinePremium" label="Workers Comp Line Premium" value="WCPolicyLine.TotalLinePremium" editable="false"/>
                     </InputColumn>
                 </DetailViewPanel>
+            </Screen>
+        </WizardStep>
+
+        <WizardStep id="WCCoverages" title="Step 2: Employers Liability &amp; Coverages">
+            <Screen id="WCCoveragesScreen">
+                <Toolbar id="WCToolbar2">
+                    <ToolbarButton id="BackBtn2" action="Wizard.previousStep()" label="&lt; Back"/>
+                    <ToolbarButton id="RateWCBtn" action="gw.pc.line.wc.WCRatingEngine.rateWorkersComp(PolicyPeriod, Payroll, ExpMod, Rate)" label="Calculate WC Premium"/>
+                </Toolbar>
+                <PanelRef def="WorkersCompCoveragesDVTile"/>
             </Screen>
         </WizardStep>
     </Wizard>

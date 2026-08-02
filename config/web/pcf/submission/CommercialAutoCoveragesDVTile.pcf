@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCF xmlns="http://guidewire.com/pcf"
+     id="CommercialAutoCoveragesDVTile"
+     title="Commercial Auto Coverages &amp; Deductibles">
+    <DetailViewTile id="CommercialAutoCoveragesDVTileInner">
+        <InputColumn title="Auto Liability Coverages">
+            <SelectInput id="AutoLiabilityCSL" label="Combined Single Limit (CSL)" value="CommercialAutoLine.CombinedSingleLimit">
+                <Choice value="$500k" label="$500,000 CSL"/>
+                <Choice value="$1M" label="$1,000,000 CSL"/>
+                <Choice value="$2M" label="$2,000,000 CSL"/>
+            </SelectInput>
+            <CheckBoxInput id="HiredAutoLiab" label="Hired Auto Liability" value="CommercialAutoLine.HiredAutoLiability"/>
+            <CheckBoxInput id="NonOwnedAutoLiab" label="Non-Owned Auto Liability" value="CommercialAutoLine.NonOwnedAutoLiability"/>
+            <CheckBoxInput id="PollutionCoverage" label="Broadened Pollution Liability" value="CommercialAutoLine.PollutionCoverage"/>
+        </InputColumn>
+        <InputColumn title="Physical Damage Deductibles &amp; UM/UIM">
+            <SelectInput id="CompDeductible" label="Comprehensive Deductible" value="CommercialAutoLine.CompDeductible">
+                <Choice value="$250" label="$250"/>
+                <Choice value="$500" label="$500"/>
+                <Choice value="$1000" label="$1,000"/>
+                <Choice value="$2500" label="$2,500"/>
+            </SelectInput>
+            <SelectInput id="CollDeductible" label="Collision Deductible" value="CommercialAutoLine.CollDeductible">
+                <Choice value="$500" label="$500"/>
+                <Choice value="$1000" label="$1,000"/>
+                <Choice value="$2500" label="$2,500"/>
+                <Choice value="$5000" label="$5,000"/>
+            </SelectInput>
+            <SelectInput id="UMLimit" label="Uninsured Motorist (UM)" value="CommercialAutoLine.UMLimit">
+                <Choice value="$100k/$300k" label="$100,000 / $300,000"/>
+                <Choice value="$500k CSL" label="$500,000 CSL"/>
+                <Choice value="$1M CSL" label="$1,000,000 CSL"/>
+            </SelectInput>
+            <CheckBoxInput id="TowingLabor" label="Towing &amp; Labor Coverage" value="CommercialAutoLine.TowingAndLabor"/>
+        </InputColumn>
+    </DetailViewTile>
+</PCF>

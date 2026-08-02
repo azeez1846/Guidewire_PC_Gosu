@@ -3,10 +3,10 @@
      id="CommercialPropertySubmissionWizard"
      title="Commercial Property Submission Wizard">
     <Wizard id="CommercialPropertyWizardFlow">
-        <WizardStep id="CPLineDetails" title="Step 1: Building &amp; BPP Coverage Details">
+        <WizardStep id="CPLineDetails" title="Step 1: Building &amp; BPP Exposure Details">
             <Screen id="CPLineScreen">
                 <Toolbar id="CPToolbar1">
-                    <ToolbarButton id="RateCPBtn" action="gw.pc.line.cp.CPRatingEngine.rateCommercialProperty(PolicyPeriod, BuildingLimit, BPPLimit, ProtectionClass)" label="Calculate Property Premium"/>
+                    <ToolbarButton id="NextBtn1" action="Wizard.nextStep()" label="Next &gt; Coverages"/>
                 </Toolbar>
                 <DetailViewPanel id="CPLineDV">
                     <InputColumn title="Property Rating &amp; Coinsurance">
@@ -16,6 +16,16 @@
                         <TextInput id="TotalLinePremium" label="Property Line Premium" value="CommercialPropertyLine.TotalLinePremium" editable="false"/>
                     </InputColumn>
                 </DetailViewPanel>
+            </Screen>
+        </WizardStep>
+
+        <WizardStep id="CPCoverages" title="Step 2: Property Cause of Loss Forms &amp; Deductibles">
+            <Screen id="CPCoveragesScreen">
+                <Toolbar id="CPToolbar2">
+                    <ToolbarButton id="BackBtn2" action="Wizard.previousStep()" label="&lt; Back"/>
+                    <ToolbarButton id="RateCPBtn" action="gw.pc.line.cp.CPRatingEngine.rateCommercialProperty(PolicyPeriod, BuildingLimit, BPPLimit, ProtectionClass)" label="Calculate Property Premium"/>
+                </Toolbar>
+                <PanelRef def="CommercialPropertyCoveragesDVTile"/>
             </Screen>
         </WizardStep>
     </Wizard>

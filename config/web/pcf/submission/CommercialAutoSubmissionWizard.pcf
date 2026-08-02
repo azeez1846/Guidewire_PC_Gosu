@@ -6,7 +6,7 @@
         <WizardStep id="AutoLineDetails" title="Step 1: Fleet &amp; Vehicle Details">
             <Screen id="AutoLineScreen">
                 <Toolbar id="AutoToolbar1">
-                    <ToolbarButton id="RateAutoBtn" action="gw.pc.line.auto.CommercialAutoRatingEngine.rateCommercialAuto(PolicyPeriod, VehicleCount, FleetStatus, Radius)" label="Calculate Auto Premium"/>
+                    <ToolbarButton id="NextBtn1" action="Wizard.nextStep()" label="Next &gt; Coverages"/>
                 </Toolbar>
                 <DetailViewPanel id="AutoLineDV">
                     <InputColumn title="Commercial Auto Fleet Information">
@@ -16,6 +16,16 @@
                         <TextInput id="TotalLinePremium" label="Commercial Auto Line Premium" value="CommercialAutoLine.TotalLinePremium" editable="false"/>
                     </InputColumn>
                 </DetailViewPanel>
+            </Screen>
+        </WizardStep>
+
+        <WizardStep id="AutoCoverages" title="Step 2: Auto Liability &amp; Physical Damage Coverages">
+            <Screen id="AutoCoveragesScreen">
+                <Toolbar id="AutoToolbar2">
+                    <ToolbarButton id="BackBtn2" action="Wizard.previousStep()" label="&lt; Back"/>
+                    <ToolbarButton id="RateAutoBtn" action="gw.pc.line.auto.CommercialAutoRatingEngine.rateCommercialAuto(PolicyPeriod, VehicleCount, FleetStatus, Radius)" label="Calculate Auto Premium"/>
+                </Toolbar>
+                <PanelRef def="CommercialAutoCoveragesDVTile"/>
             </Screen>
         </WizardStep>
     </Wizard>

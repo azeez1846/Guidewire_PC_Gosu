@@ -6,7 +6,7 @@
         <WizardStep id="GLLineDetails" title="Step 1: Coverage Form &amp; Exposure Details">
             <Screen id="GLLineScreen">
                 <Toolbar id="GLToolbar1">
-                    <ToolbarButton id="RateGLBtn" action="gw.pc.line.gl.GLRatingEngine.rateGeneralLiability(PolicyPeriod, TotalExposure, Rate, CoverageForm)" label="Calculate GL Premium"/>
+                    <ToolbarButton id="NextBtn1" action="Wizard.nextStep()" label="Next &gt; Coverages"/>
                 </Toolbar>
                 <DetailViewPanel id="GLLineDV">
                     <InputColumn title="General Liability Rating Information">
@@ -15,6 +15,16 @@
                         <TextInput id="TotalLinePremium" label="General Liability Line Premium" value="GLLine.TotalLinePremium" editable="false"/>
                     </InputColumn>
                 </DetailViewPanel>
+            </Screen>
+        </WizardStep>
+
+        <WizardStep id="GLCoverages" title="Step 2: Primary Limits &amp; Endorsements">
+            <Screen id="GLCoveragesScreen">
+                <Toolbar id="GLToolbar2">
+                    <ToolbarButton id="BackBtn2" action="Wizard.previousStep()" label="&lt; Back"/>
+                    <ToolbarButton id="RateGLBtn" action="gw.pc.line.gl.GLRatingEngine.rateGeneralLiability(PolicyPeriod, TotalExposure, Rate, CoverageForm)" label="Calculate GL Premium"/>
+                </Toolbar>
+                <PanelRef def="GeneralLiabilityCoveragesDVTile"/>
             </Screen>
         </WizardStep>
     </Wizard>
