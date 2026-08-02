@@ -52,6 +52,11 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
         String path = req.getRequestURI();
         String method = req.getMethod();
 
+        if (path != null && path.startsWith("/pcf-studio")) {
+            new PcfStudioServlet(new File(".")).service(req, resp);
+            return;
+        }
+
         Map<String, String> params = new HashMap<>();
         req.getParameterMap().forEach((key, vals) -> {
             if (vals != null && vals.length > 0) {
@@ -101,6 +106,11 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
             sessionCookie.setMaxAge(0);
             resp.addCookie(sessionCookie);
             resp.sendRedirect("/?page=login");
+            return;
+        }
+
+        if (path != null && path.startsWith("/pcf-studio")) {
+            new PcfStudioServlet(new File(".")).service(req, resp);
             return;
         }
 
@@ -253,6 +263,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
                 "<a href='/?page=new-submission' class='gw-tab'>+ New Submission</a>" +
                 "<a href='/swagger-ui' target='_blank' class='gw-tab' style='color:#38B6FF;'>⚡ Swagger REST API</a>" +
                 "<a href='http://localhost:8082' target='_blank' class='gw-tab' style='color:#00C853;'>🗄️ H2 DB Console</a>" +
+                "<a href='/pcf-studio/' target='_blank' class='gw-tab' style='color:#A7F3D0;'>🧩 Visual PCF Studio</a>" +
                 "</div>";
     }
 
