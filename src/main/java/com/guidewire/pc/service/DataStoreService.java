@@ -27,7 +27,8 @@ public class DataStoreService {
     private volatile boolean cacheLoaded = false;
 
     private DataStoreService() {
-        resetToSeedData();
+        seedSampleDataIfEmpty();
+        warmupCacheFromDb();
     }
 
     public static synchronized DataStoreService getInstance() {
