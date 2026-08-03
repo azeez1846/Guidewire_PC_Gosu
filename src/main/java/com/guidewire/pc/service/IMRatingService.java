@@ -65,14 +65,14 @@ public class IMRatingService {
 
     private double getEquipmentRate(String type) {
         if (type == null) return 0.015;
-        switch (type.toLowerCase()) {
-            case "heavymachinery": return 0.015;
-            case "mobiletools": return 0.020;
-            case "transitcargo": return 0.012;
-            case "medicalequipment": return 0.018;
-            case "solarpanels": return 0.010;
-            default: return 0.015;
-        }
+        return switch (type.toLowerCase()) {
+            case "heavymachinery" -> 0.015;
+            case "mobiletools" -> 0.020;
+            case "transitcargo" -> 0.012;
+            case "medicalequipment" -> 0.018;
+            case "solarpanels" -> 0.010;
+            default -> 0.015;
+        };
     }
 
     private double getDeductibleFactor(BigDecimal ded) {

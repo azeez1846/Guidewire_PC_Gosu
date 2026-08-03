@@ -31,7 +31,7 @@ public class SlidingScaleDividendEngine {
         double lossRatio = annualIncurredLosses.divide(totalPrem, 4, RoundingMode.HALF_UP).doubleValue();
         result.setLossRatio(lossRatio);
 
-        double dividendPct = 0.0;
+        double dividendPct;
         String tierName;
 
         if (lossRatio < 0.30) {

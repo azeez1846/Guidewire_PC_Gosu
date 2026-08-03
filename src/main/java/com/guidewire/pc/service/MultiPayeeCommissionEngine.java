@@ -61,9 +61,9 @@ public class MultiPayeeCommissionEngine {
     }
 
     public static class PayeeSplit {
-        private String payeeName;
-        private double splitPercentage;
-        private BigDecimal splitAmount;
+        private final String payeeName;
+        private final double splitPercentage;
+        private final BigDecimal splitAmount;
 
         public PayeeSplit(String payeeName, double splitPercentage, BigDecimal splitAmount) {
             this.payeeName = payeeName;

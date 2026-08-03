@@ -68,7 +68,7 @@ public class UWEscalationWorkflowEngine {
         private String escalationReason;
         private boolean dualSignOffRequired;
         private List<String> requiredApproverLevels = new ArrayList<>();
-        private Date lastEvaluatedDate = new Date();
+        private final Date lastEvaluatedDate = new Date();
 
         public String getPolicyNumber() { return policyNumber; }
         public void setPolicyNumber(String policyNumber) { this.policyNumber = policyNumber; }

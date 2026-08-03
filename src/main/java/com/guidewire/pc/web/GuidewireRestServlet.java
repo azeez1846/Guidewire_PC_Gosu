@@ -593,7 +593,7 @@ public class GuidewireRestServlet extends HttpServlet {
             Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
             String jobNumber = (String) reqMap.get("jobNumber");
             PolicyPeriod period = dataStore.findSubmission(jobNumber);
-            var res = com.guidewire.pc.service.PolicyFormInferenceEngine.getInstance().inferPolicyForms(period);
+            var res = com.guidewire.pc.service.PolicyFormInferenceEngine.inferPolicyForms(period);
             objectMapper.writeValue(resp.getWriter(), res);
             return;
         }

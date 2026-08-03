@@ -66,9 +66,10 @@ public class UWIssueWorkflowTest {
         assertTrue(period.hasBlockingBindIssues());
 
         // Attempting to bind should throw IllegalStateException
-        assertThrows(IllegalStateException.class, () -> {
+        Exception ex = assertThrows(IllegalStateException.class, () -> {
             lifecycleService.bindSubmissionBranch("S000_UW_TEST_3");
         });
+        assertNotNull(ex.getMessage());
 
         // Underwriter approves all open issues
         for (UWIssue issue : period.getOpenBlockingBindIssues()) {

@@ -147,10 +147,10 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
             case "copy-submission" -> handleCopySubmission(params.get("jobNum"), resp);
             case "policy-change" -> renderPolicyChangePage(params.get("jobNum"), params, resp);
             case "cancellation" -> renderCancellationPage(params.get("jobNum"), params, resp);
-            case "uw-issues" -> renderUWIssuesPage(params);
-            case "inland-marine" -> renderInlandMarinePage(params);
-            case "fraud-dashboard" -> renderFraudDashboardPage(params);
-            case "reinsurance-ledger" -> renderReinsuranceLedgerPage(params);
+            case "uw-issues" -> renderUWIssuesPage();
+            case "inland-marine" -> renderInlandMarinePage();
+            case "fraud-dashboard" -> renderFraudDashboardPage();
+            case "reinsurance-ledger" -> renderReinsuranceLedgerPage();
             default -> renderDesktopPage("submissions", null);
         };
 
@@ -996,7 +996,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
         return sb.toString();
     }
 
-    private String renderUWIssuesPage(Map<String, String> params) {
+    private String renderUWIssuesPage() {
         StringBuilder sb = new StringBuilder();
         sb.append("<!DOCTYPE html><html><head><title>Underwriting Issues Dashboard - Guidewire PolicyCenter</title>").append(getHeaderCSS()).append("</head><body>");
         sb.append(renderHeader("desktop"));
@@ -1037,7 +1037,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
         return sb.toString();
     }
 
-    private String renderInlandMarinePage(Map<String, String> params) {
+    private String renderInlandMarinePage() {
         StringBuilder sb = new StringBuilder();
         sb.append("<!DOCTYPE html><html><head><title>Inland Marine Line - Guidewire PolicyCenter</title>").append(getHeaderCSS()).append("</head><body>");
         sb.append(renderHeader("desktop"));
@@ -1059,7 +1059,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
         return sb.toString();
     }
 
-    private String renderFraudDashboardPage(Map<String, String> params) {
+    private String renderFraudDashboardPage() {
         StringBuilder sb = new StringBuilder();
         sb.append("<!DOCTYPE html><html><head><title>SIU Fraud Risk Dashboard - Guidewire PolicyCenter</title>").append(getHeaderCSS()).append("</head><body>");
         sb.append(renderHeader("desktop"));
@@ -1087,7 +1087,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
         return sb.toString();
     }
 
-    private String renderReinsuranceLedgerPage(Map<String, String> params) {
+    private String renderReinsuranceLedgerPage() {
         StringBuilder sb = new StringBuilder();
         sb.append("<!DOCTYPE html><html><head><title>Reinsurance Ledger & Treaties - Guidewire PolicyCenter</title>").append(getHeaderCSS()).append("</head><body>");
         sb.append(renderHeader("desktop"));
