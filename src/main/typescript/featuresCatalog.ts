@@ -1,0 +1,333 @@
+import { FeatureModule } from './types/features';
+
+export const ENTERPRISE_FEATURES_CATALOG: FeatureModule[] = [
+  {
+    id: 'telematics-ubi',
+    title: 'Auto Fleet Telematics Driving Behavior Premium Discount Engine (UBI)',
+    category: 'Specialty Lines',
+    shortDescription: 'Evaluates driver safety telemetry (hard brakes, rapid acceleration, late-night driving) for dynamic UBI discounts up to -20% or surcharges +15%.',
+    businessPurpose: 'Commercial & Personal Auto lines use telematics telemetry to reward safe drivers with rate discounts while pricing high-risk behaviors appropriately on renewal.',
+    endpoint: '/rest/v1/telematics/evaluate',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
+      { name: 'hardBrakesPer1k', label: 'Hard Brakes / 1k Miles', type: 'number', defaultValue: 1.0, description: 'Events per 1,000 miles driven' },
+      { name: 'rapidAccelerationsPer1k', label: 'Rapid Accelerations / 1k Miles', type: 'number', defaultValue: 0.5, description: 'Events per 1,000 miles driven' },
+      { name: 'lateNightDrivingPct', label: 'Late Night Driving % (12am-4am)', type: 'number', defaultValue: 0.02, description: 'Fraction of total driving during high-risk hours' },
+      { name: 'speedingEventsPer1k', label: 'Speeding Events / 1k Miles', type: 'number', defaultValue: 0.0, description: 'Events exceeding limit by >10mph' }
+    ]
+  },
+  {
+    id: 'tria-compliance',
+    title: 'TRIA Terrorism Risk Insurance Act Opt-In/Opt-Out Disclosure Engine',
+    category: 'Compliance & Regulatory',
+    shortDescription: 'Manages mandatory U.S. Federal TRIA 3.5% terrorism surcharge disclosures, opt-in endorsements, and rejection exclusion forms.',
+    businessPurpose: 'Federal regulation requires commercial property and liability insurers to disclose certified terrorism coverage terms and attach mandatory TRIA rejection forms if declined.',
+    endpoint: '/rest/v1/tria/evaluate',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
+      { name: 'optInTerrorismCoverage', label: 'Opt-In TRIA Coverage', type: 'boolean', defaultValue: true, description: 'Policyholder accepts certified terrorism coverage' },
+      { name: 'triaRatePct', label: 'TRIA Surcharge Rate (%)', type: 'number', defaultValue: 0.035, description: 'Standard 3.5% federal terrorism rate' }
+    ]
+  },
+  {
+    id: 'pollution-hazard',
+    title: 'Environmental & Pollution Liability Hazard Assessment Engine',
+    category: 'Specialty Lines',
+    shortDescription: 'Assesses Underground Storage Tanks (UST), chemical hazard scores, and proximity to waterways to calculate EIL rating multipliers and containment deductibles.',
+    businessPurpose: 'Environmental Impairment Liability (EIL) underwriters evaluate hazardous storage and waterway proximity to enforce mandatory containment deductibles up to $50,000.',
+    endpoint: '/rest/v1/pollution/assess',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
+      { name: 'ustCount', label: 'Underground Storage Tanks (UST)', type: 'number', defaultValue: 4, description: 'Active tank count on facility grounds' },
+      { name: 'chemicalHazardScore', label: 'Chemical Hazard Score (1-10)', type: 'number', defaultValue: 8, description: 'Storage volume and toxic rating score' },
+      { name: 'proximityToWaterwayMiles', label: 'Proximity to Waterway (Miles)', type: 'number', defaultValue: 0.4, description: 'Distance to nearest river, lake or coastal bay' },
+      { name: 'facilityAgeYears', label: 'Facility Age (Years)', type: 'number', defaultValue: 25, description: 'Age of industrial site structures' }
+    ]
+  },
+  {
+    id: 'cyber-liability',
+    title: 'Cyber Liability Ransomware & Breach Response Sub-Limit Engine',
+    category: 'Specialty Lines',
+    shortDescription: 'Evaluates corporate cyber security posture (MFA, daily backups, EDR) and caps ransomware sub-limits at $250k with +30% surcharge if MFA is missing.',
+    businessPurpose: 'Cyber underwriters enforce strict security controls like Multi-Factor Authentication (MFA) to prevent catastrophic ransomware losses.',
+    endpoint: '/rest/v1/cyber/evaluate',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
+      { name: 'mfaEnabled', label: 'MFA Enabled on All Systems', type: 'boolean', defaultValue: false, description: 'Mandatory Multi-Factor Authentication' },
+      { name: 'offlineBackupsDaily', label: 'Daily Offline Backups', type: 'boolean', defaultValue: true, description: 'Immutable daily offsite backups' },
+      { name: 'edrDeployed', label: 'EDR Antivirus Deployed', type: 'boolean', defaultValue: true, description: 'Endpoint Detection and Response' },
+      { name: 'employeePhishingTrained', label: 'Phishing Awareness Training', type: 'boolean', defaultValue: true, description: 'Quarterly staff phishing simulation training' }
+    ]
+  },
+  {
+    id: 'flood-zone-rating',
+    title: 'Flood Zone Risk & NFIP Elevation Certificate Premium Engine',
+    category: 'Commercial Rating & Retrospective',
+    shortDescription: 'Evaluates FEMA Flood Zones (A, V, X) and Elevation Certificate differentials to grant -30% elevation credits or apply +50% below-BFE surcharges.',
+    businessPurpose: 'Commercial property underwriters evaluate FEMA flood maps and structural elevation relative to Base Flood Elevation (BFE) for precise flood pricing.',
+    endpoint: '/rest/v1/flood/rate',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
+      { name: 'floodZone', label: 'FEMA Flood Zone', type: 'select', defaultValue: 'Zone A', options: [{label: 'Zone A (High Risk Inland)', value: 'Zone A'}, {label: 'Zone V (High Risk Coastal)', value: 'Zone V'}, {label: 'Zone X (Low/Moderate Risk)', value: 'Zone X'}], description: 'FEMA flood hazard designation' },
+      { name: 'lowestFloorElevationFt', label: 'Lowest Floor Elevation (ft)', type: 'number', defaultValue: 14.0, description: 'Structure lowest floor height above sea level' },
+      { name: 'baseFloodElevationBFE', label: 'Base Flood Elevation BFE (ft)', type: 'number', defaultValue: 12.0, description: 'FEMA 100-year flood level height' },
+      { name: 'hasFloodProofVents', label: 'Engineered Flood Vents Installed', type: 'boolean', defaultValue: true, description: 'Compliant engineered hydrostatic vents' }
+    ]
+  },
+  {
+    id: 'coinsurance-penalty',
+    title: 'Property Coinsurance Clause Penalty Engine',
+    category: 'Underwriting & Risk',
+    shortDescription: 'Evaluates commercial building replacement valuation against 80%/90% coinsurance clauses to apply claim payout penalty reductions if under-insured.',
+    businessPurpose: 'Commercial property clauses require buildings to be insured for at least 80-90% of replacement value; under-insured properties incur proportional claim penalties.',
+    endpoint: '/rest/v1/coinsurance/evaluate',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
+      { name: 'buildingValue', label: 'Building Replacement Value ($)', type: 'number', defaultValue: 2000000, description: '100% full replacement valuation' },
+      { name: 'buildingLimit', label: 'Carried Building Limit ($)', type: 'number', defaultValue: 1200000, description: 'Actual insured policy limit carried' },
+      { name: 'coinsurancePct', label: 'Coinsurance Clause %', type: 'number', defaultValue: 0.80, description: 'Mandatory 80% or 90% clause requirement' },
+      { name: 'claimLoss', label: 'Claim Property Loss Amount ($)', type: 'number', defaultValue: 500000, description: 'Incurred building property loss' },
+      { name: 'deductible', label: 'Property Deductible ($)', type: 'number', defaultValue: 5000, description: 'Policy deductible amount' }
+    ]
+  },
+  {
+    id: 'deductible-buyback',
+    title: 'Policy Deductible Buyback & Surcharge Engine',
+    category: 'Commercial Rating & Retrospective',
+    shortDescription: 'Calculates actuarial buyback surcharge factors when policyholders reduce high deductibles (e.g. buying down $10,000 to $1,000).',
+    businessPurpose: 'Allows policyholders to buy down deductible exposure in exchange for a calculated premium surcharge.',
+    endpoint: '/rest/v1/deductible/buyback',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
+      { name: 'originalDeductible', label: 'Original Deductible ($)', type: 'number', defaultValue: 10000, description: 'Standard baseline deductible' },
+      { name: 'targetDeductible', label: 'Target Buyback Deductible ($)', type: 'number', defaultValue: 1000, description: 'Requested reduced deductible' }
+    ]
+  },
+  {
+    id: 'uw-escalation',
+    title: 'Multi-Tier UW Authority Escalation & Sign-Off Workflow Engine',
+    category: 'Underwriting & Risk',
+    shortDescription: 'Manages approval hierarchy (Underwriter -> Manager -> VP) enforcing dual sign-offs for TIV > $10M or fraud scores >= 70.',
+    businessPurpose: 'Ensures high exposure commercial accounts receive proper governance and senior leadership sign-off prior to policy binding.',
+    endpoint: '/rest/v1/uw/escalation',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
+      { name: 'totalInsuredValue', label: 'Total Insured Value TIV ($)', type: 'number', defaultValue: 15000000, description: 'Aggregate property & liability value' },
+      { name: 'riskScore', label: 'Underwriting Risk Score (0-100)', type: 'number', defaultValue: 75, description: 'Automated hazard risk assessment score' }
+    ]
+  },
+  {
+    id: 'sliding-dividend',
+    title: 'Loss Sensitive Sliding Scale Policyholder Dividend Engine',
+    category: 'Commercial Rating & Retrospective',
+    shortDescription: 'Evaluates commercial retrospective rating plans returning up to 15% dividend returns for low loss ratios (<30%).',
+    businessPurpose: 'Rewards commercial accounts that maintain clean safety records with cash dividend refunds after policy expiration.',
+    endpoint: '/rest/v1/dividend/calculate',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
+      { name: 'incurredLosses', label: 'Annual Incurred Loss Amount ($)', type: 'number', defaultValue: 2500, description: 'Total paid + reserved policy claims' }
+    ]
+  },
+  {
+    id: 'rate-cap',
+    title: 'Renewal Rate Impact Capping & Transition Smoothing Engine',
+    category: 'Commercial Rating & Retrospective',
+    shortDescription: 'Enforces maximum annual rate increase caps (e.g. max +10%) on renewal policies to smooth price hikes and prevent customer churn.',
+    businessPurpose: 'Carriers cap steep rate increases to maintain high renewal retention while subsidizing transition rates over multiple terms.',
+    endpoint: '/rest/v1/rate-cap/apply',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
+      { name: 'uncappedProposedPremium', label: 'Uncapped Proposed Premium ($)', type: 'number', defaultValue: 15000, description: 'Raw technical benchmark renewal rate' },
+      { name: 'maxRateCapPct', label: 'Max Renewal Cap % (e.g. 0.10)', type: 'number', defaultValue: 0.10, description: 'Maximum allowed annual rate increase cap' }
+    ]
+  },
+  {
+    id: 'siu-fraud',
+    title: 'SIU Fraud Risk Scoring Engine',
+    category: 'Underwriting & Risk',
+    shortDescription: 'Analyzes identity anomalies, policy change velocity, and loss history to generate weighted fraud scores and trigger SIU holds.',
+    businessPurpose: 'Detects suspicious policy applications and fraudulent claim patterns early to protect carrier loss ratios.',
+    endpoint: '/rest/v1/siu-fraud/evaluate',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' }
+    ]
+  },
+  {
+    id: 'reinsurance-ledger',
+    title: 'Reinsurance Treaty Layering & Cession Ledger Engine',
+    category: 'Reinsurance & Portfolio',
+    shortDescription: 'Applies Quota Share, Excess of Loss (XOL), and Catastrophe Treaty layers to partition policy premiums and loss cessions.',
+    businessPurpose: 'Automates complex reinsurance accounting, treaty attachment points, layer limits, and reinsurer bordereau reporting.',
+    endpoint: '/rest/v1/reinsurance/calculate',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
+      { name: 'grossPremium', label: 'Gross Subject Premium ($)', type: 'number', defaultValue: 100000, description: 'Total policy premium before cessions' }
+    ]
+  },
+  {
+    id: 'cat-accumulation',
+    title: 'Real-Time Catastrophe (CAT) Accumulation Engine',
+    category: 'Reinsurance & Portfolio',
+    shortDescription: 'Aggregates geospatial Total Insured Value (TIV) across coastal hurricane and earthquake fault zones against carrier exposure caps.',
+    businessPurpose: 'Prevents over-concentration of risk in hurricane or wildfire zones by tracking live CAT accumulation totals.',
+    endpoint: '/rest/v1/cat/evaluate',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
+      { name: 'tiv', label: 'Total Insured Value TIV ($)', type: 'number', defaultValue: 5000000, description: 'Property schedule total value' },
+      { name: 'catZone', label: 'CAT Zone Code', type: 'string', defaultValue: 'FL-COASTAL-01', description: 'Geospatial risk zone code' }
+    ]
+  },
+  {
+    id: 'commercial-audit',
+    title: 'Commercial Premium Audit & Final Adjustment Engine',
+    category: 'Commercial Rating & Retrospective',
+    shortDescription: 'Compares estimated vs actual gross sales/payroll to calculate final audit additional or return premiums.',
+    businessPurpose: 'Audits commercial policies post-expiration to adjust premiums based on true operational exposure figures.',
+    endpoint: '/rest/v1/audit/calculate',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
+      { name: 'actualExposure', label: 'Actual Audited Payroll/Sales ($)', type: 'number', defaultValue: 1200000, description: 'Audited financial exposure' },
+      { name: 'estimatedExposure', label: 'Estimated Initial Payroll/Sales ($)', type: 'number', defaultValue: 1000000, description: 'Initial binding estimate' },
+      { name: 'auditRate', label: 'Audit Rate per $100', type: 'number', defaultValue: 2.50, description: 'Line exposure rating factor' }
+    ]
+  },
+  {
+    id: 'experience-mod',
+    title: 'Experience Rating Mod (e-Mod) & NCCI Calculation Engine',
+    category: 'Commercial Rating & Retrospective',
+    shortDescription: 'Computes Workers Compensation Experience Modification Factor (e-Mod) using NCCI actual vs expected loss formulas.',
+    businessPurpose: 'Adjusts Workers Comp premiums based on individual employer claim history relative to industry benchmarks.',
+    endpoint: '/rest/v1/emod/calculate',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
+      { name: 'actualLosses', label: 'Actual Incurred Losses ($)', type: 'number', defaultValue: 17000, description: '3-year policy claim losses' },
+      { name: 'expectedLosses', label: 'Expected Benchmark Losses ($)', type: 'number', defaultValue: 20000, description: 'Expected losses for class codes' }
+    ]
+  },
+  {
+    id: 'inland-marine',
+    title: 'Sub-line Inland Marine Rating & Scheduled Equipment Engine',
+    category: 'Specialty Lines',
+    shortDescription: 'Rates contractor heavy machinery, transit cargo, and mobile tools with specific deductible and equipment class factors.',
+    businessPurpose: 'Specialized mobile property and contractor equipment rating for Inland Marine commercial lines.',
+    endpoint: '/rest/v1/inland-marine/rate',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' }
+    ]
+  },
+  {
+    id: 'proration-refund',
+    title: 'Policy Cancellation Short-Rate vs Pro-Rata Refund Calculator',
+    category: 'Compliance & Regulatory',
+    shortDescription: 'Calculates unearned premium return refunds comparing standard Pro-Rata factor vs Short-Rate 90% penalty table.',
+    businessPurpose: 'Enforces state insurance department cancellation refund rules when policies are cancelled early by carrier or insured.',
+    endpoint: '/rest/v1/cancellation/refund',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
+      { name: 'cancellationReason', label: 'Cancellation Reason', type: 'select', defaultValue: 'Insured Request', options: [{label: 'Insured Request (Short-Rate)', value: 'Insured Request'}, {label: 'Non-Payment (Pro-Rata)', value: 'Non-Payment'}], description: 'Reason for early cancellation' }
+    ]
+  },
+  {
+    id: 'multinational-ledger',
+    title: 'Multi-Currency Multinational Local Policy Ledger Engine',
+    category: 'Reinsurance & Portfolio',
+    shortDescription: 'Manages global master umbrella policy allocations across local foreign currencies (EUR, GBP, JPY) with real-time FX rates.',
+    businessPurpose: 'Allows global commercial clients to manage multi-national admitted policies with local currency tax compliance.',
+    endpoint: '/rest/v1/multinational/ledger',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' }
+    ]
+  },
+  {
+    id: 'commission-split',
+    title: 'Multi-Payee Commission Split Engine',
+    category: 'Compliance & Regulatory',
+    shortDescription: 'Splits gross agency commission across wholesale brokers, managing general agents (MGA), and producing agents.',
+    businessPurpose: 'Automates agency accounting and multi-producer commission splits on commercial transactions.',
+    endpoint: '/rest/v1/commission/split',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
+      { name: 'commissionRate', label: 'Agency Commission Rate (e.g. 0.15)', type: 'number', defaultValue: 0.15, description: 'Gross commission percentage' }
+    ]
+  },
+  {
+    id: 'oos-merge',
+    title: 'Out-of-Sequence (OOS) Endorsement Transaction Merge Engine',
+    category: 'Underwriting & Risk',
+    shortDescription: 'Merges effective date endorsement conflicts when backdated policy changes overlap on the policy timeline slice.',
+    businessPurpose: 'Guidewire core capability for resolving retroactive policy endorsements without corrupting policy state.',
+    endpoint: '/rest/v1/oos/merge',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' }
+    ]
+  },
+  {
+    id: 'renewal-eligibility',
+    title: 'Pre-Renewal Portfolio Health Batch Process Engine',
+    category: 'Reinsurance & Portfolio',
+    shortDescription: 'Automated batch process scanning portfolio policies 90 days prior to expiration to score renewal profitability.',
+    businessPurpose: 'Pre-screens renewal portfolio to automatically non-renew un-profitable accounts or apply rate increases.',
+    endpoint: '/rest/v1/renewal/eligibility',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
+      { name: 'proposedRateIncreasePct', label: 'Proposed Renewal Rate Increase (e.g. 0.18)', type: 'number', defaultValue: 0.18, description: 'Target rate increase factor' }
+    ]
+  },
+  {
+    id: 'uw-override',
+    title: 'Underwriting Override Rating Engine & Audit Trail',
+    category: 'Underwriting & Risk',
+    shortDescription: 'Tracks manual underwriter rate overrides, schedule credits, and authority level approval logs.',
+    businessPurpose: 'Maintains audit trail compliance for discretionary underwriter premium adjustments.',
+    endpoint: '/rest/v1/uw-override/audit',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' }
+    ]
+  },
+  {
+    id: 'group-coi',
+    title: 'Automated Group Account Certificate of Insurance (COI) Issuance',
+    category: 'Compliance & Regulatory',
+    shortDescription: 'Batch generates ACORD 25 COI documents across multi-location commercial policyholder schedules.',
+    businessPurpose: 'Automates mass certificate generation for commercial accounts with hundreds of certificate holders.',
+    endpoint: '/rest/v1/coi/generate',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' }
+    ]
+  },
+  {
+    id: 'forms-inference',
+    title: 'Policy Form Inference & Attachment Rules Engine',
+    category: 'Compliance & Regulatory',
+    shortDescription: 'Evaluates policy coverages, state jurisdictions, and limits to dynamically attach statutory policy forms.',
+    businessPurpose: 'Ensures legal policy documents contain all required state mandatory endorsements.',
+    endpoint: '/rest/v1/forms/infer',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' }
+    ]
+  }
+];

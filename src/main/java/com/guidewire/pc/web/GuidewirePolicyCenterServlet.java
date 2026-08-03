@@ -151,6 +151,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
             case "inland-marine" -> renderInlandMarinePage();
             case "fraud-dashboard" -> renderFraudDashboardPage();
             case "reinsurance-ledger" -> renderReinsuranceLedgerPage();
+            case "features" -> renderFeaturesPage();
             default -> renderDesktopPage("submissions", null);
         };
 
@@ -265,6 +266,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
                 "<a href='/?page=search' class='gw-tab " + ("search".equals(activeTab) ? "active" : "") + "'>🔍 Search</a>" +
                 "<a href='/?page=new-account' class='gw-tab'>+ New Account</a>" +
                 "<a href='/?page=new-submission' class='gw-tab'>+ New Submission</a>" +
+                "<a href='/?page=features' class='gw-tab " + ("features".equals(activeTab) ? "active" : "") + "' style='background:linear-gradient(135deg, #FFD700, #FF8C00); color:#000; font-weight:bold; border-radius:4px;'>🚀 Features (24)</a>" +
                 "<a href='/swagger-ui' target='_blank' class='gw-tab' style='color:#38B6FF;'>⚡ Swagger REST API</a>" +
                 "<a href='http://localhost:8082' target='_blank' class='gw-tab' style='color:#00C853;'>🗄️ H2 DB Console</a>" +
                 "<a href='/pcf-studio/' target='_blank' class='gw-tab' style='color:#A7F3D0;'>🧩 Visual PCF Studio</a>" +
@@ -1113,4 +1115,121 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
         sb.append("</tbody></table></div></div></div></body></html>");
         return sb.toString();
     }
+
+    private String renderFeaturesPage() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<!DOCTYPE html><html><head><title>Enterprise Features Suite (24) - Guidewire PolicyCenter</title>")
+          .append(getHeaderCSS())
+          .append("<style>")
+          .append(".gw-feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px; margin-top: 20px; }")
+          .append(".gw-feature-card { background: #FFFFFF; border-radius: 8px; padding: 20px; border: 1px solid #E2E8F0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s, box-shadow 0.2s; }")
+          .append(".gw-feature-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-color: #CBD5E0; }")
+          .append(".gw-feature-title { font-size: 16px; font-weight: 700; color: #1A365D; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: flex-start; }")
+          .append(".gw-feature-desc { font-size: 13px; color: #4A5568; margin-bottom: 12px; line-height: 1.5; }")
+          .append(".gw-feature-purpose { font-size: 12px; color: #718096; background: #F7FAFC; padding: 8px 10px; border-left: 3px solid #3182CE; border-radius: 4px; margin-bottom: 14px; }")
+          .append(".gw-feature-form { background: #EDF2F7; padding: 12px; border-radius: 6px; margin-top: auto; }")
+          .append(".gw-form-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }")
+          .append(".gw-form-label { font-size: 11px; font-weight: 600; color: #2D3748; }")
+          .append(".gw-form-input { padding: 6px 8px; font-size: 12px; border: 1px solid #CBD5E0; border-radius: 4px; background: #FFF; }")
+          .append(".gw-result-box { margin-top: 10px; padding: 10px; background: #1A202C; color: #68D391; font-family: monospace; font-size: 11px; border-radius: 4px; max-height: 180px; overflow-y: auto; display: none; white-space: pre-wrap; }")
+          .append(".gw-filter-btn { padding: 8px 14px; border: 1px solid #CBD5E0; background: #FFF; color: #4A5568; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }")
+          .append(".gw-filter-btn.active { background: #3182CE; color: #FFF; border-color: #3182CE; }")
+          .append("</style>")
+          .append("</head><body>");
+
+        sb.append(renderHeader("features"));
+
+        sb.append("<div class='gw-main-container'><div class='gw-content'>");
+        sb.append("<div class='gw-page-header'><div class='gw-page-title'>🚀 Guidewire PolicyCenter Enterprise Features Suite <span class='gw-pcf-tag'>EnterpriseFeaturesSuite.pcf</span></div>");
+        sb.append("<div style='color:#718096; font-size:14px; margin-top:4px;'>Comprehensive suite of 24 enterprise-grade insurance industry engines with interactive TypeScript/REST execution drivers.</div></div>");
+
+        // Filter Bar
+        sb.append("<div style='display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;'>");
+        sb.append("<button onclick=\"filterFeatures('all')\" class='gw-filter-btn active' id='btn-all'>All Features (24)</button>");
+        sb.append("<button onclick=\"filterFeatures('Specialty Lines')\" class='gw-filter-btn' id='btn-specialty'>Specialty Lines</button>");
+        sb.append("<button onclick=\"filterFeatures('Commercial Rating & Retrospective')\" class='gw-filter-btn' id='btn-rating'>Commercial Rating</button>");
+        sb.append("<button onclick=\"filterFeatures('Underwriting & Risk')\" class='gw-filter-btn' id='btn-uw'>Underwriting & Risk</button>");
+        sb.append("<button onclick=\"filterFeatures('Compliance & Regulatory')\" class='gw-filter-btn' id='btn-compliance'>Compliance & Regulatory</button>");
+        sb.append("<button onclick=\"filterFeatures('Reinsurance & Portfolio')\" class='gw-filter-btn' id='btn-reinsurance'>Reinsurance & Portfolio</button>");
+        sb.append("</div>");
+
+        // Feature Cards Grid
+        sb.append("<div class='gw-feature-grid' id='featureContainer'></div>");
+
+        // Client-side JavaScript rendering driven by TypeScript catalog definitions
+        sb.append("<script>")
+          .append("const FEATURES = [")
+          .append("{id:'telematics', title:'Auto Fleet Telematics UBI Discount Engine', category:'Specialty Lines', endpoint:'/rest/v1/telematics/evaluate', desc:'Evaluates UBI telemetry (hard braking, rapid accelerations, late night hours) for dynamic rate discounts (-20%) or surcharges (+15%).', purpose:'Commercial & Personal Auto UBI telematics scoring for driver behavior.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'},{n:'hardBrakesPer1k',l:'Hard Brakes / 1k mi',t:'number',v:'1.0'},{n:'rapidAccelerationsPer1k',l:'Rapid Accel / 1k mi',t:'number',v:'0.5'},{n:'lateNightDrivingPct',l:'Late Night %',t:'number',v:'0.02'}]},")
+          .append("{id:'tria', title:'TRIA Opt-In/Opt-Out Mandatory Disclosure Engine', category:'Compliance & Regulatory', endpoint:'/rest/v1/tria/evaluate', desc:'Calculates certified federal terrorism 3.5% surcharges and attaches TRIA-COV-2026 or rejection exclusion forms.', purpose:'Mandatory U.S. Federal TRIA Terrorism Disclosure Compliance.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'},{n:'optInTerrorismCoverage',l:'Opt-In TRIA',t:'select',o:[{l:'Yes (3.5% Surcharge)',v:true},{l:'No (Rejection Form)',v:false}],v:true},{n:'triaRatePct',l:'TRIA Rate',t:'number',v:'0.035'}]},")
+          .append("{id:'pollution', title:'Environmental Pollution Liability Hazard Engine', category:'Specialty Lines', endpoint:'/rest/v1/pollution/assess', desc:'Assesses Underground Storage Tanks (UST), chemical volume, and waterway proximity to compute EIL multipliers.', purpose:'Specialty Underwriting for Environmental Impairment Liability (EIL).', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'},{n:'ustCount',l:'UST Tank Count',t:'number',v:'4'},{n:'chemicalHazardScore',l:'Hazard Score (1-10)',t:'number',v:'8'},{n:'proximityToWaterwayMiles',l:'Waterway Dist (mi)',t:'number',v:'0.4'}]},")
+          .append("{id:'cyber', title:'Cyber Liability Ransomware & Breach Sub-Limit Engine', category:'Specialty Lines', endpoint:'/rest/v1/cyber/evaluate', desc:'Evaluates security controls (MFA, backups, EDR). Enforces $250k ransomware cap and +30% surcharge if MFA is missing.', purpose:'Cyber Insurance risk posture evaluation & ransomware capping.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'},{n:'mfaEnabled',l:'MFA Enabled',t:'select',o:[{l:'Enabled (-15% Credit)',v:true},{l:'Disabled (+30% Surcharge, $250k Cap)',v:false}],v:false},{n:'offlineBackupsDaily',l:'Daily Offsite Backups',t:'select',o:[{l:'Yes',v:true},{l:'No',v:false}],v:true}]},")
+          .append("{id:'flood', title:'Flood Zone Risk & NFIP Elevation Certificate Engine', category:'Commercial Rating & Retrospective', endpoint:'/rest/v1/flood/rate', desc:'Evaluates FEMA Flood Zones (A, V, X) and Elevation Certificate differentials relative to Base Flood Elevation (BFE).', purpose:'Commercial & Personal Property Flood Risk Rating.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'},{n:'floodZone',l:'FEMA Flood Zone',t:'text',v:'Zone A'},{n:'lowestFloorElevationFt',l:'Lowest Floor Elev (ft)',t:'number',v:'14.0'},{n:'baseFloodElevationBFE',l:'Base Flood Elev BFE (ft)',t:'number',v:'12.0'}]},")
+          .append("{id:'coinsurance', title:'Property Coinsurance Clause Penalty Engine', category:'Underwriting & Risk', endpoint:'/rest/v1/coinsurance/evaluate', desc:'Evaluates building valuation against 80%/90% coinsurance clauses to apply claim payout penalty reductions.', purpose:'Commercial property under-insurance claim penalty calculation.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'},{n:'buildingValue',l:'Building Value ($)',t:'number',v:'2000000'},{n:'buildingLimit',l:'Carried Limit ($)',t:'number',v:'1200000'},{n:'coinsurancePct',l:'Coinsurance %',t:'number',v:'0.80'},{n:'claimLoss',l:'Claim Loss ($)',t:'number',v:'500000'}]},")
+          .append("{id:'deductible-buyback', title:'Policy Deductible Buyback & Surcharge Engine', category:'Commercial Rating & Retrospective', endpoint:'/rest/v1/deductible/buyback', desc:'Calculates actuarial buyback surcharge factors when policyholders reduce high deductibles ($10k down to $1k).', purpose:'Deductible buyback exposure pricing.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'},{n:'originalDeductible',l:'Original Ded ($)',t:'number',v:'10000'},{n:'targetDeductible',l:'Target Ded ($)',t:'number',v:'1000'}]},")
+          .append("{id:'uw-escalation', title:'Multi-Tier UW Authority Escalation Workflow Engine', category:'Underwriting & Risk', endpoint:'/rest/v1/uw/escalation', desc:'Escalates approval hierarchy enforcing dual sign-offs for TIV > $10M or fraud risk scores >= 70.', purpose:'Underwriting referral governance for large commercial risk.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'},{n:'totalInsuredValue',l:'Total Insured Value TIV ($)',t:'number',v:'15000000'},{n:'riskScore',l:'Risk Score (0-100)',t:'number',v:'75'}]},")
+          .append("{id:'sliding-dividend', title:'Loss Sensitive Sliding Scale Policyholder Dividend Engine', category:'Commercial Rating & Retrospective', endpoint:'/rest/v1/dividend/calculate', desc:'Evaluates commercial retrospective rating plans returning up to 15% dividend returns for low loss ratios (<30%).', purpose:'Commercial policyholder dividend return calculations.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'},{n:'incurredLosses',l:'Incurred Losses ($)',t:'number',v:'2500'}]},")
+          .append("{id:'rate-cap', title:'Renewal Rate Impact Capping & Transition Smoothing Engine', category:'Commercial Rating & Retrospective', endpoint:'/rest/v1/rate-cap/apply', desc:'Enforces maximum annual renewal rate increase caps (e.g. max +10%) to prevent customer churn.', purpose:'Renewal price hike smoothing & carrier subsidy calculation.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'},{n:'uncappedProposedPremium',l:'Uncapped Proposed Prem ($)',t:'number',v:'15000'},{n:'maxRateCapPct',l:'Max Cap % (e.g. 0.10)',t:'number',v:'0.10'}]},")
+          .append("{id:'siu-fraud', title:'SIU Fraud Risk Scoring Engine', category:'Underwriting & Risk', endpoint:'/rest/v1/siu-fraud/evaluate', desc:'Calculates weighted fraud scores for identity anomalies, change velocity, and loss history.', purpose:'Special Investigation Unit (SIU) fraud detection.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'}]},")
+          .append("{id:'reinsurance-ledger', title:'Reinsurance Treaty Layering & Cession Ledger', category:'Reinsurance & Portfolio', endpoint:'/rest/v1/reinsurance/calculate', desc:'Applies Quota Share, Excess of Loss (XOL), and Catastrophe Treaty layers to partition policy premiums and loss cessions.', purpose:'Automated reinsurance bordereau & treaty accounting.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'},{n:'grossPremium',l:'Gross Subject Prem ($)',t:'number',v:'100000'}]},")
+          .append("{id:'cat-accumulation', title:'Real-Time Catastrophe (CAT) Accumulation Engine', category:'Reinsurance & Portfolio', endpoint:'/rest/v1/cat/evaluate', desc:'Aggregates geospatial Total Insured Value (TIV) across coastal hurricane and earthquake fault zones.', purpose:'Geospatial CAT exposure concentration management.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'},{n:'tiv',label:'TIV ($)',t:'number',v:'5000000'},{n:'catZone',label:'CAT Zone Code',t:'text',v:'FL-COASTAL-01'}]},")
+          .append("{id:'commercial-audit', title:'Commercial Premium Audit & Final Adjustment Engine', category:'Commercial Rating & Retrospective', endpoint:'/rest/v1/audit/calculate', desc:'Compares estimated vs actual gross sales/payroll to calculate final audit additional or return premiums.', purpose:'Audited commercial line premium reconciliations.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'},{n:'actualExposure',l:'Audited Payroll ($)',t:'number',v:'1200000'},{n:'estimatedExposure',l:'Estimated Payroll ($)',t:'number',v:'1000000'},{n:'auditRate',l:'Audit Rate / $100',t:'number',v:'2.50'}]},")
+          .append("{id:'experience-mod', title:'Experience Rating Mod (e-Mod) NCCI Engine', category:'Commercial Rating & Retrospective', endpoint:'/rest/v1/emod/calculate', desc:'Computes Workers Compensation Experience Modification Factor (e-Mod) using NCCI actual vs expected loss formulas.', purpose:'Workers Comp experience rating mod calculation.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'},{n:'actualLosses',l:'Actual Losses ($)',t:'number',v:'17000'},{n:'expectedLosses',l:'Expected Losses ($)',t:'number',v:'20000'}]},")
+          .append("{id:'inland-marine', title:'Sub-line Inland Marine Rating & Equipment Engine', category:'Specialty Lines', endpoint:'/rest/v1/inland-marine/rate', desc:'Rates contractor heavy machinery, transit cargo, and mobile tools with specific deductible factors.', purpose:'Inland Marine commercial equipment rating.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'}]},")
+          .append("{id:'proration-refund', title:'Policy Cancellation Short-Rate vs Pro-Rata Refund Calculator', category:'Compliance & Regulatory', endpoint:'/rest/v1/cancellation/refund', desc:'Calculates unearned premium return refunds comparing standard Pro-Rata factor vs Short-Rate 90% penalty table.', purpose:'State statutory cancellation refund compliance.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'},{n:'cancellationReason',l:'Reason',t:'select',o:[{l:'Insured Request (Short-Rate)',v:'Insured Request'},{l:'Non-Payment (Pro-Rata)',v:'Non-Payment'}],v:'Insured Request'}]},")
+          .append("{id:'multinational-ledger', title:'Multi-Currency Multinational Local Policy Ledger', category:'Reinsurance & Portfolio', endpoint:'/rest/v1/multinational/ledger', desc:'Manages global master umbrella policy allocations across local foreign currencies (EUR, GBP, JPY) with FX rates.', purpose:'Multi-national admitted policy ledger management.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'}]},")
+          .append("{id:'commission-split', title:'Multi-Payee Commission Split Engine', category:'Compliance & Regulatory', endpoint:'/rest/v1/commission/split', desc:'Splits gross agency commission across wholesale brokers, MGAs, and producing agents.', purpose:'Producer & agency commission split accounting.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'},{n:'commissionRate',l:'Commission Rate',t:'number',v:'0.15'}]},")
+          .append("{id:'oos-merge', title:'Out-of-Sequence (OOS) Endorsement Merge Engine', category:'Underwriting & Risk', endpoint:'/rest/v1/oos/merge', desc:'Merges effective date endorsement conflicts when backdated policy changes overlap on the timeline slice.', purpose:'Guidewire core OOS endorsement timeline merging.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'}]},")
+          .append("{id:'renewal-eligibility', title:'Pre-Renewal Portfolio Health Batch Process Engine', category:'Reinsurance & Portfolio', endpoint:'/rest/v1/renewal/eligibility', desc:'Automated batch process scanning portfolio policies 90 days prior to expiration to score renewal profitability.', purpose:'Pre-renewal portfolio screening & health scoring.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'},{n:'proposedRateIncreasePct',l:'Proposed Rate Increase',t:'number',v:'0.18'}]},")
+          .append("{id:'uw-override', title:'Underwriting Override Rating Engine & Audit Trail', category:'Underwriting & Risk', endpoint:'/rest/v1/uw-override/audit', desc:'Tracks manual underwriter rate overrides, schedule credits, and authority level approval logs.', purpose:'Underwriter override audit trail compliance.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'}]},")
+          .append("{id:'group-coi', title:'Automated Group Account COI Issuance Engine', category:'Compliance & Regulatory', endpoint:'/rest/v1/coi/generate', desc:'Batch generates ACORD 25 COI documents across multi-location commercial policyholder schedules.', purpose:'Automated Certificate of Insurance mass generation.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'}]},")
+          .append("{id:'forms-inference', title:'Policy Form Inference & Attachment Rules Engine', category:'Compliance & Regulatory', endpoint:'/rest/v1/forms/infer', desc:'Evaluates policy coverages, state jurisdictions, and limits to dynamically attach statutory policy forms.', purpose:'Automated policy form inference & mandatory endorsement attachment.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'}]}")
+          .append("];")
+          .append("function renderCards(filterCategory) {")
+          .append("  const container = document.getElementById('featureContainer');")
+          .append("  container.innerHTML = '';")
+          .append("  const filtered = filterCategory === 'all' ? FEATURES : FEATURES.filter(f => f.category === filterCategory);")
+          .append("  filtered.forEach(f => {")
+          .append("    const card = document.createElement('div'); card.className = 'gw-feature-card';")
+          .append("    let inputsHtml = f.inputs.map(i => {")
+          .append("      if (i.t === 'select') {")
+          .append("        return `<div class='gw-form-row'><label class='gw-form-label'>${i.l}</label><select id='input-${f.id}-${i.n}' class='gw-form-input'>${i.o.map(opt => `<option value='${opt.v}' ${opt.v === i.v ? 'selected' : ''}>${opt.l}</option>`).join('')}</select></div>`;")
+          .append("      } else {")
+          .append("        return `<div class='gw-form-row'><label class='gw-form-label'>${i.l}</label><input id='input-${f.id}-${i.n}' type='${i.t}' value='${i.v}' class='gw-form-input'></div>`;")
+          .append("      }")
+          .append("    }).join('');")
+          .append("    card.innerHTML = `<div><div class='gw-feature-title'><span>${f.title}</span><span class='gw-badge gw-badge-issued'>${f.category}</span></div><div class='gw-feature-desc'>${f.desc}</div><div class='gw-feature-purpose'><b>Business Purpose:</b> ${f.purpose}</div></div><div class='gw-feature-form'>${inputsHtml}<button onclick=\"executeModule('${f.id}', '${f.endpoint}')\" class='gw-btn' style='width:100%; margin-top:8px;'>⚡ Run Module Calculation</button><div id='result-${f.id}' class='gw-result-box'></div></div>`;")
+          .append("    container.appendChild(card);")
+          .append("  });")
+          .append("}")
+          .append("function filterFeatures(cat) {")
+          .append("  document.querySelectorAll('.gw-filter-btn').forEach(b => b.classList.remove('active'));")
+          .append("  if(event && event.target) event.target.classList.add('active');")
+          .append("  renderCards(cat);")
+          .append("}")
+          .append("function executeModule(id, endpoint) {")
+          .append("  const feat = FEATURES.find(f => f.id === id);")
+          .append("  const bodyData = {};")
+          .append("  feat.inputs.forEach(i => {")
+          .append("    const el = document.getElementById(`input-${id}-${i.n}`);")
+          .append("    if (el) {")
+          .append("      if (i.t === 'number') bodyData[i.n] = parseFloat(el.value);")
+          .append("      else if (i.t === 'select') bodyData[i.n] = el.value === 'true' ? true : (el.value === 'false' ? false : el.value);")
+          .append("      else bodyData[i.n] = el.value;")
+          .append("    }")
+          .append("  });")
+          .append("  const resBox = document.getElementById(`result-${id}`);")
+          .append("  resBox.style.display = 'block';")
+          .append("  resBox.innerText = 'Calculating REST API payload...';")
+          .append("  fetch(endpoint, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(bodyData) })")
+          .append("  .then(r => r.json())")
+          .append("  .then(data => { resBox.innerText = '✅ Module Execution Success:\\n' + JSON.stringify(data, null, 2); })")
+          .append("  .catch(err => { resBox.innerText = '❌ Error executing module: ' + err.message; });")
+          .append("}")
+          .append("document.addEventListener('DOMContentLoaded', () => renderCards('all'));")
+          .append("</script>");
+
+        sb.append("</div></div></body></html>");
+        return sb.toString();
+    }
 }
+
