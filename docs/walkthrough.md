@@ -1,46 +1,46 @@
 # Enterprise Insurance Industry Modules Implementation Walkthrough
 
-We have successfully built, integrated, and verified **19 total enterprise-grade insurance industry modules** for the Guidewire PolicyCenter platform.
+We have successfully built, integrated, and verified **24 total enterprise-grade insurance industry modules** for the Guidewire PolicyCenter platform.
 
 ---
 
 ## 🌟 Key Accomplishments - Latest 5 Modules
 
-### 1. Policy Deductible Buyback & Surcharge Engine
-- **Engine**: [DeductibleBuybackEngine.java](file:///Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/src/main/java/com/guidewire/pc/service/DeductibleBuybackEngine.java)
-- **Capability**: Computes premium surcharge factors when an insured buys down high property/auto deductibles (e.g. $10,000 down to $1,000).
-- **Rules**: Calculates buyback surcharge percentage based on reduction factor ($Factor = \frac{Original - Target}{Original} \times 0.20$), net surcharge amount, and revised total premium.
-- **REST Endpoint**: `/rest/v1/deductible/buyback`
+### 1. Auto Fleet Telematics Driving Behavior Premium Discount Engine (UBI)
+- **Engine**: [TelematicsRatingEngine.java](file:///Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/src/main/java/com/guidewire/pc/service/TelematicsRatingEngine.java)
+- **Capability**: Usage-Based Insurance (UBI) telemetry scoring evaluating hard braking, rapid acceleration, late-night driving, and speeding events per 1,000 miles.
+- **Rules**: Calculates safety score ($0-100$). Applies up to $-20\%$ renewal premium discount ($\text{Score} \ge 85$) or $+15\%$ risk surcharge ($\text{Score} < 50$).
+- **REST Endpoint**: `/rest/v1/telematics/evaluate`
 
-### 2. Multi-Tier UW Authority Escalation & Sign-Off Workflow Engine
-- **Engine**: [UWEscalationWorkflowEngine.java](file:///Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/src/main/java/com/guidewire/pc/service/UWEscalationWorkflowEngine.java)
-- **Capability**: Multi-tier approval escalation hierarchy (Level 1 Underwriter $\rightarrow$ Level 2 Manager $\rightarrow$ Level 3 VP of Underwriting).
-- **Rules**: Enforces mandatory dual sign-off requirements for Total Insured Value (TIV) $> \$10\text{M}$ or high fraud risk scores ($\ge 70$).
-- **REST Endpoint**: `/rest/v1/uw/escalation`
+### 2. TRIA (Terrorism Risk Insurance Act) Opt-In/Opt-Out Disclosure Engine
+- **Engine**: [TRIARatingEngine.java](file:///Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/src/main/java/com/guidewire/pc/service/TRIARatingEngine.java)
+- **Capability**: Federal TRIA compliance for Commercial Property & Liability lines.
+- **Rules**: Evaluates certified terrorism rate surcharge ($3.5\%$ of subject premium). When opted in, attaches `TRIA-COV-2026` endorsement; when opted out, applies $\$0$ surcharge and attaches mandatory `TRIA-EXCL-01` terrorism exclusion endorsement.
+- **REST Endpoint**: `/rest/v1/tria/evaluate`
 
-### 3. Loss Sensitive Sliding Scale Policyholder Dividend Engine
-- **Engine**: [SlidingScaleDividendEngine.java](file:///Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/src/main/java/com/guidewire/pc/service/SlidingScaleDividendEngine.java)
-- **Capability**: Commercial Retrospective Rating & Loss Sensitive Dividend plans for large commercial accounts.
-- **Rules**: Calculates sliding scale dividend returns ($LossRatio < 30\% \rightarrow 15\%$ return, $30-50\% \rightarrow 8\%$, $> 50\% \rightarrow 0\%$) and net retained policy cost.
-- **REST Endpoint**: `/rest/v1/dividend/calculate`
+### 3. Environmental & Pollution Legal Liability Hazard Assessment Engine
+- **Engine**: [PollutionHazardEngine.java](file:///Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/src/main/java/com/guidewire/pc/service/PollutionHazardEngine.java)
+- **Capability**: Environmental Impairment Liability (EIL) and Contractors Pollution Liability (CPL) rating.
+- **Rules**: Evaluates Underground Storage Tank (UST) count, chemical hazard risk score (1-10), proximity to navigable waterways ($<1\text{ mile}$), and site age to generate environmental rating multipliers and recommend mandatory containment deductibles ($\$5,000$ to $\$50,000$).
+- **REST Endpoint**: `/rest/v1/pollution/assess`
 
-### 4. Property Coinsurance Clause Penalty Engine
-- **Engine**: [CoinsurancePenaltyEngine.java](file:///Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/src/main/java/com/guidewire/pc/service/CoinsurancePenaltyEngine.java)
-- **Capability**: Evaluates multi-location commercial property schedule valuations against coinsurance clauses (80%, 90%, 100%).
-- **Rules**: Calculates coinsurance penalty formula ($LossPayout = ClaimLoss \times \frac{\text{Actual Limit}}{\text{Required Limit}} - Deductible$) when building is under-insured.
-- **REST Endpoint**: `/rest/v1/coinsurance/evaluate`
+### 4. Cyber Liability Ransomware & Breach Response Sub-Limit Engine
+- **Engine**: [CyberLiabilityEngine.java](file:///Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/src/main/java/com/guidewire/pc/service/CyberLiabilityEngine.java)
+- **Capability**: Cyber Insurance posture evaluation.
+- **Rules**: Evaluates Multi-Factor Authentication (MFA), offline daily backups, Endpoint Detection & Response (EDR), and employee phishing training. Enforces mandatory Ransomware Sub-Limit cap of $\$250,000$ and $+30\%$ rate surcharge when MFA is disabled.
+- **REST Endpoint**: `/rest/v1/cyber/evaluate`
 
-### 5. Renewal Rate Impact Capping & Transition Smoothing Engine
-- **Engine**: [RateImpactCappingEngine.java](file:///Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/src/main/java/com/guidewire/pc/service/RateImpactCappingEngine.java)
-- **Capability**: Rate capping and transition smoothing rules to prevent policyholder churn on renewal.
-- **Rules**: Enforces max $+10\%$ annual renewal rate increase cap, calculating uncapped benchmark premium vs. capped transition premium and carrier subsidy amounts.
-- **REST Endpoint**: `/rest/v1/rate-cap/apply`
+### 5. Flood Zone Risk & NFIP Elevation Certificate Premium Engine
+- **Engine**: [FloodZoneRatingEngine.java](file:///Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/src/main/java/com/guidewire/pc/service/FloodZoneRatingEngine.java)
+- **Capability**: Commercial & Personal Property Flood Underwriting.
+- **Rules**: Evaluates FEMA Flood Zones (Zone A, V, X) and Elevation Certificate differentials ($\text{Lowest Floor Elevation} - \text{Base Flood Elevation BFE}$). Applies $-50\%$ PRP discount for Zone X, $-30\%$ credit for elevation $\ge +2\text{ ft}$, and $+50\%$ surcharge for structures below BFE.
+- **REST Endpoint**: `/rest/v1/flood/rate`
 
 ---
 
 ## 🧪 Verification Results
 
-All 219 automated unit and integration tests passed cleanly:
+All 224 automated unit and integration tests passed cleanly:
 
 ```bash
 mvn test
@@ -50,15 +50,15 @@ mvn test
 ```text
 [INFO] Results:
 [INFO] 
-[INFO] Tests run: 219, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 224, Failures: 0, Errors: 0, Skipped: 0
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
 ```
 
-### Key Verified Test Classes:
-1. [DeductibleBuybackEngineTest.java](file:///Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/src/test/java/com/guidewire/pc/DeductibleBuybackEngineTest.java): Verifies deductible buyback surcharge calculation.
-2. [UWEscalationWorkflowEngineTest.java](file:///Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/src/test/java/com/guidewire/pc/UWEscalationWorkflowEngineTest.java): Verifies TIV $> \$10\text{M}$ and risk score Level 3 VP dual sign-off escalation.
-3. [SlidingScaleDividendEngineTest.java](file:///Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/src/test/java/com/guidewire/pc/SlidingScaleDividendEngineTest.java): Verifies sliding scale dividend returns for low loss ratio accounts.
-4. [CoinsurancePenaltyEngineTest.java](file:///Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/src/test/java/com/guidewire/pc/CoinsurancePenaltyEngineTest.java): Verifies property coinsurance under-insurance penalty payout formula.
-5. [RateImpactCappingEngineTest.java](file:///Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/src/test/java/com/guidewire/pc/RateImpactCappingEngineTest.java): Verifies $+10\%$ renewal rate cap smoothing and carrier subsidy calculations.
+### Verified Test Classes for New Modules:
+1. [TelematicsRatingEngineTest.java](file:///Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/src/test/java/com/guidewire/pc/TelematicsRatingEngineTest.java): Verifies UBI safety score calculation and $20\%$ discount rating.
+2. [TRIARatingEngineTest.java](file:///Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/src/test/java/com/guidewire/pc/TRIARatingEngineTest.java): Verifies TRIA $3.5\%$ surcharge and certified terrorism coverage endorsement.
+3. [PollutionHazardEngineTest.java](file:///Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/src/test/java/com/guidewire/pc/PollutionHazardEngineTest.java): Verifies environmental hazard multipliers and $\$50,000$ containment deductible requirements.
+4. [CyberLiabilityEngineTest.java](file:///Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/src/test/java/com/guidewire/pc/CyberLiabilityEngineTest.java): Verifies $\$250,000$ ransomware sub-limit cap when MFA is disabled.
+5. [FloodZoneRatingEngineTest.java](file:///Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/src/test/java/com/guidewire/pc/FloodZoneRatingEngineTest.java): Verifies $-30\%$ elevation credit and $-10\%$ flood-proof vent credits.

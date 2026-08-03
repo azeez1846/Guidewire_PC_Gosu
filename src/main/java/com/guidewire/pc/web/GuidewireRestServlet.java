@@ -671,6 +671,74 @@ public class GuidewireRestServlet extends HttpServlet {
             return;
         }
 
+        if (path != null && path.equals("/telematics/evaluate")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            double hardBrakes = reqMap.get("hardBrakesPer1k") != null ? ((Number) reqMap.get("hardBrakesPer1k")).doubleValue() : 2.0;
+            double rapidAcc = reqMap.get("rapidAccelerationsPer1k") != null ? ((Number) reqMap.get("rapidAccelerationsPer1k")).doubleValue() : 1.5;
+            double lateNight = reqMap.get("lateNightDrivingPct") != null ? ((Number) reqMap.get("lateNightDrivingPct")).doubleValue() : 0.05;
+            double speeding = reqMap.get("speedingEventsPer1k") != null ? ((Number) reqMap.get("speedingEventsPer1k")).doubleValue() : 1.0;
+            var res = com.guidewire.pc.service.TelematicsRatingEngine.getInstance().evaluateTelematicsDrivingScore(period, hardBrakes, rapidAcc, lateNight, speeding);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/tria/evaluate")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            boolean optIn = reqMap.get("optInTerrorismCoverage") == null || Boolean.TRUE.equals(reqMap.get("optInTerrorismCoverage"));
+            double triaRate = reqMap.get("triaRatePct") != null ? ((Number) reqMap.get("triaRatePct")).doubleValue() : 0.035;
+            var res = com.guidewire.pc.service.TRIARatingEngine.getInstance().evaluateTRIAOption(period, optIn, triaRate);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/pollution/assess")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            int ust = reqMap.get("ustCount") != null ? ((Number) reqMap.get("ustCount")).intValue() : 2;
+            int chemScore = reqMap.get("chemicalHazardScore") != null ? ((Number) reqMap.get("chemicalHazardScore")).intValue() : 6;
+            double prox = reqMap.get("proximityToWaterwayMiles") != null ? ((Number) reqMap.get("proximityToWaterwayMiles")).doubleValue() : 0.8;
+            int age = reqMap.get("facilityAgeYears") != null ? ((Number) reqMap.get("facilityAgeYears")).intValue() : 15;
+            var res = com.guidewire.pc.service.PollutionHazardEngine.getInstance().assessPollutionHazard(period, ust, chemScore, prox, age);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/cyber/evaluate")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            boolean mfa = reqMap.get("mfaEnabled") == null || Boolean.TRUE.equals(reqMap.get("mfaEnabled"));
+            boolean backups = reqMap.get("offlineBackupsDaily") == null || Boolean.TRUE.equals(reqMap.get("offlineBackupsDaily"));
+            boolean edr = reqMap.get("edrDeployed") == null || Boolean.TRUE.equals(reqMap.get("edrDeployed"));
+            boolean phishing = reqMap.get("employeePhishingTrained") == null || Boolean.TRUE.equals(reqMap.get("employeePhishingTrained"));
+            var res = com.guidewire.pc.service.CyberLiabilityEngine.getInstance().evaluateCyberSecurityControls(period, mfa, backups, edr, phishing);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/flood/rate")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            String zone = reqMap.get("floodZone") != null ? (String) reqMap.get("floodZone") : "Zone A";
+            double lowestElev = reqMap.get("lowestFloorElevationFt") != null ? ((Number) reqMap.get("lowestFloorElevationFt")).doubleValue() : 14.0;
+            double bfe = reqMap.get("baseFloodElevationBFE") != null ? ((Number) reqMap.get("baseFloodElevationBFE")).doubleValue() : 12.0;
+            boolean vents = reqMap.get("hasFloodProofVents") == null || Boolean.TRUE.equals(reqMap.get("hasFloodProofVents"));
+            var res = com.guidewire.pc.service.FloodZoneRatingEngine.getInstance().rateFloodZoneRisk(period, zone, lowestElev, bfe, vents);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
         if (path != null && path.equals("/admin/reset-db")) {
             dataStore.resetToSeedData();
             objectMapper.writeValue(resp.getWriter(), Map.of("status", "Success", "message", "Database reset to clean sample seed data."));
