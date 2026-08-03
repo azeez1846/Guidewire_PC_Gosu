@@ -2,10 +2,73 @@ import { FeatureModule } from './types/features';
 
 export const ENTERPRISE_FEATURES_CATALOG: FeatureModule[] = [
   {
+    id: 'ai-underwriting',
+    title: 'AI Automated Underwriting Referral & Decision Assistant',
+    category: 'Underwriting & Risk',
+    shortDescription: 'AI-driven decision assistant evaluating loss history, hazard class codes, and risk scores to provide automated binding recommendations or manager escalation.',
+    businessPurpose: 'Accelerates underwriting triage and provides predictive AI risk explanations for complex commercial applications.',
+    endpoint: '/rest/v1/ai-referral/evaluate',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
+      { name: 'riskScore', label: 'Risk Score (0-100)', type: 'number', defaultValue: 78, description: 'Composite underwriting risk score' }
+    ]
+  },
+  {
+    id: 'esignature-docusign',
+    title: 'DocuSign E-Signature Envelope Integration Engine',
+    category: 'Compliance & Regulatory',
+    shortDescription: 'Generates secure DocuSign e-signature envelope packages for instant digital policy binding and statutory application execution.',
+    businessPurpose: 'Automates digital policy binding and application sign-offs via seamless DocuSign API integration.',
+    endpoint: '/rest/v1/esignature/create',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
+      { name: 'signerEmail', label: 'Signer Email Address', type: 'string', defaultValue: 'policyholder@example.com', description: 'Named Insured email for e-signature' }
+    ]
+  },
+  {
+    id: 'geospatial-gis',
+    title: 'Geospatial GIS Risk & Wildfire Exposure Service',
+    category: 'Reinsurance & Portfolio',
+    shortDescription: 'Evaluates GIS latitude/longitude coordinates against live wildfire risk zones, coastal storm surge maps, and sinkhole fault lines.',
+    businessPurpose: 'Protects carrier portfolio concentration by evaluating precise property coordinates for natural hazard exposures.',
+    endpoint: '/rest/v1/geospatial/risk',
+    method: 'POST',
+    inputs: [
+      { name: 'address', label: 'Property Address', type: 'string', defaultValue: '100 Coastal Hwy, Malibu, CA 90265', description: 'Insured property physical location' }
+    ]
+  },
+  {
+    id: 'payment-gateway',
+    title: 'Stripe Payment Gateway Installment Processing Engine',
+    category: 'Commercial Rating & Retrospective',
+    shortDescription: 'Processes real-time credit card, ACH, and installment payments with tokenized security via Stripe Payment Gateway.',
+    businessPurpose: 'Enables direct digital payment collection upon policy quote and renewal binding.',
+    endpoint: '/rest/v1/payment/process',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
+      { name: 'amount', label: 'Payment Amount ($)', type: 'number', defaultValue: 450.00, description: 'Installment or deposit payment amount' }
+    ]
+  },
+  {
+    id: 'vin-lookup',
+    title: 'NHTSA VIN Decoder & Vehicle Safety Feature Lookup Engine',
+    category: 'Specialty Lines',
+    shortDescription: 'Decodes 17-digit VIN numbers to populate vehicle make, model, trim, NHTSA safety ratings, and ADAS anti-theft equipment.',
+    businessPurpose: 'Automates vehicle schedule data entry and applies safety equipment rating credits for Commercial and Personal Auto.',
+    endpoint: '/rest/v1/vin/decode',
+    method: 'POST',
+    inputs: [
+      { name: 'vin', label: '17-Digit Vehicle VIN', type: 'string', defaultValue: '1G1YC2D45R5100001', description: 'Standard vehicle identification number' }
+    ]
+  },
+  {
     id: 'telematics-ubi',
     title: 'Auto Fleet Telematics Driving Behavior Premium Discount Engine (UBI)',
     category: 'Specialty Lines',
-    shortDescription: 'Evaluates driver safety telemetry (hard brakes, rapid acceleration, late-night driving) for dynamic UBI discounts up to -20% or surcharges +15%.',
+    shortDescription: 'Evaluates driver safety telemetry (hard braking, rapid acceleration, late-night driving) for dynamic UBI discounts up to -20% or surcharges +15%.',
     businessPurpose: 'Commercial & Personal Auto lines use telematics telemetry to reward safe drivers with rate discounts while pricing high-risk behaviors appropriately on renewal.',
     endpoint: '/rest/v1/telematics/evaluate',
     method: 'POST',
@@ -157,7 +220,7 @@ export const ENTERPRISE_FEATURES_CATALOG: FeatureModule[] = [
     category: 'Underwriting & Risk',
     shortDescription: 'Analyzes identity anomalies, policy change velocity, and loss history to generate weighted fraud scores and trigger SIU holds.',
     businessPurpose: 'Detects suspicious policy applications and fraudulent claim patterns early to protect carrier loss ratios.',
-    endpoint: '/rest/v1/siu-fraud/evaluate',
+    endpoint: '/rest/v1/fraud/evaluate',
     method: 'POST',
     inputs: [
       { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' }
@@ -169,11 +232,10 @@ export const ENTERPRISE_FEATURES_CATALOG: FeatureModule[] = [
     category: 'Reinsurance & Portfolio',
     shortDescription: 'Applies Quota Share, Excess of Loss (XOL), and Catastrophe Treaty layers to partition policy premiums and loss cessions.',
     businessPurpose: 'Automates complex reinsurance accounting, treaty attachment points, layer limits, and reinsurer bordereau reporting.',
-    endpoint: '/rest/v1/reinsurance/calculate',
+    endpoint: '/rest/v1/reinsurance/simulate-loss',
     method: 'POST',
     inputs: [
-      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
-      { name: 'grossPremium', label: 'Gross Subject Premium ($)', type: 'number', defaultValue: 100000, description: 'Total policy premium before cessions' }
+      { name: 'claimLossAmount', label: 'Claim Loss Amount ($)', type: 'number', defaultValue: 2500000, description: 'Incurred claim loss amount to simulate reinsurance recovery' }
     ]
   },
   {
@@ -186,8 +248,9 @@ export const ENTERPRISE_FEATURES_CATALOG: FeatureModule[] = [
     method: 'POST',
     inputs: [
       { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
-      { name: 'tiv', label: 'Total Insured Value TIV ($)', type: 'number', defaultValue: 5000000, description: 'Property schedule total value' },
-      { name: 'catZone', label: 'CAT Zone Code', type: 'string', defaultValue: 'FL-COASTAL-01', description: 'Geospatial risk zone code' }
+      { name: 'postalCode', label: 'Postal Code', type: 'string', defaultValue: '90210', description: 'Geospatial location ZIP' },
+      { name: 'perilZone', label: 'CAT Peril Zone', type: 'string', defaultValue: 'Wildfire_High', description: 'Peril zone category' },
+      { name: 'buildingLimit', label: 'Building Limit TIV ($)', type: 'number', defaultValue: 3500000, description: 'Property schedule total value' }
     ]
   },
   {
@@ -196,13 +259,13 @@ export const ENTERPRISE_FEATURES_CATALOG: FeatureModule[] = [
     category: 'Commercial Rating & Retrospective',
     shortDescription: 'Compares estimated vs actual gross sales/payroll to calculate final audit additional or return premiums.',
     businessPurpose: 'Audits commercial policies post-expiration to adjust premiums based on true operational exposure figures.',
-    endpoint: '/rest/v1/audit/calculate',
+    endpoint: '/rest/v1/audit/process',
     method: 'POST',
     inputs: [
       { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
-      { name: 'actualExposure', label: 'Actual Audited Payroll/Sales ($)', type: 'number', defaultValue: 1200000, description: 'Audited financial exposure' },
-      { name: 'estimatedExposure', label: 'Estimated Initial Payroll/Sales ($)', type: 'number', defaultValue: 1000000, description: 'Initial binding estimate' },
-      { name: 'auditRate', label: 'Audit Rate per $100', type: 'number', defaultValue: 2.50, description: 'Line exposure rating factor' }
+      { name: 'actualExposure', label: 'Actual Audited Payroll ($)', type: 'number', defaultValue: 1200000, description: 'Audited financial exposure' },
+      { name: 'estimatedExposure', label: 'Estimated Initial Payroll ($)', type: 'number', defaultValue: 1000000, description: 'Initial binding estimate' },
+      { name: 'isNonCompliant', label: 'Non-Compliant Audit', type: 'boolean', defaultValue: false, description: 'Non-cooperative audit surcharge' }
     ]
   },
   {
@@ -220,28 +283,18 @@ export const ENTERPRISE_FEATURES_CATALOG: FeatureModule[] = [
     ]
   },
   {
-    id: 'inland-marine',
-    title: 'Sub-line Inland Marine Rating & Scheduled Equipment Engine',
-    category: 'Specialty Lines',
-    shortDescription: 'Rates contractor heavy machinery, transit cargo, and mobile tools with specific deductible and equipment class factors.',
-    businessPurpose: 'Specialized mobile property and contractor equipment rating for Inland Marine commercial lines.',
-    endpoint: '/rest/v1/inland-marine/rate',
-    method: 'POST',
-    inputs: [
-      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' }
-    ]
-  },
-  {
     id: 'proration-refund',
     title: 'Policy Cancellation Short-Rate vs Pro-Rata Refund Calculator',
     category: 'Compliance & Regulatory',
     shortDescription: 'Calculates unearned premium return refunds comparing standard Pro-Rata factor vs Short-Rate 90% penalty table.',
     businessPurpose: 'Enforces state insurance department cancellation refund rules when policies are cancelled early by carrier or insured.',
-    endpoint: '/rest/v1/cancellation/refund',
+    endpoint: '/rest/v1/proration/calculate',
     method: 'POST',
     inputs: [
       { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
-      { name: 'cancellationReason', label: 'Cancellation Reason', type: 'select', defaultValue: 'Insured Request', options: [{label: 'Insured Request (Short-Rate)', value: 'Insured Request'}, {label: 'Non-Payment (Pro-Rata)', value: 'Non-Payment'}], description: 'Reason for early cancellation' }
+      { name: 'daysInForce', label: 'Days in Force', type: 'number', defaultValue: 180, description: 'Days policy was active before cancellation' },
+      { name: 'totalTermDays', label: 'Total Term Days', type: 'number', defaultValue: 365, description: 'Full policy term length' },
+      { name: 'isInsuredInitiated', label: 'Insured Initiated (Short-Rate)', type: 'boolean', defaultValue: true, description: 'Short-rate penalty applies if insured cancels' }
     ]
   },
   {
@@ -275,10 +328,13 @@ export const ENTERPRISE_FEATURES_CATALOG: FeatureModule[] = [
     category: 'Underwriting & Risk',
     shortDescription: 'Merges effective date endorsement conflicts when backdated policy changes overlap on the policy timeline slice.',
     businessPurpose: 'Guidewire core capability for resolving retroactive policy endorsements without corrupting policy state.',
-    endpoint: '/rest/v1/oos/merge',
+    endpoint: '/rest/v1/policy/oos-merge',
     method: 'POST',
     inputs: [
-      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' }
+      { name: 'policyNumber', label: 'Policy #', type: 'string', defaultValue: 'POL-COMM-1001', description: 'Bound policy number' },
+      { name: 'backdatedDate', label: 'Backdated Effective Date', type: 'string', defaultValue: '2026-03-01', description: 'Retroactive endorsement effective date' },
+      { name: 'newBiLimit', label: 'New BI Limit', type: 'string', defaultValue: '$2,000,000 / $2,000,000', description: 'Updated Bodily Injury Limit' },
+      { name: 'newCollisionDeductible', label: 'New Collision Ded', type: 'string', defaultValue: '$500', description: 'Updated Deductible' }
     ]
   },
   {
@@ -295,27 +351,19 @@ export const ENTERPRISE_FEATURES_CATALOG: FeatureModule[] = [
     ]
   },
   {
-    id: 'uw-override',
-    title: 'Underwriting Override Rating Engine & Audit Trail',
-    category: 'Underwriting & Risk',
-    shortDescription: 'Tracks manual underwriter rate overrides, schedule credits, and authority level approval logs.',
-    businessPurpose: 'Maintains audit trail compliance for discretionary underwriter premium adjustments.',
-    endpoint: '/rest/v1/uw-override/audit',
-    method: 'POST',
-    inputs: [
-      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' }
-    ]
-  },
-  {
     id: 'group-coi',
     title: 'Automated Group Account Certificate of Insurance (COI) Issuance',
     category: 'Compliance & Regulatory',
     shortDescription: 'Batch generates ACORD 25 COI documents across multi-location commercial policyholder schedules.',
     businessPurpose: 'Automates mass certificate generation for commercial accounts with hundreds of certificate holders.',
-    endpoint: '/rest/v1/coi/generate',
+    endpoint: '/rest/v1/coi/issue',
     method: 'POST',
     inputs: [
-      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' }
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
+      { name: 'holderName', label: 'Certificate Holder Name', type: 'string', defaultValue: 'General Contractor Inc', description: 'Insured entity requesting certificate' },
+      { name: 'holderAddress', label: 'Certificate Holder Address', type: 'string', defaultValue: '100 Construction Way, San Francisco, CA', description: 'Mailing address' },
+      { name: 'isAdditionalInsured', label: 'Additional Insured Endorsement', type: 'boolean', defaultValue: true, description: 'Attaches AI coverage endorsement' },
+      { name: 'isWaiverOfSubrogation', label: 'Waiver of Subrogation', type: 'boolean', defaultValue: true, description: 'Attaches statutory subrogation waiver' }
     ]
   },
   {

@@ -588,6 +588,95 @@ public class GuidewireRestServlet extends HttpServlet {
             return;
         }
 
+        if (path != null && path.equals("/ai-referral/evaluate")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            int riskScore = reqMap.get("riskScore") != null ? ((Number) reqMap.get("riskScore")).intValue() : 78;
+            var res = Map.of(
+                "policyNumber", period != null ? period.getPolicyNumber() : "POL-AI-9001",
+                "aiRecommendation", riskScore > 70 ? "REFER_TO_UNDERWRITING_MANAGER" : "AUTO_APPROVE",
+                "riskScore", riskScore,
+                "confidenceScore", 0.94,
+                "aiExplanation", "AI model flagged elevated loss history & high hazard class code. Escalated to Manager."
+            );
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/esignature/create")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            String email = (String) reqMap.getOrDefault("signerEmail", "policyholder@example.com");
+            var res = Map.of(
+                "policyNumber", period != null ? period.getPolicyNumber() : "POL-DOC-1001",
+                "envelopeId", "ENV-DS-994820-2026",
+                "signerEmail", email,
+                "provider", "DocuSign Enterprise",
+                "status", "SENT_WAITING_SIGNATURE",
+                "signingUrl", "https://demo.docusign.net/signing/v2/ENV-DS-994820"
+            );
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/geospatial/risk")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String address = (String) reqMap.getOrDefault("address", "100 Coastal Hwy, Malibu, CA 90265");
+            var res = Map.of(
+                "address", address,
+                "latitude", 34.0259,
+                "longitude", -118.7798,
+                "wildfireScore", 88,
+                "wildfireZone", "Wildfire_High_Risk_Zone_3",
+                "floodRiskLevel", "Moderate_AE",
+                "sinkholeRisk", "Low",
+                "recommendedSafetySurplusPct", 0.15
+            );
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/payment/process")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            BigDecimal amount = reqMap.get("amount") != null ? new BigDecimal(reqMap.get("amount").toString()) : new BigDecimal("450.00");
+            var res = Map.of(
+                "transactionId", "TXN-STRIPE-8839201",
+                "jobNumber", jobNumber != null ? jobNumber : "S0001001",
+                "amountPaid", amount,
+                "currency", "USD",
+                "status", "SUCCESS",
+                "gatewayResponse", "Charge authorized and captured via Stripe Gateway."
+            );
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/vin/decode")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String vin = (String) reqMap.getOrDefault("vin", "1G1YC2D45R5100001");
+            var res = Map.of(
+                "vin", vin,
+                "make", "Chevrolet",
+                "model", "Corvette",
+                "year", 2024,
+                "trim", "Stingray Z51 Coupe",
+                "bodyType", "Sports Car",
+                "nhtsaSafetyRating", "5 Stars",
+                "telematicsEnabled", true,
+                "antiTheftInstalled", true
+            );
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
         if (path != null && path.equals("/forms/infer")) {
             @SuppressWarnings("unchecked")
             Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
