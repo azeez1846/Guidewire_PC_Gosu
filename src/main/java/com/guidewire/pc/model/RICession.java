@@ -12,6 +12,7 @@ public class RICession implements KeyableBean {
     private BigDecimal cededExposure = BigDecimal.ZERO;
     private BigDecimal grossWrittenPremium = BigDecimal.ZERO;
     private BigDecimal cededPremium = BigDecimal.ZERO;
+    private BigDecimal cedingCommission = BigDecimal.ZERO;
     private boolean requiresFacultative = false;
 
     public RICession() {
@@ -43,6 +44,9 @@ public class RICession implements KeyableBean {
 
     public BigDecimal getCededPremium() { return cededPremium; }
     public void setCededPremium(BigDecimal cededPremium) { this.cededPremium = cededPremium; }
+
+    public BigDecimal getCedingCommission() { return cedingCommission; }
+    public void setCedingCommission(BigDecimal cedingCommission) { this.cedingCommission = cedingCommission; }
 
     public boolean isRequiresFacultative() { return requiresFacultative; }
     public void setRequiresFacultative(boolean requiresFacultative) { this.requiresFacultative = requiresFacultative; }

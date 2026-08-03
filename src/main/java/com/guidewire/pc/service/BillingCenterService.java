@@ -19,8 +19,8 @@ public class BillingCenterService {
     public static class PaymentInstallment {
         private final int installmentNumber;
         private final String dueDate;
-        private final BigDecimal amount;
-        private final String status; // Pending, Paid, PastDue
+        private BigDecimal amount;
+        private String status; // Pending, Paid, PastDue
 
         public PaymentInstallment(int installmentNumber, String dueDate, BigDecimal amount, String status) {
             this.installmentNumber = installmentNumber;
@@ -32,7 +32,9 @@ public class BillingCenterService {
         public int getInstallmentNumber() { return installmentNumber; }
         public String getDueDate() { return dueDate; }
         public BigDecimal getAmount() { return amount; }
+        public void setAmount(BigDecimal amount) { this.amount = amount; }
         public String getStatus() { return status; }
+        public void setStatus(String status) { this.status = status; }
     }
 
     public static class BillingSchedule {
@@ -97,6 +99,44 @@ public class BillingCenterService {
         return new BillingSchedule(period.getPolicyNumber(), pName, totalPrem, installments);
     }
 
+    public boolean applyPayment(BillingSchedule schedule, int installmentNumber, BigDecimal paymentAmount) {
+        if (schedule == null || paymentAmount == null || paymentAmount.compareTo(BigDecimal.ZERO) <= 0) return false;
+        for (PaymentInstallment inst : schedule.getInstallments()) {
+            if (inst.getInstallmentNumber() == installmentNumber) {
+                inst.setStatus("Paid");
+                LOGGER.log(Level.INFO, "Payment of ${0} applied to installment #{1} for policy: {2}",
+                        new Object[]{paymentAmount, installmentNumber, schedule.getPolicyNumber()});
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean applyLateFees(BillingSchedule schedule, int installmentNumber, BigDecimal lateFeeAmount) {
+        if (schedule == null || lateFeeAmount == null) return false;
+        for (PaymentInstallment inst : schedule.getInstallments()) {
+            if (inst.getInstallmentNumber() == installmentNumber && "Pending".equalsIgnoreCase(inst.getStatus())) {
+                inst.setStatus("PastDue");
+                inst.setAmount(inst.getAmount().add(lateFeeAmount));
+                LOGGER.log(Level.INFO, "Late fee of ${0} assessed on installment #{1} for policy: {2}",
+                        new Object[]{lateFeeAmount, installmentNumber, schedule.getPolicyNumber()});
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public BigDecimal calculateOutstandingBalance(BillingSchedule schedule) {
+        if (schedule == null || schedule.getInstallments() == null) return BigDecimal.ZERO;
+        BigDecimal balance = BigDecimal.ZERO;
+        for (PaymentInstallment inst : schedule.getInstallments()) {
+            if (!"Paid".equalsIgnoreCase(inst.getStatus())) {
+                balance = balance.add(inst.getAmount());
+            }
+        }
+        return balance;
+    }
+
     public String generateInvoiceHtml(PolicyPeriod period, BillingSchedule schedule) {
         StringBuilder sb = new StringBuilder();
         sb.append("<!DOCTYPE html><html><head><style>")
@@ -113,6 +153,7 @@ public class BillingCenterService {
           .append("<p><strong>Account Holder:</strong> ").append(period != null && period.getAccount() != null ? period.getAccount().getAccountHolderName() : "Valued Customer").append("</p>")
           .append("<p><strong>Payment Plan:</strong> ").append(schedule.getPlanName()).append("</p>")
           .append("<p><strong>Total Premium:</strong> $").append(schedule.getTotalPremium()).append("</p>")
+          .append("<p><strong>Outstanding Balance:</strong> $").append(calculateOutstandingBalance(schedule)).append("</p>")
           .append("<h3>Installment Schedule</h3><table>")
           .append("<tr><th>#</th><th>Due Date</th><th>Amount</th><th>Status</th></tr>");
 

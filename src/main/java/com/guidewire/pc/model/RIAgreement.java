@@ -12,6 +12,7 @@ public class RIAgreement implements KeyableBean {
     private BigDecimal grossRetentionLimit = new BigDecimal("1000000.00");
     private BigDecimal attachmentPoint = BigDecimal.ZERO;
     private BigDecimal cedingPercentage = new BigDecimal("20.00"); // 20%
+    private BigDecimal cedingCommissionPct = new BigDecimal("20.00"); // 20% ceding commission
     private String effectiveDate = "2026-01-01";
     private String expirationDate = "2027-01-01";
 
@@ -52,6 +53,9 @@ public class RIAgreement implements KeyableBean {
 
     public BigDecimal getCedingPercentage() { return cedingPercentage; }
     public void setCedingPercentage(BigDecimal cedingPercentage) { this.cedingPercentage = cedingPercentage; }
+
+    public BigDecimal getCedingCommissionPct() { return cedingCommissionPct; }
+    public void setCedingCommissionPct(BigDecimal cedingCommissionPct) { this.cedingCommissionPct = cedingCommissionPct; }
 
     public String getEffectiveDate() { return effectiveDate; }
     public void setEffectiveDate(String effectiveDate) { this.effectiveDate = effectiveDate; }
