@@ -147,6 +147,10 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
             case "copy-submission" -> handleCopySubmission(params.get("jobNum"), resp);
             case "policy-change" -> renderPolicyChangePage(params.get("jobNum"), params, resp);
             case "cancellation" -> renderCancellationPage(params.get("jobNum"), params, resp);
+            case "uw-issues" -> renderUWIssuesPage(params);
+            case "inland-marine" -> renderInlandMarinePage(params);
+            case "fraud-dashboard" -> renderFraudDashboardPage(params);
+            case "reinsurance-ledger" -> renderReinsuranceLedgerPage(params);
             default -> renderDesktopPage("submissions", null);
         };
 
@@ -989,6 +993,124 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
         sb.append("</form>");
 
         sb.append("</div></div></body></html>");
+        return sb.toString();
+    }
+
+    private String renderUWIssuesPage(Map<String, String> params) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<!DOCTYPE html><html><head><title>Underwriting Issues Dashboard - Guidewire PolicyCenter</title>").append(getHeaderCSS()).append("</head><body>");
+        sb.append(renderHeader("desktop"));
+
+        sb.append("<div class='gw-main-container'><div class='gw-content'>");
+        sb.append("<div class='gw-page-header'><div class='gw-page-title'>Underwriting Authority & Issues Dashboard <span class='gw-pcf-tag'>UWIssuesPanelSet.pcf</span></div></div>");
+
+        sb.append("<div class='gw-card'><div class='gw-card-title'>Active Underwriting Referrals & Approvals</div>");
+        sb.append("<table class='gw-table'><thead><tr><th>Issue Key</th><th>Code</th><th>Description</th><th>Severity</th><th>Status</th><th>Authority Required</th><th>Action</th></tr></thead><tbody>");
+
+        List<com.guidewire.pc.model.UWIssue> issues = new java.util.ArrayList<>();
+        for (PolicyPeriod p : dataStore.getSubmissions()) {
+            issues.addAll(p.getUwIssues());
+        }
+
+        if (issues.isEmpty()) {
+            sb.append("<tr><td colspan='7' style='text-align:center; padding:16px; color:#718096;'>No active underwriting issues found. All policies within standard limits.</td></tr>");
+        } else {
+            for (com.guidewire.pc.model.UWIssue issue : issues) {
+                sb.append("<tr>");
+                sb.append("<td><code>").append(issue.getIssueKey()).append("</code></td>");
+                sb.append("<td><b>").append(issue.getIssueCode()).append("</b></td>");
+                sb.append("<td>").append(issue.getShortDescription()).append("</td>");
+                sb.append("<td><span class='gw-badge ").append(issue.isBlockingBind() ? "gw-badge-bound" : "gw-badge-draft").append("'>").append(issue.getSeverity()).append("</span></td>");
+                sb.append("<td><b>").append(issue.getStatus()).append("</b></td>");
+                sb.append("<td>").append(issue.getRequiredAuthorityLevel()).append("</td>");
+                sb.append("<td>");
+                if (issue.isOpen()) {
+                    sb.append("<button onclick=\"fetch('/rest/v1/uw-issues/approve', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({issueKey:'").append(issue.getIssueKey()).append("', approvedBy:'su', reason:'Manager Approval'})}).then(()=>location.reload())\" class='gw-btn' style='padding:4px 8px; font-size:12px;'>Approve</button>");
+                } else {
+                    sb.append("<span style='color:#38A169; font-weight:bold;'>Approved</span>");
+                }
+                sb.append("</td></tr>");
+            }
+        }
+
+        sb.append("</tbody></table></div></div></div></body></html>");
+        return sb.toString();
+    }
+
+    private String renderInlandMarinePage(Map<String, String> params) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<!DOCTYPE html><html><head><title>Inland Marine Line - Guidewire PolicyCenter</title>").append(getHeaderCSS()).append("</head><body>");
+        sb.append(renderHeader("desktop"));
+
+        sb.append("<div class='gw-main-container'><div class='gw-content'>");
+        sb.append("<div class='gw-page-header'><div class='gw-page-title'>Inland Marine (IM) Commercial Line <span class='gw-pcf-tag'>InlandMarineScreen.pcf</span></div></div>");
+
+        sb.append("<div class='gw-card'><div class='gw-card-title'>Contractors Equipment & Scheduled Property</div>");
+        sb.append("<p style='margin-bottom:12px;'>OOTB Commercial Inland Marine Line rating for mobile tools, heavy machinery, and high-value transit property.</p>");
+
+        sb.append("<table class='gw-table'><thead><tr><th>Item #</th><th>Equipment Type</th><th>Description</th><th>Serial #</th><th>Stated Value</th><th>Deductible</th></tr></thead><tbody>");
+        sb.append("<tr><td>1</td><td>HeavyMachinery</td><td>Caterpillar Excavator 320DL</td><td>SN-CAT-90412</td><td>$185,000.00</td><td>$1,000.00</td></tr>");
+        sb.append("<tr><td>2</td><td>MobileTools</td><td>Jobsite Generator & Power Pack</td><td>SN-GEN-55410</td><td>$35,000.00</td><td>$500.00</td></tr>");
+        sb.append("<tr><td>3</td><td>TransitCargo</td><td>High-Value Electronics Cargo</td><td>SN-TR-88120</td><td>$120,000.00</td><td>$2,500.00</td></tr>");
+        sb.append("</tbody></table>");
+
+        sb.append("<div style='margin-top:20px;'><a href='/?page=new-submission&productCode=InlandMarine' class='gw-btn'>Start Inland Marine Submission</a></div>");
+        sb.append("</div></div></div></body></html>");
+        return sb.toString();
+    }
+
+    private String renderFraudDashboardPage(Map<String, String> params) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<!DOCTYPE html><html><head><title>SIU Fraud Risk Dashboard - Guidewire PolicyCenter</title>").append(getHeaderCSS()).append("</head><body>");
+        sb.append(renderHeader("desktop"));
+
+        sb.append("<div class='gw-main-container'><div class='gw-content'>");
+        sb.append("<div class='gw-page-header'><div class='gw-page-title'>SIU Fraud Risk & Referral Dashboard <span class='gw-pcf-tag'>SIUFraudDashboard.pcf</span></div></div>");
+
+        sb.append("<div class='gw-card'><div class='gw-card-title'>Fraud Risk Scoring Engine Overview</div>");
+        sb.append("<p style='margin-bottom:16px;'>Automated weighted risk scoring for identity anomalies, policy change velocity, backdated endorsements, and loss history.</p>");
+
+        sb.append("<table class='gw-table'><thead><tr><th>Policy #</th><th>Product</th><th>Status</th><th>Fraud Risk Tier</th><th>Action</th></tr></thead><tbody>");
+        for (PolicyPeriod p : dataStore.getSubmissions()) {
+            if (p.getPolicyNumber() != null) {
+                var score = com.guidewire.pc.service.SIURiskScoringEngine.getInstance().evaluatePolicyFraudRisk(p);
+                sb.append("<tr>");
+                sb.append("<td><code>").append(p.getPolicyNumber()).append("</code></td>");
+                sb.append("<td>").append(p.getProductCode()).append("</td>");
+                sb.append("<td>").append(p.getStatus()).append("</td>");
+                sb.append("<td><span class='gw-badge ").append(score.isSiuHoldRequired() ? "gw-badge-canceled" : "gw-badge-issued").append("'>").append(score.getRiskTier()).append(" (Score: ").append(score.getTotalRiskScore()).append(")</span></td>");
+                sb.append("<td><a href='/?page=submission-wizard&jobNum=").append(p.getJobNumber()).append("' class='gw-btn gw-btn-secondary' style='padding:4px 8px; font-size:12px;'>View Policy</a></td>");
+                sb.append("</tr>");
+            }
+        }
+        sb.append("</tbody></table></div></div></div></body></html>");
+        return sb.toString();
+    }
+
+    private String renderReinsuranceLedgerPage(Map<String, String> params) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<!DOCTYPE html><html><head><title>Reinsurance Ledger & Treaties - Guidewire PolicyCenter</title>").append(getHeaderCSS()).append("</head><body>");
+        sb.append(renderHeader("desktop"));
+
+        sb.append("<div class='gw-main-container'><div class='gw-content'>");
+        sb.append("<div class='gw-page-header'><div class='gw-page-title'>Reinsurance Treaty Layering & Cession Ledger <span class='gw-pcf-tag'>ReinsuranceLedger.pcf</span></div></div>");
+
+        sb.append("<div class='gw-card'><div class='gw-card-title'>Active Reinsurance Treaties</div>");
+        sb.append("<table class='gw-table'><thead><tr><th>Treaty #</th><th>Treaty Name</th><th>Type</th><th>Reinsurer</th><th>Attachment Point</th><th>Layer Limit</th><th>Cession %</th></tr></thead><tbody>");
+
+        var treaties = com.guidewire.pc.service.ReinsuranceLedgerEngine.getInstance().getActiveTreaties();
+        for (var t : treaties) {
+            sb.append("<tr>");
+            sb.append("<td><code>").append(t.getTreatyNumber()).append("</code></td>");
+            sb.append("<td><b>").append(t.getTreatyName()).append("</b></td>");
+            sb.append("<td>").append(t.getTreatyType()).append("</td>");
+            sb.append("<td>").append(t.getReinsurerName()).append("</td>");
+            sb.append("<td>$").append(t.getAttachmentPoint()).append("</td>");
+            sb.append("<td>$").append(t.getLayerLimit()).append("</td>");
+            sb.append("<td>").append((int)(t.getCessionPercentage() * 100)).append("%</td>");
+            sb.append("</tr>");
+        }
+        sb.append("</tbody></table></div></div></div></body></html>");
         return sb.toString();
     }
 }

@@ -200,6 +200,21 @@ public class GuidewireRestServlet extends HttpServlet {
             return;
         }
 
+        if (path.equals("/reinsurance/treaties")) {
+            var treaties = com.guidewire.pc.service.ReinsuranceLedgerEngine.getInstance().getActiveTreaties();
+            objectMapper.writeValue(resp.getWriter(), treaties);
+            return;
+        }
+
+        if (path.equals("/uw-issues")) {
+            List<com.guidewire.pc.model.UWIssue> issues = new java.util.ArrayList<>();
+            for (PolicyPeriod p : dataStore.getSubmissions()) {
+                issues.addAll(p.getUwIssues());
+            }
+            objectMapper.writeValue(resp.getWriter(), issues);
+            return;
+        }
+
         if (path.startsWith("/jobs/")) {
             String jobNumber = path.substring("/jobs/".length());
             PolicyPeriod period = dataStore.findSubmission(jobNumber);
@@ -363,6 +378,296 @@ public class GuidewireRestServlet extends HttpServlet {
         if (path != null && path.equals("/gosu/reload")) {
             com.guidewire.pc.gosu.GosuBridge.reloadScripts();
             objectMapper.writeValue(resp.getWriter(), Map.of("status", "Success", "message", "Gosu script directory hot-reloaded successfully."));
+            return;
+        }
+
+        if (path != null && path.equals("/uw-issues/approve")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String issueKey = (String) reqMap.get("issueKey");
+            String approvedBy = reqMap.get("approvedBy") != null ? (String) reqMap.get("approvedBy") : "su";
+            String reason = reqMap.get("reason") != null ? (String) reqMap.get("reason") : "Approved by Underwriting Manager";
+
+            for (PolicyPeriod p : dataStore.getSubmissions()) {
+                for (com.guidewire.pc.model.UWIssue issue : p.getUwIssues()) {
+                    if (issue.getIssueKey() != null && issue.getIssueKey().equalsIgnoreCase(issueKey)) {
+                        issue.approve(approvedBy, reason);
+                        dataStore.updateSubmission(p);
+                        objectMapper.writeValue(resp.getWriter(), issue);
+                        return;
+                    }
+                }
+            }
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            objectMapper.writeValue(resp.getWriter(), Map.of("error", "UW Issue not found: " + issueKey));
+            return;
+        }
+
+        if (path != null && path.equals("/inland-marine/rate")) {
+            PolicyPeriod period = objectMapper.readValue(req.getInputStream(), PolicyPeriod.class);
+            com.guidewire.pc.service.IMRatingService.getInstance().rateInlandMarine(period);
+            dataStore.createSubmission(period);
+            objectMapper.writeValue(resp.getWriter(), period);
+            return;
+        }
+
+        if (path != null && path.equals("/policy/rewrite")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String policyNumber = (String) reqMap.get("policyNumber");
+            String reason = (String) reqMap.get("reason");
+            String effectiveDate = (String) reqMap.get("effectiveDate");
+            PolicyPeriod rewrite = PolicyLifecycleService.getInstance().startRewrite(policyNumber, reason, effectiveDate);
+            objectMapper.writeValue(resp.getWriter(), rewrite);
+            return;
+        }
+
+        if (path != null && path.equals("/policy/rewrite-new-account")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String policyNumber = (String) reqMap.get("policyNumber");
+            String targetAccountNumber = (String) reqMap.get("targetAccountNumber");
+            String reason = (String) reqMap.get("reason");
+            PolicyPeriod rewrite = PolicyLifecycleService.getInstance().startRewriteNewAccount(policyNumber, targetAccountNumber, reason);
+            objectMapper.writeValue(resp.getWriter(), rewrite);
+            return;
+        }
+
+        if (path != null && path.equals("/fraud/evaluate")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            if (period != null) {
+                var score = com.guidewire.pc.service.SIURiskScoringEngine.getInstance().evaluatePolicyFraudRisk(period);
+                objectMapper.writeValue(resp.getWriter(), score);
+            } else {
+                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                objectMapper.writeValue(resp.getWriter(), Map.of("error", "Job not found: " + jobNumber));
+            }
+            return;
+        }
+
+        if (path != null && path.equals("/rating/rate-routine")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            if (period != null) {
+                var routineResult = com.guidewire.pc.service.RateRoutineEngine.getInstance().executeRateRoutine(period);
+                objectMapper.writeValue(resp.getWriter(), routineResult);
+            } else {
+                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                objectMapper.writeValue(resp.getWriter(), Map.of("error", "Job not found: " + jobNumber));
+            }
+            return;
+        }
+
+        if (path != null && path.equals("/policy/oos-merge")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String policyNumber = (String) reqMap.get("policyNumber");
+            String backdatedDate = (String) reqMap.get("backdatedDate");
+            String newBiLimit = (String) reqMap.get("newBiLimit");
+            String newCollDed = (String) reqMap.get("newCollisionDeductible");
+            var timeline = com.guidewire.pc.service.OOSMergeEngine.getInstance().processOOSEndorsement(policyNumber, backdatedDate, newBiLimit, newCollDed);
+            objectMapper.writeValue(resp.getWriter(), timeline);
+            return;
+        }
+
+        if (path != null && path.equals("/reinsurance/simulate-loss")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            Object lossObj = reqMap.get("claimLossAmount");
+            BigDecimal lossAmt = lossObj != null ? new BigDecimal(lossObj.toString()) : new BigDecimal("2500000.00");
+            var report = com.guidewire.pc.service.ReinsuranceLedgerEngine.getInstance().simulateClaimLossRecovery(lossAmt);
+            objectMapper.writeValue(resp.getWriter(), report);
+            return;
+        }
+
+        if (path != null && path.equals("/proration/calculate")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            long daysInForce = reqMap.get("daysInForce") != null ? ((Number) reqMap.get("daysInForce")).longValue() : 180;
+            long totalDays = reqMap.get("totalTermDays") != null ? ((Number) reqMap.get("totalTermDays")).longValue() : 365;
+            boolean isInsured = reqMap.get("isInsuredInitiated") != null && (Boolean) reqMap.get("isInsuredInitiated");
+            var res = com.guidewire.pc.service.ProrationRefundEngine.getInstance().calculateCancellationRefund(period, daysInForce, totalDays, isInsured);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/multinational/ledger")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            var res = com.guidewire.pc.service.MultinationalLedgerEngine.getInstance().generateMultinationalLedger(period);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/audit/process")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            BigDecimal actualExp = reqMap.get("actualExposure") != null ? new BigDecimal(reqMap.get("actualExposure").toString()) : new BigDecimal("1200000.00");
+            BigDecimal estExp = reqMap.get("estimatedExposure") != null ? new BigDecimal(reqMap.get("estimatedExposure").toString()) : new BigDecimal("1000000.00");
+            boolean nonComp = reqMap.get("isNonCompliant") != null && (Boolean) reqMap.get("isNonCompliant");
+            var res = com.guidewire.pc.service.CommercialAuditEngine.getInstance().processFinalAudit(period, actualExp, estExp, nonComp);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/coi/issue")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            String holder = (String) reqMap.getOrDefault("holderName", "General Contractor Inc");
+            String addr = (String) reqMap.getOrDefault("holderAddress", "100 Construction Way, San Francisco, CA");
+            boolean addIns = reqMap.get("isAdditionalInsured") == null || (Boolean) reqMap.get("isAdditionalInsured");
+            boolean subWaiver = reqMap.get("isWaiverOfSubrogation") == null || (Boolean) reqMap.get("isWaiverOfSubrogation");
+            var res = com.guidewire.pc.service.GroupAccountCOIEngine.getInstance().issueCertificate(period, holder, addr, addIns, subWaiver);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/cat/evaluate")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            String postal = (String) reqMap.getOrDefault("postalCode", "90210");
+            String zone = (String) reqMap.getOrDefault("perilZone", "Wildfire_High");
+            BigDecimal limit = reqMap.get("buildingLimit") != null ? new BigDecimal(reqMap.get("buildingLimit").toString()) : new BigDecimal("3500000.00");
+            var res = com.guidewire.pc.service.CatastropheAccumulationEngine.getInstance().evaluateRiskAccumulation(period, postal, zone, limit);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/uw/rating-override")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            double schedCredit = reqMap.get("scheduleCreditPct") != null ? ((Number) reqMap.get("scheduleCreditPct")).doubleValue() : -0.10;
+            BigDecimal manualRate = reqMap.get("manualRateOverride") != null ? new BigDecimal(reqMap.get("manualRateOverride").toString()) : null;
+            String user = (String) reqMap.getOrDefault("underwriterUser", "su");
+            String reason = (String) reqMap.getOrDefault("reason", "Schedule credit applied for superior safety controls.");
+            var res = com.guidewire.pc.service.UWRatingOverrideEngine.getInstance().applyRatingOverride(period, schedCredit, manualRate, user, reason);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/billing/multi-payee")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            String payee1 = (String) reqMap.getOrDefault("primaryPayee", "Named Insured Corp");
+            double split1 = reqMap.get("primarySplit") != null ? ((Number) reqMap.get("primarySplit")).doubleValue() : 0.60;
+            String payee2 = (String) reqMap.getOrDefault("secondaryPayee", "First National Bank (Loss Payee)");
+            BigDecimal volume = reqMap.get("annualAgencyVolume") != null ? new BigDecimal(reqMap.get("annualAgencyVolume").toString()) : new BigDecimal("600000.00");
+            var res = com.guidewire.pc.service.MultiPayeeCommissionEngine.getInstance().calculateMultiPayeeCommission(period, payee1, split1, payee2, volume);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/emod/calculate")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            BigDecimal actualLosses = reqMap.get("actualLosses") != null ? new BigDecimal(reqMap.get("actualLosses").toString()) : new BigDecimal("17000.00");
+            BigDecimal expectedLosses = reqMap.get("expectedLosses") != null ? new BigDecimal(reqMap.get("expectedLosses").toString()) : new BigDecimal("20000.00");
+            var res = com.guidewire.pc.service.ExperienceRatingEngine.getInstance().calculateExperienceMod(period, actualLosses, expectedLosses);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/forms/infer")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            var res = com.guidewire.pc.service.PolicyFormInferenceEngine.getInstance().inferPolicyForms(period);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/renewal/eligibility")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            double rateIncrease = reqMap.get("proposedRateIncreasePct") != null ? ((Number) reqMap.get("proposedRateIncreasePct")).doubleValue() : 0.18;
+            var res = com.guidewire.pc.service.RenewalEligibilityEngine.getInstance().evaluateRenewalEligibility(period, rateIncrease);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/deductible/buyback")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            BigDecimal origDed = reqMap.get("originalDeductible") != null ? new BigDecimal(reqMap.get("originalDeductible").toString()) : new BigDecimal("10000.00");
+            BigDecimal targetDed = reqMap.get("targetDeductible") != null ? new BigDecimal(reqMap.get("targetDeductible").toString()) : new BigDecimal("1000.00");
+            var res = com.guidewire.pc.service.DeductibleBuybackEngine.getInstance().calculateDeductibleBuyback(period, origDed, targetDed);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/uw/escalation")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            BigDecimal tiv = reqMap.get("totalInsuredValue") != null ? new BigDecimal(reqMap.get("totalInsuredValue").toString()) : new BigDecimal("12000000.00");
+            int score = reqMap.get("riskScore") != null ? ((Number) reqMap.get("riskScore")).intValue() : 75;
+            var res = com.guidewire.pc.service.UWEscalationWorkflowEngine.getInstance().processUWEscalation(period, tiv, score);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/dividend/calculate")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            BigDecimal losses = reqMap.get("incurredLosses") != null ? new BigDecimal(reqMap.get("incurredLosses").toString()) : new BigDecimal("2500.00");
+            var res = com.guidewire.pc.service.SlidingScaleDividendEngine.getInstance().calculatePolicyholderDividend(period, losses);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/coinsurance/evaluate")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            BigDecimal value = reqMap.get("buildingValue") != null ? new BigDecimal(reqMap.get("buildingValue").toString()) : new BigDecimal("2000000.00");
+            BigDecimal limit = reqMap.get("buildingLimit") != null ? new BigDecimal(reqMap.get("buildingLimit").toString()) : new BigDecimal("1200000.00");
+            double coinsPct = reqMap.get("coinsurancePct") != null ? ((Number) reqMap.get("coinsurancePct")).doubleValue() : 0.80;
+            BigDecimal loss = reqMap.get("claimLoss") != null ? new BigDecimal(reqMap.get("claimLoss").toString()) : new BigDecimal("500000.00");
+            BigDecimal ded = reqMap.get("deductible") != null ? new BigDecimal(reqMap.get("deductible").toString()) : new BigDecimal("5000.00");
+            var res = com.guidewire.pc.service.CoinsurancePenaltyEngine.getInstance().calculateClaimPayoutWithCoinsurance(period, value, limit, coinsPct, loss, ded);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/rate-cap/apply")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = dataStore.findSubmission(jobNumber);
+            BigDecimal proposed = reqMap.get("uncappedProposedPremium") != null ? new BigDecimal(reqMap.get("uncappedProposedPremium").toString()) : new BigDecimal("15000.00");
+            double maxCap = reqMap.get("maxRateCapPct") != null ? ((Number) reqMap.get("maxRateCapPct")).doubleValue() : 0.10;
+            var res = com.guidewire.pc.service.RateImpactCappingEngine.getInstance().applyRenewalRateCap(period, proposed, maxCap);
+            objectMapper.writeValue(resp.getWriter(), res);
             return;
         }
 

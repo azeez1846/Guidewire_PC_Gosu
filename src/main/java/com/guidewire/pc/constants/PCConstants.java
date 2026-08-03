@@ -24,6 +24,8 @@ public final class PCConstants {
     public static final String JOB_TYPE_CANCELLATION = "Cancellation";
     public static final String JOB_TYPE_REINSTATEMENT = "Reinstatement";
     public static final String JOB_TYPE_RENEWAL = "Renewal";
+    public static final String JOB_TYPE_REWRITE = "Rewrite";
+    public static final String JOB_TYPE_REWRITE_NEW_ACCOUNT = "RewriteNewAccount";
 
     // Product Codes
     public static final String PRODUCT_PERSONAL_AUTO = "PersonalAuto";
@@ -31,6 +33,15 @@ public final class PCConstants {
     public static final String PRODUCT_COMMERCIAL_PROPERTY = "CommercialProperty";
     public static final String PRODUCT_GENERAL_LIABILITY = "GeneralLiability";
     public static final String PRODUCT_WORKERS_COMP = "WorkersComp";
+    public static final String PRODUCT_INLAND_MARINE = "InlandMarine";
+
+    // UW Issue Severities & Statuses
+    public static final String UW_SEVERITY_BLOCKING_QUOTE = "BlockingQuote";
+    public static final String UW_SEVERITY_BLOCKING_BIND = "BlockingBind";
+    public static final String UW_SEVERITY_INFORMATIONAL = "Informational";
+    public static final String UW_STATUS_OPEN = "Open";
+    public static final String UW_STATUS_APPROVED = "Approved";
+    public static final String UW_STATUS_REJECTED = "Rejected";
 
     // Charge Patterns
     public static final String CHARGE_BASE_PREMIUM = "BasePremium";

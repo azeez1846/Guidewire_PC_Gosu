@@ -53,6 +53,12 @@ public class PolicyPeriod implements KeyableBean, EffDatedBranch, Coverable {
     // Scheduled Items
     private final List<ScheduledItem> scheduledItems = new ArrayList<>();
 
+    // OOTB UW Issues
+    private final List<UWIssue> uwIssues = new ArrayList<>();
+
+    // OOTB Inland Marine Scheduled Equipment
+    private final List<ScheduledEquipmentItem> scheduledEquipmentItems = new ArrayList<>();
+
     public List<ScheduledItem> getScheduledItems() {
         return scheduledItems;
     }
@@ -61,6 +67,55 @@ public class PolicyPeriod implements KeyableBean, EffDatedBranch, Coverable {
         if (item != null) {
             item.setItemNumber(scheduledItems.size() + 1);
             scheduledItems.add(item);
+        }
+    }
+
+    public List<UWIssue> getUwIssues() {
+        return uwIssues;
+    }
+
+    public void addUWIssue(UWIssue issue) {
+        if (issue != null) {
+            this.uwIssues.add(issue);
+        }
+    }
+
+    public List<UWIssue> getOpenBlockingQuoteIssues() {
+        List<UWIssue> list = new ArrayList<>();
+        for (UWIssue issue : uwIssues) {
+            if (issue.isBlockingQuote()) {
+                list.add(issue);
+            }
+        }
+        return list;
+    }
+
+    public List<UWIssue> getOpenBlockingBindIssues() {
+        List<UWIssue> list = new ArrayList<>();
+        for (UWIssue issue : uwIssues) {
+            if (issue.isBlockingBind()) {
+                list.add(issue);
+            }
+        }
+        return list;
+    }
+
+    public boolean hasBlockingQuoteIssues() {
+        return !getOpenBlockingQuoteIssues().isEmpty();
+    }
+
+    public boolean hasBlockingBindIssues() {
+        return !getOpenBlockingBindIssues().isEmpty();
+    }
+
+    public List<ScheduledEquipmentItem> getScheduledEquipmentItems() {
+        return scheduledEquipmentItems;
+    }
+
+    public void addScheduledEquipmentItem(ScheduledEquipmentItem item) {
+        if (item != null) {
+            item.setItemNumber(scheduledEquipmentItems.size() + 1);
+            scheduledEquipmentItems.add(item);
         }
     }
 

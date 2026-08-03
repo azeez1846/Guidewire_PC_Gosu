@@ -306,6 +306,14 @@ public class DataStoreService {
         }
     }
 
+    public synchronized Activity createActivity(Activity act) {
+        if (act.getCreateTime() == null) {
+            act.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        }
+        insertActivityToDb(act);
+        return act;
+    }
+
     public List<Account> getAccounts() {
         if (!accountCache.isEmpty()) {
             return new ArrayList<>(accountCache.values());
@@ -409,6 +417,10 @@ public class DataStoreService {
             LOGGER.log(Level.SEVERE, "Failed to find account by number in H2: " + accountNumber, e);
         }
         return null;
+    }
+
+    public Account findAccountByNumber(String accountNumber) {
+        return findAccount(accountNumber);
     }
 
     public PolicyPeriod findSubmission(String jobNumber) {

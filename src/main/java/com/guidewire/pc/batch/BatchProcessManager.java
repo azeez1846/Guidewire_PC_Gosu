@@ -12,6 +12,7 @@ public class BatchProcessManager {
 
     private BatchProcessManager() {
         registerProcess(new PolicyRenewalBatchProcess());
+        registerProcess(new PreRenewalBatchProcess());
         registerProcess(new ActivityEscalationBatchProcess());
     }
 

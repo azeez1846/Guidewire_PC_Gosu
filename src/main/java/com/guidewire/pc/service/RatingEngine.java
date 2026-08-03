@@ -27,6 +27,18 @@ public class RatingEngine {
         List<Cost> costs = new ArrayList<>();
         if (period == null) return costs;
 
+        if (PCConstants.PRODUCT_INLAND_MARINE.equalsIgnoreCase(period.getProductCode())) {
+            IMRatingService.getInstance().rateInlandMarine(period);
+            Cost baseCost = new Cost(PCConstants.CHARGE_BASE_PREMIUM, "Inland Marine Base Premium", period.getBasePremium());
+            Cost taxCost = new Cost(PCConstants.CHARGE_STATE_TAX, "State Tax & Fees", period.getTaxesAndFees());
+            costs.add(baseCost);
+            costs.add(taxCost);
+            for (Cost c : costs) {
+                period.addEffDatedBean(c);
+            }
+            return costs;
+        }
+
         // 1. Base Premium Cost
         double baseRate = 500.0;
         if (PCConstants.PRODUCT_PERSONAL_AUTO.equalsIgnoreCase(period.getProductCode())) baseRate = 650.0;

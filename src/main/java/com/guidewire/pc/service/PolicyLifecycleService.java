@@ -187,6 +187,134 @@ public class PolicyLifecycleService {
         return copy;
     }
 
+    /**
+     * Quote a Policy Submission branch with UW Authority Issue evaluation
+     */
+    public PolicyPeriod quoteSubmissionBranch(String jobNumber) {
+        PolicyPeriod period = dataStore.findSubmission(jobNumber);
+        if (period == null) {
+            throw new IllegalArgumentException("Job not found: " + jobNumber);
+        }
+
+        RatingEngine.getInstance().rate(period);
+        UWAuthorityEngine.getInstance().evaluatePolicy(period);
+
+        if (period.hasBlockingQuoteIssues()) {
+            period.setStatus(PCConstants.STATUS_DRAFT);
+            LOGGER.log(Level.WARNING, "Quote blocked for job {0} due to open blocking quote UW issues", jobNumber);
+            dataStore.updateSubmission(period);
+            return period;
+        }
+
+        period.setStatus(PCConstants.STATUS_QUOTED);
+        dataStore.updateSubmission(period);
+        LOGGER.log(Level.INFO, "Job {0} quoted successfully.", jobNumber);
+        return period;
+    }
+
+    /**
+     * Bind a Policy Submission branch with UW Authority Issue evaluation
+     */
+    public PolicyPeriod bindSubmissionBranch(String jobNumber) {
+        PolicyPeriod period = dataStore.findSubmission(jobNumber);
+        if (period == null) {
+            throw new IllegalArgumentException("Job not found: " + jobNumber);
+        }
+
+        if (period.hasBlockingBindIssues()) {
+            LOGGER.log(Level.WARNING, "Bind blocked for job {0} due to open blocking bind UW issues", jobNumber);
+            throw new IllegalStateException("Cannot bind policy job " + jobNumber + " with open blocking Underwriting Issues.");
+        }
+
+        period.setStatus(PCConstants.STATUS_BOUND);
+        dataStore.updateSubmission(period);
+        LOGGER.log(Level.INFO, "Job {0} bound successfully.", jobNumber);
+        return period;
+    }
+
+    /**
+     * Start a Mid-Term Policy Rewrite job
+     */
+    public PolicyPeriod startRewrite(String policyNumber, String rewriteReason, String effectiveDateStr) {
+        PolicyPeriod orig = dataStore.findPolicyByPolicyNumber(policyNumber);
+        if (orig == null) {
+            throw new IllegalArgumentException("Policy not found for rewrite: " + policyNumber);
+        }
+
+        orig.setStatus(PCConstants.STATUS_CANCELED);
+        dataStore.updateSubmission(orig);
+
+        PolicyPeriod rewrite = new PolicyPeriod();
+        rewrite.setJobType(PCConstants.JOB_TYPE_REWRITE);
+        rewrite.setJobNumber("RW00" + (System.currentTimeMillis() % 89999 + 10000));
+        rewrite.setPolicyNumber("POL-RW-" + (System.currentTimeMillis() % 89999 + 10000));
+        rewrite.setProductCode(orig.getProductCode());
+        rewrite.setAccount(orig.getAccount());
+        rewrite.setBaseState(orig.getBaseState());
+        rewrite.setProducerCode(orig.getProducerCode());
+        rewrite.setEffectiveDate(effectiveDateStr != null ? effectiveDateStr : orig.getEffectiveDate());
+        rewrite.setExpirationDate(orig.getExpirationDate());
+        rewrite.setTermMonths(orig.getTermMonths());
+        rewrite.setBodilyInjuryLimit(orig.getBodilyInjuryLimit());
+        rewrite.setPropertyDamageLimit(orig.getPropertyDamageLimit());
+        rewrite.setComprehensiveDeductible(orig.getComprehensiveDeductible());
+        rewrite.setCollisionDeductible(orig.getCollisionDeductible());
+
+        RatingEngine.getInstance().rate(rewrite);
+        rewrite.setStatus(PCConstants.STATUS_BOUND);
+        dataStore.createSubmission(rewrite);
+
+        LOGGER.log(Level.INFO, "Mid-Term Rewrite completed: Original {0} rewritten to {1} (Job: {2}, Reason: {3})",
+                new Object[]{policyNumber, rewrite.getPolicyNumber(), rewrite.getJobNumber(), rewriteReason});
+        return rewrite;
+    }
+
+    /**
+     * Start a Rewrite New Account job
+     */
+    public PolicyPeriod startRewriteNewAccount(String policyNumber, String targetAccountNumber, String rewriteReason) {
+        PolicyPeriod orig = dataStore.findPolicyByPolicyNumber(policyNumber);
+        if (orig == null) {
+            throw new IllegalArgumentException("Policy not found for rewrite new account: " + policyNumber);
+        }
+
+        com.guidewire.pc.model.Account targetAccount = dataStore.findAccountByNumber(targetAccountNumber);
+        if (targetAccount == null) {
+            targetAccount = new com.guidewire.pc.model.Account();
+            targetAccount.setAccountNumber(targetAccountNumber);
+            targetAccount.setAccountHolderName("Rewritten Account Holder");
+            targetAccount.setAccountHolderType("Company");
+            dataStore.createAccount(targetAccount);
+        }
+
+        orig.setStatus(PCConstants.STATUS_CANCELED);
+        dataStore.updateSubmission(orig);
+
+        PolicyPeriod rewrite = new PolicyPeriod();
+        rewrite.setJobType(PCConstants.JOB_TYPE_REWRITE_NEW_ACCOUNT);
+        rewrite.setJobNumber("RNA0" + (System.currentTimeMillis() % 89999 + 10000));
+        rewrite.setPolicyNumber("POL-RNA-" + (System.currentTimeMillis() % 89999 + 10000));
+        rewrite.setProductCode(orig.getProductCode());
+        rewrite.setAccount(targetAccount);
+        rewrite.setBaseState(orig.getBaseState());
+        rewrite.setProducerCode(orig.getProducerCode());
+        rewrite.setEffectiveDate(orig.getEffectiveDate());
+        rewrite.setExpirationDate(orig.getExpirationDate());
+        rewrite.setTermMonths(orig.getTermMonths());
+        rewrite.setBodilyInjuryLimit(orig.getBodilyInjuryLimit());
+        rewrite.setPropertyDamageLimit(orig.getPropertyDamageLimit());
+        rewrite.setComprehensiveDeductible(orig.getComprehensiveDeductible());
+        rewrite.setCollisionDeductible(orig.getCollisionDeductible());
+
+        RatingEngine.getInstance().rate(rewrite);
+        rewrite.setStatus(PCConstants.STATUS_BOUND);
+        dataStore.createSubmission(rewrite);
+
+        LOGGER.log(Level.INFO, "Rewrite New Account completed: Policy {0} transferred to Account {1} (New Policy: {2}, Job: {3})",
+                new Object[]{policyNumber, targetAccountNumber, rewrite.getPolicyNumber(), rewrite.getJobNumber()});
+        return rewrite;
+    }
+
     private double calculateProRataFactor(Date start, Date end, Date effective) {
         if (start == null || end == null || effective == null) return 0.5;
         long totalMs = Math.max(1, end.getTime() - start.getTime());
