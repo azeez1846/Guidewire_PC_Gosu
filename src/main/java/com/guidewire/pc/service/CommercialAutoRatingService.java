@@ -10,6 +10,11 @@ import java.util.List;
 public class CommercialAutoRatingService {
 
     public static BigDecimal rateCommercialAuto(PolicyPeriod period, int vehicleCount, boolean isFleet, String radius) {
+        return rateCommercialAutoExtended(period, vehicleCount, isFleet, radius, 0, false);
+    }
+
+    public static BigDecimal rateCommercialAutoExtended(PolicyPeriod period, int vehicleCount, boolean isFleet, String radius,
+                                                        int avgTelematicsScore, boolean isHighRiskGaraging) {
         if (period == null || vehicleCount <= 0) return BigDecimal.ZERO;
 
         double basePerVehicle = 1200.00;
@@ -19,10 +24,21 @@ public class CommercialAutoRatingService {
             basePerVehicle = 1600.00;
         }
 
+        if (isHighRiskGaraging) {
+            basePerVehicle *= 1.15; // 15% high-density urban garaging surcharge
+        }
+
         BigDecimal totalBase = new BigDecimal(basePerVehicle * vehicleCount);
 
         if (isFleet || vehicleCount >= 5) {
             totalBase = totalBase.multiply(new BigDecimal("0.90")).setScale(2, RoundingMode.HALF_UP);
+        }
+
+        // Telematics UBI driving score discount (Score >= 85 gives 10% discount, >= 70 gives 5%)
+        if (avgTelematicsScore >= 85) {
+            totalBase = totalBase.multiply(new BigDecimal("0.90")).setScale(2, RoundingMode.HALF_UP);
+        } else if (avgTelematicsScore >= 70) {
+            totalBase = totalBase.multiply(new BigDecimal("0.95")).setScale(2, RoundingMode.HALF_UP);
         }
 
         BigDecimal tax = totalBase.multiply(new BigDecimal("0.06")).setScale(2, RoundingMode.HALF_UP);

@@ -10,6 +10,12 @@ import java.util.List;
 public class WCRatingService {
 
     public static BigDecimal rateWorkersComp(PolicyPeriod period, BigDecimal estimatedPayroll, BigDecimal expMod, BigDecimal classRate) {
+        return rateWorkersCompWithSpecialClassCodes(period, estimatedPayroll, expMod, classRate, null, null, null, false);
+    }
+
+    public static BigDecimal rateWorkersCompWithSpecialClassCodes(PolicyPeriod period, BigDecimal estimatedPayroll, BigDecimal expMod, BigDecimal classRate,
+                                                                 String specialClassCode, BigDecimal specialClassPayroll, BigDecimal specialClassRate,
+                                                                 boolean hasSafetyProgram) {
         if (period == null) return BigDecimal.ZERO;
 
         BigDecimal payroll = estimatedPayroll != null ? estimatedPayroll : new BigDecimal("100000.00");
@@ -18,13 +24,33 @@ public class WCRatingService {
 
         BigDecimal unitsOf100 = payroll.divide(new BigDecimal("100.00"), 4, RoundingMode.HALF_UP);
         BigDecimal manualPrem = unitsOf100.multiply(rate).setScale(2, RoundingMode.HALF_UP);
+
+        // Special Class Code Add-on Rating (e.g. Code 8810 Clerical, Code 5606 Executive)
+        if (specialClassCode != null && specialClassPayroll != null && specialClassPayroll.compareTo(BigDecimal.ZERO) > 0) {
+            BigDecimal scRate = specialClassRate != null ? specialClassRate : new BigDecimal("0.45");
+            BigDecimal scUnits = specialClassPayroll.divide(new BigDecimal("100.00"), 4, RoundingMode.HALF_UP);
+            BigDecimal scPrem = scUnits.multiply(scRate).setScale(2, RoundingMode.HALF_UP);
+            manualPrem = manualPrem.add(scPrem);
+        }
+
         BigDecimal standardPrem = manualPrem.multiply(emod).setScale(2, RoundingMode.HALF_UP);
+
+        // OSHA Safety Program Discount (5% reduction)
+        if (hasSafetyProgram) {
+            standardPrem = standardPrem.multiply(new BigDecimal("0.95")).setScale(2, RoundingMode.HALF_UP);
+        }
+
         BigDecimal taxAndExpense = standardPrem.multiply(new BigDecimal("0.08")).setScale(2, RoundingMode.HALF_UP);
 
         return standardPrem.add(taxAndExpense);
     }
 
     public static List<String> validateWorkersCompLine(PolicyPeriod period, BigDecimal estimatedPayroll, BigDecimal expMod) {
+        return validateWorkersCompLineDetails(period, estimatedPayroll, expMod, null, null);
+    }
+
+    public static List<String> validateWorkersCompLineDetails(PolicyPeriod period, BigDecimal estimatedPayroll, BigDecimal expMod,
+                                                               String specialClassCode, BigDecimal specialClassPayroll) {
         List<String> errors = new ArrayList<>();
         if (period == null) return errors;
 
@@ -38,6 +64,10 @@ public class WCRatingService {
 
         if (period.getBaseState() == null || period.getBaseState().trim().isEmpty()) {
             errors.add("WC_VALIDATION_ERROR: Workers Compensation primary jurisdiction base state is required");
+        }
+
+        if (specialClassCode != null && (specialClassPayroll == null || specialClassPayroll.compareTo(BigDecimal.ZERO) < 0)) {
+            errors.add("WC_VALIDATION_ERROR: Special Class Code " + specialClassCode + " requires non-negative allocated payroll");
         }
 
         return errors;

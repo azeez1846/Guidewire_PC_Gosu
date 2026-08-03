@@ -10,6 +10,11 @@ import java.util.List;
 public class CURatingService {
 
     public static BigDecimal rateCommercialUmbrella(PolicyPeriod period, BigDecimal limitAmount, BigDecimal sirAmount, int underlyingPolicyCount) {
+        return rateCommercialUmbrellaExtended(period, limitAmount, sirAmount, underlyingPolicyCount, false);
+    }
+
+    public static BigDecimal rateCommercialUmbrellaExtended(PolicyPeriod period, BigDecimal limitAmount, BigDecimal sirAmount,
+                                                            int underlyingPolicyCount, boolean hasHighRiskUnderlying) {
         if (period == null || limitAmount == null) return BigDecimal.ZERO;
 
         BigDecimal millions = limitAmount.divide(new BigDecimal("1000000.00"), 2, RoundingMode.HALF_UP);
@@ -22,6 +27,15 @@ public class CURatingService {
         if (underlyingPolicyCount > 2) {
             BigDecimal surchargeFactor = new BigDecimal(1.00 + ((underlyingPolicyCount - 2) * 0.10));
             basePrem = basePrem.multiply(surchargeFactor).setScale(2, RoundingMode.HALF_UP);
+        }
+
+        // SIR Credit (Retention greater than standard $10,000 SIR lowers premium)
+        if (sirAmount != null && sirAmount.compareTo(new BigDecimal("10000.00")) > 0) {
+            basePrem = basePrem.multiply(new BigDecimal("0.90")).setScale(2, RoundingMode.HALF_UP);
+        }
+
+        if (hasHighRiskUnderlying) {
+            basePrem = basePrem.multiply(new BigDecimal("1.25")).setScale(2, RoundingMode.HALF_UP);
         }
 
         BigDecimal tax = basePrem.multiply(new BigDecimal("0.05")).setScale(2, RoundingMode.HALF_UP);

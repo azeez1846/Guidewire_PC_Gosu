@@ -10,6 +10,11 @@ import java.util.List;
 public class GLRatingService {
 
     public static BigDecimal rateGeneralLiability(PolicyPeriod period, BigDecimal exposureBasisAmount, BigDecimal baseRatePer1000, boolean isClaimsMade) {
+        return rateGeneralLiabilityExtended(period, exposureBasisAmount, baseRatePer1000, isClaimsMade, false, 0);
+    }
+
+    public static BigDecimal rateGeneralLiabilityExtended(PolicyPeriod period, BigDecimal exposureBasisAmount, BigDecimal baseRatePer1000,
+                                                          boolean isClaimsMade, boolean hasCyberExtension, int additionalInsuredCount) {
         if (period == null || exposureBasisAmount == null) return BigDecimal.ZERO;
 
         BigDecimal rate = baseRatePer1000 != null ? baseRatePer1000 : new BigDecimal("4.50");
@@ -18,6 +23,15 @@ public class GLRatingService {
 
         if (isClaimsMade) {
             basePrem = basePrem.multiply(new BigDecimal("0.85")).setScale(2, RoundingMode.HALF_UP);
+        }
+
+        if (hasCyberExtension) {
+            basePrem = basePrem.add(new BigDecimal("350.00")); // Flat $350 cyber extension rider
+        }
+
+        if (additionalInsuredCount > 0) {
+            BigDecimal aiFee = new BigDecimal(additionalInsuredCount * 50); // $50 per additional insured endorsement
+            basePrem = basePrem.add(aiFee);
         }
 
         BigDecimal tax = basePrem.multiply(new BigDecimal("0.07")).setScale(2, RoundingMode.HALF_UP);
