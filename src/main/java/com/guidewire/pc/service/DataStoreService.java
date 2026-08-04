@@ -446,7 +446,7 @@ public class DataStoreService {
 
     public synchronized Account createAccount(Account newAccount) {
         if (newAccount.getAccountNumber() == null || newAccount.getAccountNumber().trim().isEmpty()) {
-            newAccount.setAccountNumber("A000" + (System.currentTimeMillis() % 89999 + 10000));
+            newAccount.setAccountNumber("A000" + com.guidewire.pc.util.SequenceGenerator.nextId());
         }
         if (newAccount.getAccountStatus() == null) newAccount.setAccountStatus("Active");
         if (newAccount.getCreateTime() == null) {
@@ -506,7 +506,7 @@ public class DataStoreService {
 
     public synchronized PolicyPeriod createSubmission(PolicyPeriod submission) {
         if (submission.getJobNumber() == null || submission.getJobNumber().trim().isEmpty()) {
-            submission.setJobNumber("S000" + (System.currentTimeMillis() % 89999 + 10000));
+            submission.setJobNumber("S000" + com.guidewire.pc.util.SequenceGenerator.nextId());
         }
         if (submission.getStatus() == null) submission.setStatus("Draft");
         if (submission.getCreateTime() == null) {

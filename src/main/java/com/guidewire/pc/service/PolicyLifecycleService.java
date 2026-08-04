@@ -34,7 +34,7 @@ public class PolicyLifecycleService {
 
         PolicyPeriod changePeriod = new PolicyPeriod();
         changePeriod.setJobType(PCConstants.JOB_TYPE_POLICY_CHANGE);
-        changePeriod.setJobNumber("C000" + (System.currentTimeMillis() % 89999 + 10000));
+        changePeriod.setJobNumber("C000" + com.guidewire.pc.util.SequenceGenerator.nextId());
         changePeriod.setPolicyNumber(orig.getPolicyNumber());
         changePeriod.setProductCode(orig.getProductCode());
         changePeriod.setAccount(orig.getAccount());
@@ -145,7 +145,7 @@ public class PolicyLifecycleService {
 
         PolicyPeriod renewal = new PolicyPeriod();
         renewal.setJobType(PCConstants.JOB_TYPE_RENEWAL);
-        renewal.setJobNumber("R000" + (System.currentTimeMillis() % 89999 + 10000));
+        renewal.setJobNumber("R000" + com.guidewire.pc.util.SequenceGenerator.nextId());
         renewal.setPolicyNumber(orig.getPolicyNumber());
         renewal.setProductCode(orig.getProductCode());
         renewal.setAccount(orig.getAccount());
@@ -179,7 +179,7 @@ public class PolicyLifecycleService {
         if (orig == null) {
             throw new IllegalArgumentException("Source submission not found for copy: " + sourceJobNum);
         }
-        String newJobNum = "S000" + (System.currentTimeMillis() % 89999 + 10000);
+        String newJobNum = "S000" + com.guidewire.pc.util.SequenceGenerator.nextId();
         PolicyPeriod copy = orig.copySubmissionBranch(newJobNum);
         dataStore.createSubmission(copy);
         LOGGER.log(Level.INFO, "Submission {0} copied into new submission {1} for account {2}",
@@ -246,8 +246,8 @@ public class PolicyLifecycleService {
 
         PolicyPeriod rewrite = new PolicyPeriod();
         rewrite.setJobType(PCConstants.JOB_TYPE_REWRITE);
-        rewrite.setJobNumber("RW00" + (System.currentTimeMillis() % 89999 + 10000));
-        rewrite.setPolicyNumber("POL-RW-" + (System.currentTimeMillis() % 89999 + 10000));
+        rewrite.setJobNumber("RW00" + com.guidewire.pc.util.SequenceGenerator.nextId());
+        rewrite.setPolicyNumber("POL-RW-" + com.guidewire.pc.util.SequenceGenerator.nextId());
         rewrite.setProductCode(orig.getProductCode());
         rewrite.setAccount(orig.getAccount());
         rewrite.setBaseState(orig.getBaseState());
@@ -292,8 +292,8 @@ public class PolicyLifecycleService {
 
         PolicyPeriod rewrite = new PolicyPeriod();
         rewrite.setJobType(PCConstants.JOB_TYPE_REWRITE_NEW_ACCOUNT);
-        rewrite.setJobNumber("RNA0" + (System.currentTimeMillis() % 89999 + 10000));
-        rewrite.setPolicyNumber("POL-RNA-" + (System.currentTimeMillis() % 89999 + 10000));
+        rewrite.setJobNumber("RNA0" + com.guidewire.pc.util.SequenceGenerator.nextId());
+        rewrite.setPolicyNumber("POL-RNA-" + com.guidewire.pc.util.SequenceGenerator.nextId());
         rewrite.setProductCode(orig.getProductCode());
         rewrite.setAccount(targetAccount);
         rewrite.setBaseState(orig.getBaseState());

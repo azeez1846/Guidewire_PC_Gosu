@@ -26,7 +26,7 @@ public class PolicyLifecycleTest {
 
     @Test
     public void testPolicyChangeEndorsement() {
-        String polNum = "POL-TEST-ENDORSE-" + (System.currentTimeMillis() % 89999 + 10000);
+        String polNum = "POL-TEST-ENDORSE-" + com.guidewire.pc.util.SequenceGenerator.nextId();
         PolicyPeriod orig = new PolicyPeriod();
         orig.setPolicyNumber(polNum);
         orig.setProductCode("PersonalAuto");
@@ -47,7 +47,7 @@ public class PolicyLifecycleTest {
 
     @Test
     public void testPolicyCancellationAndReinstatement() {
-        String polNum = "POL-TEST-CANCEL-" + (System.currentTimeMillis() % 89999 + 10000);
+        String polNum = "POL-TEST-CANCEL-" + com.guidewire.pc.util.SequenceGenerator.nextId();
         PolicyPeriod orig = new PolicyPeriod();
         orig.setPolicyNumber(polNum);
         orig.setProductCode("CommercialProperty");
@@ -67,7 +67,7 @@ public class PolicyLifecycleTest {
 
     @Test
     public void testPolicyRenewal() {
-        String polNum = "POL-TEST-RENEW-" + (System.currentTimeMillis() % 89999 + 10000);
+        String polNum = "POL-TEST-RENEW-" + com.guidewire.pc.util.SequenceGenerator.nextId();
         PolicyPeriod orig = new PolicyPeriod();
         orig.setPolicyNumber(polNum);
         orig.setProductCode("GeneralLiability");
@@ -85,7 +85,7 @@ public class PolicyLifecycleTest {
     @Test
     public void testMultiPolicyBundlingDiscount() {
         Account multiAcc = new Account();
-        multiAcc.setAccountNumber("A-MULTI-" + (System.currentTimeMillis() % 89999 + 10000));
+        multiAcc.setAccountNumber("A-MULTI-" + com.guidewire.pc.util.SequenceGenerator.nextId());
         dataStore.createAccount(multiAcc);
 
         PolicyPeriod p1 = new PolicyPeriod();
@@ -105,7 +105,7 @@ public class PolicyLifecycleTest {
 
     @Test
     public void testCopySubmission() {
-        String origJobNum = "S000" + (System.currentTimeMillis() % 89999 + 10000);
+        String origJobNum = "S000" + com.guidewire.pc.util.SequenceGenerator.nextId();
         PolicyPeriod orig = new PolicyPeriod();
         orig.setJobNumber(origJobNum);
         orig.setPolicyNumber("POL-COPY-SRC-1");
