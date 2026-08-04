@@ -863,6 +863,21 @@ public class GuidewireRestServlet extends HttpServlet {
             return;
         }
 
+        if (path != null && (path.equals("/ig/address-standardize") || path.equals("/address/standardize"))) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String line1 = (String) reqMap.getOrDefault("addressLine1", "100 California St");
+            String line2 = (String) reqMap.getOrDefault("addressLine2", "");
+            String city = (String) reqMap.getOrDefault("city", "San Francisco");
+            String state = (String) reqMap.getOrDefault("state", "CA");
+            String zip = (String) reqMap.getOrDefault("postalCode", "94111");
+            String country = (String) reqMap.getOrDefault("country", "USA");
+
+            var res = com.guidewire.pc.service.AddressStandardizationService.getInstance().executeAddressStandardization(line1, line2, city, state, zip, country);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
         if (path != null && path.equals("/admin/reset-db")) {
             dataStore.resetToSeedData();
             objectMapper.writeValue(resp.getWriter(), Map.of("status", "Success", "message", "Database reset to clean sample seed data."));

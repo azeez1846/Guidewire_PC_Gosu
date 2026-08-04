@@ -266,7 +266,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
                 "<a href='/?page=search' class='gw-tab " + ("search".equals(activeTab) ? "active" : "") + "'>🔍 Search</a>" +
                 "<a href='/?page=new-account' class='gw-tab'>+ New Account</a>" +
                 "<a href='/?page=new-submission' class='gw-tab'>+ New Submission</a>" +
-                "<a href='/?page=features' class='gw-tab " + ("features".equals(activeTab) ? "active" : "") + "' style='background:linear-gradient(135deg, #FFD700, #FF8C00); color:#000; font-weight:bold; border-radius:4px;'>🚀 Features (30)</a>" +
+                "<a href='/?page=features' class='gw-tab " + ("features".equals(activeTab) ? "active" : "") + "' style='background:linear-gradient(135deg, #FFD700, #FF8C00); color:#000; font-weight:bold; border-radius:4px;'>🚀 Features (31)</a>" +
                 "<a href='/swagger-ui' target='_blank' class='gw-tab' style='color:#38B6FF;'>⚡ Swagger REST API</a>" +
                 "<a href='http://localhost:8082' target='_blank' class='gw-tab' style='color:#00C853;'>🗄️ H2 DB Console</a>" +
                 "<a href='/pcf-studio/' target='_blank' class='gw-tab' style='color:#A7F3D0;'>🧩 Visual PCF Studio</a>" +
@@ -555,17 +555,72 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
         sb.append("</div>");
 
         sb.append("<div>");
-        sb.append("<div class='gw-field'><label>Street Address Line 1 <span class='required'>*</span></label><input type='text' name='addressLine1' placeholder='123 Commercial Blvd' required></div>");
-        sb.append("<div class='gw-field'><label>Address Line 2</label><input type='text' name='addressLine2' placeholder='Suite 200'></div>");
-        sb.append("<div class='gw-field'><label>City <span class='required'>*</span></label><input type='text' name='city' placeholder='San Francisco' required></div>");
-        sb.append("<div class='gw-field'><label>State <span class='required'>*</span></label><input type='text' name='state' placeholder='CA' required></div>");
-        sb.append("<div class='gw-field'><label>ZIP / Postal Code <span class='required'>*</span></label><input type='text' name='postalCode' placeholder='94105' required></div>");
-        sb.append("<div class='gw-field'><label>Phone Number</label><input type='text' name='phone' placeholder='(415) 555-0100'></div>");
+        sb.append("<div class='gw-field'><label>Street Address Line 1 <span class='required'>*</span></label><input type='text' id='addrLine1' name='addressLine1' placeholder='100 California St' required></div>");
+        sb.append("<div class='gw-field'><label>Address Line 2</label><input type='text' id='addrLine2' name='addressLine2' placeholder='Suite 200'></div>");
+        sb.append("<div class='gw-field'><label>City <span class='required'>*</span></label><input type='text' id='addrCity' name='city' placeholder='San Francisco' required></div>");
+        sb.append("<div class='gw-field'><label>State <span class='required'>*</span></label><input type='text' id='addrState' name='state' placeholder='CA' required></div>");
+        sb.append("<div class='gw-field'><label>ZIP / Postal Code <span class='required'>*</span></label><input type='text' id='addrZip' name='postalCode' placeholder='94111' required></div>");
+        sb.append("<button type='button' onclick='openAddressIgModal()' class='gw-btn' style='background:linear-gradient(135deg, #10B981, #059669); color:#fff; width:100%; margin-top:8px;'>📍 Validate &amp; Standardize Address via IG</button>");
+        sb.append("<div class='gw-field' style='margin-top:12px;'><label>Phone Number</label><input type='text' name='phone' placeholder='(415) 555-0100'></div>");
         sb.append("<div class='gw-field'><label>Email Address</label><input type='text' name='email' placeholder='billing@apex.com'></div>");
         sb.append("</div>");
 
         sb.append("</div></div>");
         sb.append("</form>");
+
+        // Address Standardization IG Modal Dialog
+        sb.append("<div id='addrModal' style='display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;'>");
+        sb.append("<div style='background:#fff; border-radius:10px; width:520px; padding:24px; box-shadow:0 20px 25px -5px rgba(0,0,0,0.3); font-family:sans-serif;'>");
+        sb.append("<div style='display:flex; justify-space-between; align-items:center; border-bottom:2px solid #E2E8F0; padding-bottom:12px; margin-bottom:16px;'>");
+        sb.append("<h3 style='margin:0; color:#1E293B;'>📍 Guidewire Cloud Address IG Standardization</h3>");
+        sb.append("<button onclick='closeAddressIgModal()' style='background:none; border:none; font-size:20px; cursor:pointer; color:#64748B;'>✕</button>");
+        sb.append("</div>");
+        sb.append("<div id='modalContent' style='color:#334155; line-height:1.6;'>Querying External Address Gateway...</div>");
+        sb.append("<div id='modalActions' style='margin-top:20px; display:flex; justify-content:flex-end; gap:10px;'>");
+        sb.append("<button onclick='closeAddressIgModal()' class='gw-btn gw-btn-secondary'>Close</button>");
+        sb.append("</div>");
+        sb.append("</div></div>");
+
+        sb.append("<script>")
+          .append("let lastStdResult = null;")
+          .append("function openAddressIgModal() {")
+          .append("  const modal = document.getElementById('addrModal');")
+          .append("  const content = document.getElementById('modalContent');")
+          .append("  modal.style.display = 'flex';")
+          .append("  content.innerHTML = '<p style=\"color:#0284C7; font-weight:bold;\">⏳ Connecting to Guidewire Cloud Integration Gateway (IG)...</p>';")
+          .append("  const line1 = document.getElementById('addrLine1').value || '100 California St';")
+          .append("  const city = document.getElementById('addrCity').value || 'San Francisco';")
+          .append("  const state = document.getElementById('addrState').value || 'CA';")
+          .append("  const zip = document.getElementById('addrZip').value || '94111';")
+          .append("  fetch('/rest/v1/ig/address-standardize', {")
+          .append("    method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/json'},")
+          .append("    body: JSON.stringify({ addressLine1: line1, city: city, state: state, postalCode: zip })")
+          .append("  }).then(r => r.json()).then(data => {")
+          .append("    lastStdResult = data.addressSpecs;")
+          .append("    const s = data.addressSpecs || {};")
+          .append("    content.innerHTML = `<div style=\"background:#F1F5F9; padding:12px; border-radius:6px; border-left:4px solid #10B981;\">")
+          .append("      <p><b>Status:</b> <span style=\"color:#059669; font-weight:bold;\">${data.standardizationStatus || 'USPS_STANDARDIZED'}</span></p>")
+          .append("      <p><b>Standardized Line 1:</b> ${s.standardizedAddressLine1 || line1}</p>")
+          .append("      <p><b>City, State ZIP+4:</b> ${s.city || city}, ${s.state || state} ${s.postalCode || zip}-${s.postalCodePlus4 || '4102'}</p>")
+          .append("      <p><b>County:</b> ${s.county || 'San Francisco County'}</p>")
+          .append("      <p><b>USPS DPV Deliverable:</b> <span style=\"color:#047857; font-weight:bold;\">✔ ${s.deliveryPointValidationDPV || 'CONFIRMED_DELIVERABLE'}</span></p>")
+          .append("      <p><b>Geocoding Coordinates:</b> Lat ${s.latitude || 37.7939}, Lon ${s.longitude || -122.3980}</p>")
+          .append("      <p style=\"font-size:11px; color:#64748B; margin-top:8px;\">${data.gatewayMetadata || 'Guidewire Cloud IG v1.0'}</p>")
+          .append("    </div>`;")
+          .append("    document.getElementById('modalActions').innerHTML = '<button onclick=\"applyStandardizedAddress()\" class=\"gw-btn\" style=\"background:#10B981; color:#fff;\">✔ Auto-Fill Standardized Address</button> <button onclick=\"closeAddressIgModal()\" class=\"gw-btn gw-btn-secondary\">Close</button>';")
+          .append("  }).catch(err => { content.innerHTML = '<p style=\"color:#DC2626;\">Error contacting IG: ' + err + '</p>'; });")
+          .append("}")
+          .append("function applyStandardizedAddress() {")
+          .append("  if (lastStdResult) {")
+          .append("    document.getElementById('addrLine1').value = lastStdResult.standardizedAddressLine1 || '';")
+          .append("    document.getElementById('addrCity').value = lastStdResult.city || '';")
+          .append("    document.getElementById('addrState').value = lastStdResult.state || '';")
+          .append("    document.getElementById('addrZip').value = (lastStdResult.postalCode || '') + '-' + (lastStdResult.postalCodePlus4 || '');")
+          .append("  }")
+          .append("  closeAddressIgModal();")
+          .append("}")
+          .append("function closeAddressIgModal() { document.getElementById('addrModal').style.display = 'none'; }")
+          .append("</script>");
 
         sb.append("</div></div></body></html>");
         return sb.toString();
@@ -1188,7 +1243,8 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
           .append("{id:'uw-override', title:'Underwriting Override Rating Engine & Audit Trail', category:'Underwriting & Risk', endpoint:'/rest/v1/uw-override/audit', desc:'Tracks manual underwriter rate overrides, schedule credits, and authority level approval logs.', purpose:'Underwriter override audit trail compliance.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'}]},")
           .append("{id:'group-coi', title:'Automated Group Account COI Issuance Engine', category:'Compliance & Regulatory', endpoint:'/rest/v1/coi/generate', desc:'Batch generates ACORD 25 COI documents across multi-location commercial policyholder schedules.', purpose:'Automated Certificate of Insurance mass generation.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'}]},")
           .append("{id:'forms-inference', title:'Policy Form Inference & Attachment Rules Engine', category:'Compliance & Regulatory', endpoint:'/rest/v1/forms/infer', desc:'Evaluates policy coverages, state jurisdictions, and limits to dynamically attach statutory policy forms.', purpose:'Automated policy form inference & mandatory endorsement attachment.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'}]},")
-          .append("{id:'ig-vehicle-details', title:'Guidewire Cloud Integration Gateway (IG) — Vehicle & MVR Vendor Gateway', category:'Specialty Lines', endpoint:'/rest/v1/ig/vehicle-details', desc:'Integration Gateway (IG) microservice layer executing outbound real-time DMV MVR driver lookup, VIN spec verification, safety scores, and auto underwriting tier recommendations.', purpose:'Connects PolicyCenter Personal Auto and Commercial Auto submissions to external MVR/DMV data vendors via the Integration Gateway microservice JAR.', inputs:[{n:'vin',l:'Vehicle VIN',t:'text',v:'1FA6P8CF0R5100001'},{n:'vehicleYear',l:'Model Year',t:'number',v:'2025'},{n:'vehicleMake',l:'Make',t:'text',v:'Ford'},{n:'vehicleModel',l:'Model',t:'text',v:'Mustang GT'},{n:'driverLicenseNumber',l:'Driver License #',t:'text',v:'DL-CA-9948123'},{n:'driverState',l:'State',t:'text',v:'CA'}]}")
+          .append("{id:'ig-vehicle-details', title:'Guidewire Cloud Integration Gateway (IG) — Vehicle & MVR Vendor Gateway', category:'Specialty Lines', endpoint:'/rest/v1/ig/vehicle-details', desc:'Integration Gateway (IG) microservice layer executing outbound real-time DMV MVR driver lookup, VIN spec verification, safety scores, and auto underwriting tier recommendations.', purpose:'Connects PolicyCenter Personal Auto and Commercial Auto submissions to external MVR/DMV data vendors via the Integration Gateway microservice JAR.', inputs:[{n:'vin',l:'Vehicle VIN',t:'text',v:'1FA6P8CF0R5100001'},{n:'vehicleYear',l:'Model Year',t:'number',v:'2025'},{n:'vehicleMake',l:'Make',t:'text',v:'Ford'},{n:'vehicleModel',l:'Model',t:'text',v:'Mustang GT'},{n:'driverLicenseNumber',l:'Driver License #',t:'text',v:'DL-CA-9948123'},{n:'driverState',l:'State',t:'text',v:'CA'}]},")
+          .append("{id:'ig-address-standardization', title:'Guidewire Cloud Integration Gateway (IG) — Address Standardization & Geocoding Gateway', category:'Compliance & Regulatory', endpoint:'/rest/v1/ig/address-standardize', desc:'Integration Gateway (IG) microservice executing real-time USPS DPV deliverability validation, address standardization, ZIP+4 resolution, and lat/long geocoding.', purpose:'Standardizes policyholder addresses and resolves geospatial risk coordinates via the Integration Gateway microservice JAR.', inputs:[{n:'addressLine1',l:'Address Line 1',t:'text',v:'100 California St'},{n:'city',l:'City',t:'text',v:'San Francisco'},{n:'state',l:'State',t:'text',v:'CA'},{n:'postalCode',l:'ZIP Code',t:'text',v:'94111'}]}")
           .append("];")
           .append("function renderCards(filterCategory) {")
           .append("  const container = document.getElementById('featureContainer');")

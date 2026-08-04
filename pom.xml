@@ -48,6 +48,11 @@
             <artifactId>vehicledetails_IG</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.guidewire.ig</groupId>
+            <artifactId>addressstandardization_IG</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
