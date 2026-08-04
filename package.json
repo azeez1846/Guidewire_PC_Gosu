@@ -1,0 +1,14 @@
+{
+  "name": "guidewire-policycenter-ts",
+  "version": "1.0.0",
+  "description": "Guidewire PolicyCenter High-Performance TypeScript Engine Front-End Layer",
+  "main": "src/main/typescript/featuresCatalog.ts",
+  "scripts": {
+    "build:ts": "tsc",
+    "type-check": "tsc --noEmit",
+    "watch": "tsc --watch"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}
