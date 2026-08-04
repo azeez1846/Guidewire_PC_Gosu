@@ -67,6 +67,8 @@ services:
       - addressstandardization-ig
       - creditfraud-ig
       - telematics-ig
+    volumes:
+      - ./data:/app/data
     networks:
       - gw-ig-network
     restart: always
