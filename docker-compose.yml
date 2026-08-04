@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  vehicledetails-ig:
+    build:
+      context: ../vehicledetails_IG
+      dockerfile: Dockerfile
+    container_name: vehicledetails_ig_service
+    ports:
+      - "8088:8080"
+    networks:
+      - gw-ig-network
+    restart: always
+
+  addressstandardization-ig:
+    build:
+      context: ../addressstandardization_IG
+      dockerfile: Dockerfile
+    container_name: addressstandardization_ig_service
+    ports:
+      - "8089:8080"
+    networks:
+      - gw-ig-network
+    restart: always
+
+  guidewire-policycenter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: guidewire_policycenter_app
+    ports:
+      - "8085:8085"
+      - "8082:8082"
+    environment:
+      - VEHICLE_IG_HOST=vehicledetails-ig
+      - VEHICLE_IG_PORT=8088
+      - ADDRESS_IG_HOST=addressstandardization-ig
+      - ADDRESS_IG_PORT=8089
+    depends_on:
+      - vehicledetails-ig
+      - addressstandardization-ig
+    networks:
+      - gw-ig-network
+    restart: always
+
+networks:
+  gw-ig-network:
+    driver: bridge
