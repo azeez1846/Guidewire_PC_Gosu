@@ -115,11 +115,12 @@ public class ExternalVendorMVRConnector {
                 JsonNode results = root.path("Results");
                 if (results.isArray() && results.size() > 0) {
                     JsonNode node = results.get(0);
-                    String make = node.path("Make").asText(fallbackMake != null ? fallbackMake : "FORD");
-                    String model = node.path("Model").asText(fallbackModel != null ? fallbackModel : "Mustang");
-                    String bodyClass = node.path("BodyClass").asText("SEDAN_4_DOOR");
-                    String displacement = node.path("DisplacementL").asText("5.0") + "L " + node.path("EngineConfiguration").asText("V8");
-                    String fuel = node.path("FuelTypePrimary").asText("Gasoline");
+                    String make = node.has("Make") ? node.get("Make").asText() : (fallbackMake != null ? fallbackMake : "FORD");
+                    String model = node.has("Model") ? node.get("Model").asText() : (fallbackModel != null ? fallbackModel : "Mustang");
+                    String bodyClass = node.has("BodyClass") ? node.get("BodyClass").asText() : "SEDAN_4_DOOR";
+                    String displacement = (node.has("DisplacementL") ? node.get("DisplacementL").asText() : "5.0")
+                            + "L " + (node.has("EngineConfiguration") ? node.get("EngineConfiguration").asText() : "V8");
+                    String fuel = node.has("FuelTypePrimary") ? node.get("FuelTypePrimary").asText() : "Gasoline";
                     boolean laneDep = "Standard".equalsIgnoreCase(node.path("LaneDepartureWarning").asText());
                     boolean activeBraking = "Standard".equalsIgnoreCase(node.path("PedestrianAutomaticEmergencyBraking").asText()) || "Standard".equalsIgnoreCase(node.path("ForwardCollisionWarning").asText());
 

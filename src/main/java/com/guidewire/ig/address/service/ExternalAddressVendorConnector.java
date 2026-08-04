@@ -68,12 +68,13 @@ public class ExternalAddressVendorConnector {
                     double lon = match.path("lon").asDouble(-122.3995);
 
                     JsonNode addrNode = match.path("address");
-                    String houseNumber = addrNode.path("house_number").asText("");
-                    String road = addrNode.path("road").asText(line1);
+                    String houseNumber = addrNode.has("house_number") ? addrNode.get("house_number").asText() : "";
+                    String road = addrNode.has("road") ? addrNode.get("road").asText() : line1;
                     String stdLine1 = houseNumber.isEmpty() ? road : (houseNumber + " " + road);
-                    String stdCity = addrNode.path("city").asText(addrNode.path("town").asText(city));
-                    String stdCounty = addrNode.path("county").asText(state + " County");
-                    String stdPostcode = addrNode.path("postcode").asText(zip);
+                    String stdCity = addrNode.has("city") ? addrNode.get("city").asText()
+                            : (addrNode.has("town") ? addrNode.get("town").asText() : city);
+                    String stdCounty = addrNode.has("county") ? addrNode.get("county").asText() : (state + " County");
+                    String stdPostcode = addrNode.has("postcode") ? addrNode.get("postcode").asText() : zip;
 
                     specs.setStandardizedAddressLine1(stdLine1.toUpperCase());
                     specs.setStandardizedAddressLine2("");

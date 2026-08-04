@@ -862,8 +862,6 @@ public class GuidewireRestServlet extends HttpServlet {
             String state = (String) reqMap.getOrDefault("driverState", "CA");
             String polType = (String) reqMap.getOrDefault("policyType", "PersonalAuto");
 
-            String jobNumber = (String) reqMap.get("jobNumber");
-            PolicyPeriod period = jobNumber != null ? dataStore.findSubmission(jobNumber) : null;
 
             var res = com.guidewire.pc.service.VehicleDetailsIntegrationService.getInstance().executeVehicleLookup(vin, year, make, model, dl, state, polType);
             objectMapper.writeValue(resp.getWriter(), res);
