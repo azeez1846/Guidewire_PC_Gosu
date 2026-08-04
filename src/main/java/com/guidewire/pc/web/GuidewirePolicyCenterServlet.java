@@ -105,11 +105,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
             if (u != null && !u.trim().isEmpty()) {
                 String uClean = u.trim().toLowerCase();
                 String pClean = p != null ? p.trim() : "";
-                if ("su".equals(uClean)) {
-                    valid = true;
-                } else if ("admin".equals(uClean)) {
-                    valid = true;
-                } else if (!uClean.isEmpty() && !pClean.isEmpty()) {
+                if (("su".equals(uClean) || "admin".equals(uClean) || "underwriter".equals(uClean) || "testuser".equals(uClean)) && !pClean.isEmpty()) {
                     valid = true;
                 }
             }
@@ -184,6 +180,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
             case "fraud-dashboard" -> renderFraudDashboardPage();
             case "reinsurance-ledger" -> renderReinsuranceLedgerPage();
             case "features" -> renderFeaturesPage();
+            case "dashboard" -> renderDashboardPage();
             default -> renderDesktopPage("submissions", null);
         };
 
@@ -1297,8 +1294,12 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
           .append("{id:'ig-credit-fraud', title:'Guidewire Cloud Integration Gateway (IG) — Credit Score & OFAC Sanctions Gateway', category:'Underwriting & Risk', endpoint:'/rest/v1/ig/credit-fraud', desc:'Integration Gateway microservice executing real-time credit bureau queries (Experian/D&B) and US Treasury OFAC sanctions watchlist checks.', purpose:'Computes Credit-Based Insurance Scores (CBIS) and enforces OFAC compliance via creditfraud_IG-1.0.0.jar.', inputs:[{n:'accountHolderName',l:'Account Name',t:'text',v:'Apex Global Industrial'},{n:'feinOrSsn',l:'FEIN / SSN',t:'text',v:'98-7654321'},{n:'orgType',l:'Organization Type',t:'text',v:'Corporation'},{n:'state',l:'State',t:'text',v:'CA'}]},")
           .append("{id:'acord-ingestion', title:'ACORD 125/126 Application Ingestion Engine', category:'Compliance & Regulatory', endpoint:'/rest/v1/acord/ingest', desc:'Automated document intake engine parsing ACORD 125 commercial applications and pre-populating submissions.', purpose:'Instant policy submission creation from ACORD applications.', inputs:[{n:'acordFormType',l:'ACORD Form Type',t:'text',v:'ACORD_125_COMMERCIAL_AUTO'},{n:'applicantName',l:'Applicant Name',t:'text',v:'Apex Industrial Logistics LLC'},{n:'fein',l:'FEIN',t:'text',v:'98-7654321'},{n:'lineOfBusiness',l:'Line of Business',t:'text',v:'CommercialAuto'},{n:'requestedLimit',l:'Requested Limit ($)',t:'number',v:'1000000'}]},")
           .append("{id:'oos-timeline-visualizer', title:'Out-of-Sequence (OOS) Endorsement Timeline Visualizer', category:'Underwriting & Risk', endpoint:'/rest/v1/oos/timeline-visualizer', desc:'Renders graphical effective date timeline slices and backdated endorsement conflict merge resolutions.', purpose:'Visualizes mid-term endorsement timeline slices on Policy Changes.', inputs:[{n:'jobNumber',l:'Job #',t:'text',v:'S0001001'}]},")
-          .append("{id:'claims-loss-ratio', title:'ClaimsCenter (CC) Earned-to-Loss Ratio & FNOL Sync Engine', category:'Commercial Rating & Retrospective', endpoint:'/rest/v1/claims/loss-ratio', desc:'Synchronizes ClaimsCenter loss payouts, incurred reserves, and FNOL logs to compute account loss ratio.', purpose:'Triggers automatic underwriting holds if Loss Ratio > 65%.', inputs:[{n:'accountNumber',l:'Account #',t:'text',v:'A0001001'}]},")
-          .append("{id:'ig-telematics', title:'Guidewire Cloud Integration Gateway (IG) — Commercial IoT Telematics Gateway', category:'Specialty Lines', endpoint:'/rest/v1/ig/telematics', desc:'Integration Gateway microservice ingesting Commercial Auto IoT fleet telemetry (hard braking, speeding, mileage).', purpose:'Calculates Usage-Based Insurance (UBI) discounts via telematics_IG-1.0.0.jar.', inputs:[{n:'fleetId',l:'Fleet ID',t:'text',v:'FLT-CA-90812'},{n:'accountNumber',l:'Account #',t:'text',v:'A0001001'},{n:'activeVehiclesCount',l:'Active Vehicles',t:'number',v:'15'}]}")
+          .append("{id:'ig-telematics', title:'Guidewire Cloud Integration Gateway (IG) — Commercial IoT Telematics Gateway', category:'Specialty Lines', endpoint:'/rest/v1/ig/telematics', desc:'Integration Gateway microservice ingesting Commercial Auto IoT fleet telemetry (hard braking, speeding, mileage).', purpose:'Calculates Usage-Based Insurance (UBI) discounts via telematics_IG-1.0.0.jar.', inputs:[{n:'fleetId',l:'Fleet ID',t:'text',v:'FLT-CA-90812'},{n:'accountNumber',l:'Account #',t:'text',v:'A0001001'},{n:'activeVehiclesCount',l:'Active Vehicles',t:'number',v:'15'}]},")
+          .append("{id:'claim-fnol', title:'ClaimCenter FNOL & Loss Ratio Triage Engine', category:'Underwriting & Risk', endpoint:'/rest/v1/claims/fnol', desc:'Ingests First Notice of Loss (FNOL) claims, computes policy loss ratio percentages, and triggers automated Underwriting Holds if Loss Ratio > 75%.', purpose:'Real-time FNOL triage & loss ratio enforcement.', inputs:[{n:'policyNumber',l:'Policy #',t:'text',v:'POL-849102'},{n:'claimType',l:'Claim Type',t:'text',v:'COLLISION'},{n:'lossAmount',l:'Loss Amount ($)',t:'number',v:'2500'},{n:'description',l:'Description',t:'text',v:'Fender bender at intersection'}]},")
+          .append("{id:'policy-renewal-mta', title:'Automated Policy Renewal & Mid-Term Endorsement Engine', category:'Commercial Rating & Retrospective', endpoint:'/rest/v1/policy/renewal', desc:'Evaluates policy renewal eligibility, applies inflation rate adjustments, and computes calendar-day pro-rata MTA premium adjustments.', purpose:'Automated policy renewals and pro-rata endorsement calculations.', inputs:[{n:'policyNumber',l:'Policy #',t:'text',v:'POL-849102'},{n:'currentPremium',l:'Current Premium ($)',t:'number',v:'2450.00'},{n:'baseInflationPercent',l:'Inflation Rate %',t:'number',v:'5.00'}]},")
+          .append("{id:'graphql-gateway', title:'GraphQL API Gateway & Live Query Sandbox', category:'Compliance & Regulatory', endpoint:'/graphql', desc:'Serves flexible GraphQL queries (policies, accounts, claims, telematics) and mutation operations over HTTP POST.', purpose:'GraphQL API query and mutation execution.', inputs:[{n:'query',l:'GraphQL Query / Mutation',t:'text',v:'query { policy { policyNumber, status, annualPremium } }'}]},")
+          .append("{id:'ai-triage-agent', title:'Autonomous AI Underwriting Triage Agent (AGY SDK)', category:'Underwriting & Risk', endpoint:'/rest/v1/ai-triage/evaluate', desc:'Autonomous multi-agent system synthesizing telematics scores, coastal flood risks, and claim history to output Straight-Through Binding, UW Referral, or Decline decisions.', purpose:'Multi-agent AI underwriting triage decisioning.', inputs:[{n:'submissionId',l:'Submission ID',t:'text',v:'SUB-001'},{n:'policyNumber',l:'Policy #',t:'text',v:'POL-849102'},{n:'driverScore',l:'Telematics Score (0-100)',t:'number',v:'70'},{n:'highFloodZone',l:'High Flood Zone A',t:'select',o:[{l:'True (Zone A Coastal)',v:true},{l:'False (Low Risk)',v:false}],v:true}]},")
+          .append("{id:'analytics-portal', title:'PolicyCenter Intelligence & Analytics Web Dashboard', category:'Reinsurance & Portfolio', endpoint:'/graphql', desc:'Real-time Glassmorphism web dashboard featuring telematics driver velocity charts, coastal flood heatmaps, and financial KPI metrics.', purpose:'Interactive UI dashboard for policy administration and telemetry analytics.', inputs:[]}")
           .append("];")
           .append("function renderCards(filterCategory) {")
           .append("  const container = document.getElementById('featureContainer');")
@@ -1354,6 +1355,120 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
           .append("  .catch(err => { resBox.innerText = '❌ Error executing module: ' + err.message; });")
           .append("}")
           .append("document.addEventListener('DOMContentLoaded', () => renderCards('all'));")
+          .append("</script>");
+
+        sb.append("</div></div></body></html>");
+        return sb.toString();
+    }
+
+    private String renderDashboardPage() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(renderHeader("dashboard"));
+        sb.append("<style>")
+          .append(".dash-container { max-width: 1280px; margin: 24px auto; padding: 0 16px; font-family: 'Inter', sans-serif; font-size:14px; color: #E2E8F0; }")
+          .append(".dash-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }")
+          .append(".dash-title { font-size: 24px; font-weight: 700; background: linear-gradient(135deg, #38BDF8, #818CF8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }")
+          .append(".dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px; }")
+          .append(".glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); transition: transform 0.2s ease; }")
+          .append(".glass-card:hover { transform: translateY(-3px); }")
+          .append(".stat-label { font-size: 12px; text-transform: uppercase; color: #94A3B8; letter-spacing: 0.5px; font-weight: 600; }")
+          .append(".stat-val { font-size: 32px; font-weight: 800; margin: 8px 0; color: #F8FAFC; }")
+          .append(".stat-desc { font-size: 12px; color: #38BDF8; }")
+          .append(".canvas-container { height: 260px; position: relative; background: #0F172A; border-radius: 8px; padding: 12px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.05); }")
+          .append(".action-btn { background: linear-gradient(135deg, #0284C7, #4F46E5); color: #FFF; border: none; border-radius: 6px; padding: 10px 18px; font-weight: 600; cursor: pointer; transition: all 0.2s; text-decoration:none; display:inline-block; }")
+          .append(".action-btn:hover { opacity: 0.9; transform: scale(1.02); }")
+          .append("</style>");
+
+        sb.append("<div class='dash-container'>")
+          .append("  <div class='dash-header'>")
+          .append("    <div>")
+          .append("      <div class='dash-title'>💎 PolicyCenter Intelligence & Analytics Web Portal</div>")
+          .append("      <div style='color:#94A3B8; font-size:13px; margin-top:4px;'>Real-time Risk Metrics, Telematics Dynamic Scoring, Catastrophe Overlays & GraphQL Gateway</div>")
+          .append("    </div>")
+          .append("    <a href='/graphql' target='_blank' class='action-btn'>🌐 Open GraphQL Endpoint</a>")
+          .append("  </div>")
+          .append("  <div class='dash-grid'>")
+          .append("    <div class='glass-card'>")
+          .append("      <div class='stat-label'>Total Written Premium</div>")
+          .append("      <div class='stat-val'>$42,850,200</div>")
+          .append("      <div class='stat-desc'>+14.2% YoY Growth (Java 23 Virtual Threads Engine)</div>")
+          .append("    </div>")
+          .append("    <div class='glass-card'>")
+          .append("      <div class='stat-label'>Loss Ratio Performance</div>")
+          .append("      <div class='stat-val' style='color:#34D399;'>54.8%</div>")
+          .append("      <div class='stat-desc'>Optimal Underwriting Threshold (<75.0%)</div>")
+          .append("    </div>")
+          .append("    <div class='glass-card'>")
+          .append("      <div class='stat-label'>Telematics Connected Vehicles</div>")
+          .append("      <div class='stat-val' style='color:#F472B6;'>14,892</div>")
+          .append("      <div class='stat-desc'>Average Driving Score: 88 / 100</div>")
+          .append("    </div>")
+          .append("    <div class='glass-card'>")
+          .append("      <div class='stat-label'>Catastrophe Risk Exposure</div>")
+          .append("      <div class='stat-val' style='color:#FBBF24;'>Zone A</div>")
+          .append("      <div class='stat-desc'>3 Active Coastal Hurricane Alerts Flagged</div>")
+          .append("    </div>")
+          .append("  </div>")
+
+          .append("  <div style='display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:30px;'>")
+          .append("    <div class='glass-card'>")
+          .append("      <h3 style='margin-top:0; color:#38BDF8;'>🚗 Telematics Driver Speed & Hard-Braking Monitor</h3>")
+          .append("      <div class='canvas-container'>")
+          .append("        <canvas id='telematicsCanvas' width='500' height='220'></canvas>")
+          .append("      </div>")
+          .append("    </div>")
+          .append("    <div class='glass-card'>")
+          .append("      <h3 style='margin-top:0; color:#F472B6;'>🌊 Geospatial Catastrophe & Flood Zone Map</h3>")
+          .append("      <div class='canvas-container'>")
+          .append("        <canvas id='catRiskCanvas' width='500' height='220'></canvas>")
+          .append("      </div>")
+          .append("    </div>")
+          .append("  </div>")
+
+          .append("  <div class='glass-card' style='margin-bottom:30px;'>")
+          .append("    <h3 style='margin-top:0; color:#A7F3D0;'>🚀 GraphQL Live Query Sandbox</h3>")
+          .append("    <div style='display:flex; gap:12px; margin-bottom:12px;'>")
+          .append("      <button class='action-btn' onclick='runGql(\"query { policy { policyNumber, status, annualPremium } }\")'>Query Policy</button>")
+          .append("      <button class='action-btn' style='background:linear-gradient(135deg, #10B981, #059669);' onclick='runGql(\"mutation { createFNOL(policyNumber: \\\"POL-849102\\\", lossAmount: 3200) }\")'>Trigger FNOL Claim Mutation</button>")
+          .append("      <button class='action-btn' style='background:linear-gradient(135deg, #F59E0B, #D97706);' onclick='runGql(\"mutation { evaluateRenewal(policyNumber: \\\"POL-849102\\\") }\")'>Evaluate Policy Renewal</button>")
+          .append("    </div>")
+          .append("    <pre id='gqlResult' style='background:#0F172A; padding:14px; border-radius:6px; font-family:monospace; font-size:13px; color:#38BDF8; overflow-x:auto; margin:0;'>Click a button above to execute a GraphQL Query/Mutation over HTTP POST...</pre>")
+          .append("  </div>")
+
+          .append("<script>")
+          .append("function drawTelematics() {")
+          .append("  const c = document.getElementById('telematicsCanvas'); if(!c) return;")
+          .append("  const ctx = c.getContext('2d');")
+          .append("  ctx.clearRect(0,0,500,220);")
+          .append("  ctx.strokeStyle = '#38BDF8'; ctx.lineWidth = 3;")
+          .append("  ctx.beginPath();")
+          .append("  for(let x=0; x<=500; x+=20) {")
+          .append("    let y = 110 + Math.sin(x*0.05)*40 + (Math.random()*10 - 5);")
+          .append("    if(x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);")
+          .append("  }")
+          .append("  ctx.stroke();")
+          .append("  ctx.fillStyle = '#94A3B8'; ctx.font = '12px Inter';")
+          .append("  ctx.fillText('Live Driving Score Index (88/100) - Smooth Telematics Velocity Signal', 20, 20);")
+          .append("}")
+          .append("function drawCatMap() {")
+          .append("  const c = document.getElementById('catRiskCanvas'); if(!c) return;")
+          .append("  const ctx = c.getContext('2d');")
+          .append("  ctx.clearRect(0,0,500,220);")
+          .append("  ctx.fillStyle = '#1E293B'; ctx.fillRect(0,0,500,220);")
+          .append("  ctx.fillStyle = 'rgba(239, 68, 68, 0.4)'; ctx.beginPath(); ctx.arc(150, 100, 70, 0, Math.PI*2); ctx.fill();")
+          .append("  ctx.fillStyle = 'rgba(245, 158, 11, 0.3)'; ctx.beginPath(); ctx.arc(350, 130, 80, 0, Math.PI*2); ctx.fill();")
+          .append("  ctx.fillStyle = '#F8FAFC'; ctx.font = '12px Inter';")
+          .append("  ctx.fillText('Zone A High Risk Coastal Flood Region (Tampa Bay Area)', 40, 100);")
+          .append("  ctx.fillText('Zone B Inland Hurricane Windstorm Buffer', 250, 130);")
+          .append("}")
+          .append("function runGql(queryStr) {")
+          .append("  document.getElementById('gqlResult').innerText = 'Executing query over /graphql...';")
+          .append("  fetch('/graphql', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({query: queryStr}) })")
+          .append("    .then(r => r.json())")
+          .append("    .then(data => { document.getElementById('gqlResult').innerText = JSON.stringify(data, null, 2); })")
+          .append("    .catch(err => { document.getElementById('gqlResult').innerText = 'Error: ' + err.message; });")
+          .append("}")
+          .append("document.addEventListener('DOMContentLoaded', () => { drawTelematics(); drawCatMap(); });")
           .append("</script>");
 
         sb.append("</div></div></body></html>");

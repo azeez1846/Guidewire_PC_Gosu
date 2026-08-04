@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Guidewire PolicyCenter - Underwriter Assistant",
+  "version": "1.0.0",
+  "description": "Chrome Extension for instant VIN decoding, Policy lookup, and FNOL triage from any webpage.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "contextMenus",
+    "storage",
+    "sidePanel"
+  ],
+  "host_permissions": [
+    "http://localhost:8085/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "PolicyCenter Underwriter Assistant"
+  },
+  "side_panel": {
+    "default_path": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}

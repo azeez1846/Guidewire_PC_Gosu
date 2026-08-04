@@ -30,6 +30,10 @@ public class GuidewireRestServlet extends HttpServlet {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final DataStoreService dataStore = DataStoreService.getInstance();
 
+    private final com.guidewire.pc.service.ClaimCenterIntegrationEngine claimEngine = new com.guidewire.pc.service.ClaimCenterIntegrationEngine();
+    private final com.guidewire.pc.service.PolicyLifecycleRenewalEngine renewalEngine = new com.guidewire.pc.service.PolicyLifecycleRenewalEngine();
+    private final com.guidewire.pc.agent.AIUnderwritingTriageAgent triageAgent = new com.guidewire.pc.agent.AIUnderwritingTriageAgent();
+
     private boolean isAuthenticated(HttpServletRequest req) {
         LOGGER.log(Level.FINE, "→ GuidewireRestServlet.isAuthenticated");
         String authHeader = req.getHeader("Authorization");
@@ -261,6 +265,67 @@ public class GuidewireRestServlet extends HttpServlet {
         if (!isAuthenticated(req)) {
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             objectMapper.writeValue(resp.getWriter(), Map.of("error", "Unauthorized: Invalid or missing API session token"));
+            return;
+        }
+
+        if ("/claims/fnol".equals(path)) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> body = objectMapper.readValue(req.getInputStream(), Map.class);
+            String polNum = body.containsKey("policyNumber") ? body.get("policyNumber").toString() : "POL-849102";
+            String claimType = body.containsKey("claimType") ? body.get("claimType").toString() : "COLLISION";
+            BigDecimal lossAmt = new BigDecimal(body.containsKey("lossAmount") ? body.get("lossAmount").toString() : "2500");
+            String desc = body.containsKey("description") ? body.get("description").toString() : "FNOL submission from features suite";
+
+            com.guidewire.pc.service.ClaimCenterIntegrationEngine.FNOLEvent event = claimEngine.ingestFNOL(polNum, claimType, lossAmt, desc);
+            com.guidewire.pc.service.ClaimCenterIntegrationEngine.PolicyLossSummary summary = claimEngine.evaluatePolicyLossSummary(polNum, new BigDecimal("10000.00"));
+            objectMapper.writeValue(resp.getWriter(), Map.of(
+                "claimNumber", event.getClaimNumber(),
+                "status", event.getStatus(),
+                "lossAmount", event.getLossAmount(),
+                "policyLossRatio", summary.getLossRatioPercentage() + "%",
+                "underwritingHold", summary.isUnderwritingHoldRequired(),
+                "holdReason", summary.getHoldReason()
+            ));
+            return;
+        }
+
+        if ("/policy/renewal".equals(path)) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> body = objectMapper.readValue(req.getInputStream(), Map.class);
+            String polNum = body.containsKey("policyNumber") ? body.get("policyNumber").toString() : "POL-849102";
+            BigDecimal prem = new BigDecimal(body.containsKey("currentPremium") ? body.get("currentPremium").toString() : "2450.00");
+            BigDecimal inflation = new BigDecimal(body.containsKey("baseInflationPercent") ? body.get("baseInflationPercent").toString() : "5.00");
+
+            com.guidewire.pc.service.PolicyLifecycleRenewalEngine.RenewalResult result = renewalEngine.evaluateAndCreateRenewal(polNum, prem, null, inflation);
+            objectMapper.writeValue(resp.getWriter(), Map.of(
+                "policyNumber", result.getPolicyNumber(),
+                "renewalJobNumber", result.getRenewalJobNumber(),
+                "eligible", result.isEligible(),
+                "previousPremium", result.getPreviousPremium(),
+                "newRenewalPremium", result.getNewRenewalPremium(),
+                "statusMessage", result.getStatusMessage()
+            ));
+            return;
+        }
+
+        if ("/ai-triage/evaluate".equals(path)) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> body = objectMapper.readValue(req.getInputStream(), Map.class);
+            String subId = body.containsKey("submissionId") ? body.get("submissionId").toString() : "SUB-001";
+            String polNum = body.containsKey("policyNumber") ? body.get("policyNumber").toString() : "POL-849102";
+            String lob = body.containsKey("lineOfBusiness") ? body.get("lineOfBusiness").toString() : "CommercialAuto";
+            BigDecimal prem = new BigDecimal(body.containsKey("annualPremium") ? body.get("annualPremium").toString() : "3500.00");
+            int score = Integer.parseInt(body.containsKey("driverScore") ? body.get("driverScore").toString() : "70");
+            boolean flood = Boolean.parseBoolean(body.containsKey("highFloodZone") ? body.get("highFloodZone").toString() : "true");
+
+            com.guidewire.pc.agent.AIUnderwritingTriageAgent.TriageDecision decision = triageAgent.evaluateSubmission(subId, polNum, lob, prem, score, flood);
+            objectMapper.writeValue(resp.getWriter(), Map.of(
+                "submissionId", decision.getSubmissionId(),
+                "recommendation", decision.getRecommendation(),
+                "riskScore", decision.getRiskScore(),
+                "rationale", decision.getRationale(),
+                "escalationRequired", decision.isEscalationRequired()
+            ));
             return;
         }
 

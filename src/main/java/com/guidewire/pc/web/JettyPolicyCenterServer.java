@@ -64,6 +64,7 @@ public class JettyPolicyCenterServer {
         context.addServlet(new ServletHolder(new GuidewireRestServlet()), "/rest/v1/*");
         context.addServlet(new ServletHolder(new SwaggerUiServlet()), "/swagger-ui/*");
         context.addServlet(new ServletHolder(new PcfStudioServlet(rootDir)), "/pcf-studio/*");
+        context.addServlet(new ServletHolder(new GraphQLGatewayServlet()), "/graphql/*");
 
         GuidewirePolicyCenterServlet servlet = new GuidewirePolicyCenterServlet(rootDir);
         context.addServlet(new ServletHolder(servlet), "/*");
