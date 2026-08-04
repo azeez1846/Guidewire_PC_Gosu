@@ -26,6 +26,7 @@ public abstract class EffDatedBean implements KeyableBean {
     public FixedId<?> getFixedId() { return fixedId; }
     public void setFixedId(FixedId<?> fixedId) { this.fixedId = fixedId; }
 
+    @com.fasterxml.jackson.annotation.JsonIgnore
     public EffDatedBranch getBranch() { return branch; }
     public void setBranch(EffDatedBranch branch) { this.branch = branch; }
 
