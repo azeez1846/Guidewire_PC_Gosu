@@ -5,9 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "java",
-            "name": "Launch Java App",
+            "type": "jdk",
             "request": "launch",
+            "name": "Launch Java App",
+            "mainClass": "com.guidewire.pc.App",
+            "projectName": "guidewire-policycenter",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Compile Project (mvn compile)",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "jdk",
+            "request": "launch",
+            "name": "🚀 Run & Debug PolicyCenter (Jetty)",
             "mainClass": "com.guidewire.pc.App",
             "projectName": "guidewire-policycenter",
             "cwd": "${workspaceFolder}",
@@ -16,8 +26,8 @@
         },
         {
             "type": "java",
-            "name": "🚀 Run & Debug PolicyCenter (Jetty)",
             "request": "launch",
+            "name": "Launch Java App (RedHat Java)",
             "mainClass": "com.guidewire.pc.App",
             "projectName": "guidewire-policycenter",
             "cwd": "${workspaceFolder}",
