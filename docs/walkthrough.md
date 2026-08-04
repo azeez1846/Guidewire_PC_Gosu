@@ -1,17 +1,22 @@
 # Enterprise Insurance Industry Modules & Features Suite Walkthrough
 
-We have successfully built, integrated, verified, and deployed **29 total enterprise-grade insurance industry modules & accelerators** on the Guidewire PolicyCenter platform.
+We have successfully built, integrated, verified, and deployed **30 total enterprise-grade insurance industry modules & accelerators** on the Guidewire PolicyCenter platform, including a standalone Spring Boot **Integration Gateway Layer (`vehicledetails_IG`)**.
 
 ---
 
 ## 🌟 Primary Feature Catalog Highlights
 
-### 1. Interactive UI Features Tab (`🚀 Features (29)`)
+### 1. Interactive UI Features Tab (`🚀 Features (30)`)
 - **Access**: Available in top navigation upon login at `http://localhost:8085/?page=features`
 - **TypeScript Integration**: Driven by strongly typed catalog definitions ([featuresCatalog.ts](file:///Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/src/main/typescript/featuresCatalog.ts) & [features.ts](file:///Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/src/main/typescript/types/features.ts)).
 - **Interactive Live Runner**: Allows underwriters to test custom input parameters, execute live REST POST calls, and review JSON responses directly inside the UI.
 
-### 2. Comprehensive 29 Enterprise Modules Catalog
+### 2. Guidewire Cloud Integration Gateway Layer (`vehicledetails_IG`)
+- **Standalone Spring Boot Microservice**: Located at `/Users/azeezmohiuddin/Downloads/vehicledetails_IG`
+- **Outbound External Vendor Connector**: Connects PolicyCenter Personal Auto and Commercial Auto submissions to external DMV MVR driver lookup APIs, VIN spec decoders, safety ratings, and auto underwriting tier calculators.
+- **Synchronization JAR Integration**: Packaged into `vehicledetails_IG-1.0.0.jar` and linked into PolicyCenter via `VehicleDetailsIntegrationService.java`.
+
+### 3. Comprehensive 30 Enterprise Modules Catalog
 1. **AI Automated Underwriting Referral Assistant** (`/rest/v1/ai-referral/evaluate`)
 2. **DocuSign E-Signature Envelope Integration Engine** (`/rest/v1/esignature/create`)
 3. **Geospatial GIS Risk & Wildfire Exposure Service** (`/rest/v1/geospatial/risk`)
@@ -41,12 +46,13 @@ We have successfully built, integrated, verified, and deployed **29 total enterp
 27. **Underwriting Override Rating Engine & Audit Trail** (`/rest/v1/uw/rating-override`)
 28. **Sub-line Inland Marine Rating & Equipment Engine** (`/rest/v1/inland-marine/rate`)
 29. **Policy Form Inference & Attachment Rules Engine** (`/rest/v1/forms/infer`)
+30. **Guidewire Cloud Integration Gateway (IG) — Vehicle & MVR Vendor Gateway** (`/rest/v1/ig/vehicle-details`)
 
 ---
 
 ## 🧪 Verification & Test Results
 
-All **224 automated unit and integration tests** passed cleanly:
+All **226 automated unit and integration tests** passed cleanly:
 
 ```bash
 mvn test
@@ -56,17 +62,8 @@ mvn test
 ```text
 [INFO] Results:
 [INFO] 
-[INFO] Tests run: 224, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 226, Failures: 0, Errors: 0, Skipped: 0
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
 ```
-
----
-
-## 🚀 GitHub Repository Status
-
-- **Latest Commit**: `c9aec0e`
-- **Branch**: `main`
-- **Remote**: `https://github.com/azeez1846/Guidewire_PC_Gosu.git`
-- **Status**: Pushed and up to date!

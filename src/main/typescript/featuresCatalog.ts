@@ -377,5 +377,22 @@ export const ENTERPRISE_FEATURES_CATALOG: FeatureModule[] = [
     inputs: [
       { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' }
     ]
+  },
+  {
+    id: 'ig-vehicle-details',
+    title: 'Guidewire Cloud Integration Gateway (IG) — Vehicle & MVR Vendor Gateway',
+    category: 'Specialty Lines',
+    shortDescription: 'Integration Gateway (IG) microservice layer executing outbound real-time DMV MVR driver lookup, VIN spec verification, safety scores, and auto underwriting tier recommendations.',
+    businessPurpose: 'Connects PolicyCenter Personal Auto and Commercial Auto submissions to external MVR/DMV data vendors via the Integration Gateway microservice JAR.',
+    endpoint: '/rest/v1/ig/vehicle-details',
+    method: 'POST',
+    inputs: [
+      { name: 'vin', label: 'Vehicle VIN', type: 'string', defaultValue: '1FA6P8CF0R5100001', description: '17-character VIN identifier' },
+      { name: 'vehicleYear', label: 'Vehicle Model Year', type: 'number', defaultValue: 2025, description: 'Model manufacture year' },
+      { name: 'vehicleMake', label: 'Vehicle Make', type: 'string', defaultValue: 'Ford', description: 'Manufacturer make' },
+      { name: 'vehicleModel', label: 'Vehicle Model', type: 'string', defaultValue: 'Mustang GT', description: 'Model designation' },
+      { name: 'driverLicenseNumber', label: 'Driver License Number', type: 'string', defaultValue: 'DL-CA-9948123', description: 'Driver license (Use DL-DUI-9948000 for high-risk test)' },
+      { name: 'driverState', label: 'Driver State Jurisdiction', type: 'string', defaultValue: 'CA', description: 'State licensing authority' }
+    ]
   }
 ];

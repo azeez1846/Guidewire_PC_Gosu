@@ -62,7 +62,8 @@ public class FeaturesApiTest {
             "/renewal/eligibility",
             "/uw-override/audit",
             "/coi/generate",
-            "/forms/infer"
+            "/forms/infer",
+            "/ig/vehicle-details"
         };
 
         for (String endpoint : endpoints) {

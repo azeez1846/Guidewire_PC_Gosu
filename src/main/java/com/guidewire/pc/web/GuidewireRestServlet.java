@@ -844,6 +844,25 @@ public class GuidewireRestServlet extends HttpServlet {
             return;
         }
 
+        if (path != null && (path.equals("/ig/vehicle-details") || path.equals("/vehicle-details/lookup"))) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String vin = (String) reqMap.getOrDefault("vin", "1FA6P8CF0R5100001");
+            Integer year = reqMap.get("vehicleYear") != null ? ((Number) reqMap.get("vehicleYear")).intValue() : 2025;
+            String make = (String) reqMap.getOrDefault("vehicleMake", "Ford");
+            String model = (String) reqMap.getOrDefault("vehicleModel", "Mustang GT");
+            String dl = (String) reqMap.getOrDefault("driverLicenseNumber", "DL-CA-9948123");
+            String state = (String) reqMap.getOrDefault("driverState", "CA");
+            String polType = (String) reqMap.getOrDefault("policyType", "PersonalAuto");
+
+            String jobNumber = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = jobNumber != null ? dataStore.findSubmission(jobNumber) : null;
+
+            var res = com.guidewire.pc.service.VehicleDetailsIntegrationService.getInstance().executeVehicleLookup(vin, year, make, model, dl, state, polType);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
         if (path != null && path.equals("/admin/reset-db")) {
             dataStore.resetToSeedData();
             objectMapper.writeValue(resp.getWriter(), Map.of("status", "Success", "message", "Database reset to clean sample seed data."));
