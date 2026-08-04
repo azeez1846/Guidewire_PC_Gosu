@@ -878,6 +878,63 @@ public class GuidewireRestServlet extends HttpServlet {
             return;
         }
 
+        if (path != null && (path.equals("/ig/credit-fraud") || path.equals("/credit-fraud/evaluate"))) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String name = (String) reqMap.getOrDefault("accountHolderName", "Apex Global Industrial");
+            String fein = (String) reqMap.getOrDefault("feinOrSsn", "98-7654321");
+            String orgType = (String) reqMap.getOrDefault("orgType", "Corporation");
+            String state = (String) reqMap.getOrDefault("state", "CA");
+
+            var res = com.guidewire.pc.service.CreditFraudIntegrationService.getInstance().executeCreditAndFraudLookup(name, fein, orgType, state);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/acord/ingest")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            var res = com.guidewire.pc.service.AcordIngestionService.getInstance().parseAndIngestAcordPayload(reqMap);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/oos/timeline-visualizer")) {
+            String jobNumber = req.getParameter("jobNumber");
+            if (jobNumber == null && req.getContentLength() > 0) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+                jobNumber = (String) reqMap.get("jobNumber");
+            }
+            var res = com.guidewire.pc.service.OOSTimelineVisualizerService.getInstance().generateTimelineSlices(jobNumber);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/claims/loss-ratio")) {
+            String accNum = req.getParameter("accountNumber");
+            if (accNum == null && req.getContentLength() > 0) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+                accNum = (String) reqMap.get("accountNumber");
+            }
+            var res = com.guidewire.pc.service.ClaimsCenterSyncService.getInstance().calculateAccountLossRatioAndSyncClaims(accNum);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && (path.equals("/ig/telematics") || path.equals("/telematics/ingest"))) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String fleetId = (String) reqMap.getOrDefault("fleetId", "FLT-CA-90812");
+            String accNum = (String) reqMap.getOrDefault("accountNumber", "A0001001");
+            Integer count = reqMap.get("activeVehiclesCount") != null ? ((Number) reqMap.get("activeVehiclesCount")).intValue() : 15;
+
+            var res = com.guidewire.pc.service.TelematicsIntegrationService.getInstance().executeTelematicsIngestion(fleetId, accNum, count);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
         if (path != null && path.equals("/admin/reset-db")) {
             dataStore.resetToSeedData();
             objectMapper.writeValue(resp.getWriter(), Map.of("status", "Success", "message", "Database reset to clean sample seed data."));

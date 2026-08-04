@@ -23,6 +23,28 @@ services:
       - gw-ig-network
     restart: always
 
+  creditfraud-ig:
+    build:
+      context: ../creditfraud_IG
+      dockerfile: Dockerfile
+    container_name: creditfraud_ig_service
+    ports:
+      - "8090:8090"
+    networks:
+      - gw-ig-network
+    restart: always
+
+  telematics-ig:
+    build:
+      context: ../telematics_IG
+      dockerfile: Dockerfile
+    container_name: telematics_ig_service
+    ports:
+      - "8091:8091"
+    networks:
+      - gw-ig-network
+    restart: always
+
   guidewire-policycenter:
     build:
       context: .
@@ -36,9 +58,15 @@ services:
       - VEHICLE_IG_PORT=8088
       - ADDRESS_IG_HOST=addressstandardization-ig
       - ADDRESS_IG_PORT=8089
+      - CREDIT_IG_HOST=creditfraud-ig
+      - CREDIT_IG_PORT=8090
+      - TELEMATICS_IG_HOST=telematics-ig
+      - TELEMATICS_IG_PORT=8091
     depends_on:
       - vehicledetails-ig
       - addressstandardization-ig
+      - creditfraud-ig
+      - telematics-ig
     networks:
       - gw-ig-network
     restart: always

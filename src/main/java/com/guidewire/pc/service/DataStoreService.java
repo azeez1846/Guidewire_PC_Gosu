@@ -566,4 +566,16 @@ public class DataStoreService {
         p.setCreateTime(rs.getString("create_time"));
         return p;
     }
+
+    public synchronized Account saveAccount(Account acc) {
+        return createAccount(acc);
+    }
+
+    public synchronized PolicyPeriod saveSubmission(PolicyPeriod period) {
+        if (period.getCreateTime() == null) {
+            period.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        }
+        insertSubmissionToDb(period);
+        return period;
+    }
 }

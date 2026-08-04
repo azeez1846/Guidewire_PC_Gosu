@@ -1,69 +1,67 @@
-# Enterprise Insurance Industry Modules & Features Suite Walkthrough
+# Guidewire PolicyCenter Enterprise Architecture — 5 New Features Walkthrough
 
-We have successfully built, integrated, verified, and deployed **30 total enterprise-grade insurance industry modules & accelerators** on the Guidewire PolicyCenter platform, including a standalone Spring Boot **Integration Gateway Layer (`vehicledetails_IG`)**.
+## Overview
 
----
-
-## 🌟 Primary Feature Catalog Highlights
-
-### 1. Interactive UI Features Tab (`🚀 Features (30)`)
-- **Access**: Available in top navigation upon login at `http://localhost:8085/?page=features`
-- **TypeScript Integration**: Driven by strongly typed catalog definitions ([featuresCatalog.ts](file:///Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/src/main/typescript/featuresCatalog.ts) & [features.ts](file:///Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/src/main/typescript/types/features.ts)).
-- **Interactive Live Runner**: Allows underwriters to test custom input parameters, execute live REST POST calls, and review JSON responses directly inside the UI.
-
-### 2. Guidewire Cloud Integration Gateway Layer (`vehicledetails_IG`)
-- **Standalone Spring Boot Microservice**: Located at `/Users/azeezmohiuddin/Downloads/vehicledetails_IG`
-- **Outbound External Vendor Connector**: Connects PolicyCenter Personal Auto and Commercial Auto submissions to external DMV MVR driver lookup APIs, VIN spec decoders, safety ratings, and auto underwriting tier calculators.
-- **Synchronization JAR Integration**: Packaged into `vehicledetails_IG-1.0.0.jar` and linked into PolicyCenter via `VehicleDetailsIntegrationService.java`.
-
-### 3. Comprehensive 30 Enterprise Modules Catalog
-1. **AI Automated Underwriting Referral Assistant** (`/rest/v1/ai-referral/evaluate`)
-2. **DocuSign E-Signature Envelope Integration Engine** (`/rest/v1/esignature/create`)
-3. **Geospatial GIS Risk & Wildfire Exposure Service** (`/rest/v1/geospatial/risk`)
-4. **Stripe Payment Gateway Installment Processing** (`/rest/v1/payment/process`)
-5. **NHTSA VIN Decoder & Vehicle Safety Feature Lookup** (`/rest/v1/vin/decode`)
-6. **Auto Fleet Telematics Driving Behavior Premium Discount Engine (UBI)** (`/rest/v1/telematics/evaluate`)
-7. **TRIA Terrorism Risk Insurance Act Opt-In/Opt-Out Disclosure Engine** (`/rest/v1/tria/evaluate`)
-8. **Environmental & Pollution Liability Hazard Assessment Engine** (`/rest/v1/pollution/assess`)
-9. **Cyber Liability Ransomware & Breach Response Sub-Limit Engine** (`/rest/v1/cyber/evaluate`)
-10. **Flood Zone Risk & NFIP Elevation Certificate Premium Engine** (`/rest/v1/flood/rate`)
-11. **Property Coinsurance Clause Penalty Engine** (`/rest/v1/coinsurance/evaluate`)
-12. **Policy Deductible Buyback & Surcharge Engine** (`/rest/v1/deductible/buyback`)
-13. **Multi-Tier UW Authority Escalation Workflow Engine** (`/rest/v1/uw/escalation`)
-14. **Loss Sensitive Sliding Scale Policyholder Dividend Engine** (`/rest/v1/dividend/calculate`)
-15. **Renewal Rate Impact Capping & Transition Smoothing Engine** (`/rest/v1/rate-cap/apply`)
-16. **SIU Fraud Risk Scoring Engine** (`/rest/v1/fraud/evaluate`)
-17. **Reinsurance Treaty Layering & Cession Ledger Engine** (`/rest/v1/reinsurance/simulate-loss`)
-18. **Real-Time Catastrophe (CAT) Accumulation Engine** (`/rest/v1/cat/evaluate`)
-19. **Commercial Premium Audit & Final Adjustment Engine** (`/rest/v1/audit/process`)
-20. **Experience Rating Mod (e-Mod) & NCCI Engine** (`/rest/v1/emod/calculate`)
-21. **Policy Cancellation Short-Rate vs Pro-Rata Refund Calculator** (`/rest/v1/proration/calculate`)
-22. **Multi-Currency Multinational Local Policy Ledger** (`/rest/v1/multinational/ledger`)
-23. **Multi-Payee Commission Split Engine** (`/rest/v1/commission/split`)
-24. **Out-of-Sequence (OOS) Endorsement Merge Engine** (`/rest/v1/policy/oos-merge`)
-25. **Pre-Renewal Portfolio Health Batch Process Engine** (`/rest/v1/renewal/eligibility`)
-26. **Automated Group Account COI Issuance Engine** (`/rest/v1/coi/issue`)
-27. **Underwriting Override Rating Engine & Audit Trail** (`/rest/v1/uw/rating-override`)
-28. **Sub-line Inland Marine Rating & Equipment Engine** (`/rest/v1/inland-marine/rate`)
-29. **Policy Form Inference & Attachment Rules Engine** (`/rest/v1/forms/infer`)
-30. **Guidewire Cloud Integration Gateway (IG) — Vehicle & MVR Vendor Gateway** (`/rest/v1/ig/vehicle-details`)
+This walkthrough documents the design, implementation, verification, and microservice container topology for **5 major enterprise features** and **2 standalone Spring Boot Integration Gateway (IG) microservices** added to Guidewire PolicyCenter (`Guidewire_PC_Java_Gosu`).
 
 ---
 
-## 🧪 Verification & Test Results
+## 1. Feature Specifications & Capabilities
 
-All **226 automated unit and integration tests** passed cleanly:
+### 1.1 Credit Score & OFAC Sanctions IG Gateway (`creditfraud_IG`)
+- **Microservice Architecture**: Standalone Spring Boot 3.4.1 + Java 23 microservice running on port `8090` in `/Users/azeezmohiuddin/Downloads/creditfraud_IG`.
+- **SDK & Integration**: Packaged into `creditfraud_IG-1.0.0.jar`, installed to local Maven repository `.m2`, integrated into PolicyCenter via `CreditFraudIntegrationService.java`.
+- **Functionality**: Performs outbound queries against Credit Rating Bureaus (Experian / Dun & Bradstreet) and US Treasury OFAC Sanctions watchlists during account creation and quote issuance.
+- **REST Route**: `/rest/v1/ig/credit-fraud`
 
-```bash
-mvn test
-```
+---
 
-### Test Output:
-```text
-[INFO] Results:
-[INFO] 
-[INFO] Tests run: 226, Failures: 0, Errors: 0, Skipped: 0
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD SUCCESS
-[INFO] ------------------------------------------------------------------------
-```
+### 1.2 ACORD 125/126 Commercial Application Ingestion Engine
+- **Engine Service**: `AcordIngestionService.java`
+- **Functionality**: Automated document intake engine parsing ACORD 125 (Commercial Insurance Application) and ACORD 126 (Commercial General Liability) payloads. Automatically creates or updates policy accounts, generates Commercial Auto or Property submissions, and rates requested limits.
+- **REST Route**: `/rest/v1/acord/ingest`
+
+---
+
+### 1.3 Out-of-Sequence (OOS) Endorsement Timeline Visualizer
+- **Visualizer Service**: `OOSTimelineVisualizerService.java`
+- **Functionality**: Renders graphical effective date timeline slices, pro-rata rate factors, and backdated endorsement conflict merge resolutions for mid-term Policy Changes.
+- **REST Route**: `/rest/v1/oos/timeline-visualizer`
+
+---
+
+### 1.4 ClaimsCenter (CC) Earned-to-Loss Ratio & FNOL Sync Engine
+- **Sync Engine Service**: `ClaimsCenterSyncService.java`
+- **Functionality**: Synchronizes ClaimsCenter loss payouts, incurred reserves, and First Notice of Loss (FNOL) logs. Computes account-level Earned-to-Loss Ratios and automatically places underwriting holds if the Loss Ratio exceeds 65%.
+- **REST Route**: `/rest/v1/claims/loss-ratio`
+
+---
+
+### 1.5 IoT Commercial Fleet Telematics Gateway (`telematics_IG`)
+- **Microservice Architecture**: Standalone Spring Boot 3.4.1 + Java 23 microservice running on port `8091` in `/Users/azeezmohiuddin/Downloads/telematics_IG`.
+- **SDK & Integration**: Packaged into `telematics_IG-1.0.0.jar`, installed to local Maven repository `.m2`, integrated into PolicyCenter via `TelematicsIntegrationService.java`.
+- **Functionality**: Ingests IoT fleet vehicle telemetry (hard braking events, rapid accelerations, speeding violations, monthly mileage) from commercial fleet hardware (Samsara / Geotab). Calculates Usage-Based Insurance (UBI) discounts or surcharges.
+- **REST Route**: `/rest/v1/ig/telematics`
+
+---
+
+## 2. Multi-Container Topology (`docker-compose.yml`)
+
+The multi-container stack orchestrates PolicyCenter alongside all 4 Integration Gateway microservices:
+
+| Container Name | Service ID | Port | Description |
+| :--- | :--- | :--- | :--- |
+| `vehicledetails_ig_service` | `vehicledetails-ig` | `8088:8080` | MVR / NHTSA VIN Gateway |
+| `addressstandardization_ig_service` | `addressstandardization-ig` | `8089:8080` | USPS DPV & Geocoding Gateway |
+| `creditfraud_ig_service` | `creditfraud-ig` | `8090:8090` | Credit Scoring & OFAC Sanction Gateway |
+| `telematics_ig_service` | `telematics-ig` | `8091:8091` | IoT Fleet Telematics Gateway |
+| `guidewire_policycenter_app` | `guidewire-policycenter` | `8085:8085`, `8082:8082` | PolicyCenter Web App & H2 Console |
+
+---
+
+## 3. Verification & Test Execution Results
+
+- **Unit Test Suite**: `FiveNewEnterpriseFeaturesTest.java`
+- **Total Test Count**: **232 Automated Tests**
+- **Test Pass Rate**: **100% (232 PASS, 0 Failures, 0 Errors)**
+- **TypeScript 7 Native Build**: Verified near-instant compile execution during `mvn compile`.
