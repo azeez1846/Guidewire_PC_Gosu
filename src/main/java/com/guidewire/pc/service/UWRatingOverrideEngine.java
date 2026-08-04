@@ -11,13 +11,16 @@ public class UWRatingOverrideEngine {
     private static final Logger LOGGER = Logger.getLogger(UWRatingOverrideEngine.class.getName());
     private static final UWRatingOverrideEngine instance = new UWRatingOverrideEngine();
 
-    private UWRatingOverrideEngine() {}
+    private UWRatingOverrideEngine() {
+        LOGGER.log(Level.FINE, "→ UWRatingOverrideEngine.UWRatingOverrideEngine");}
 
     public static UWRatingOverrideEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ UWRatingOverrideEngine.getInstance");
         return instance;
     }
 
     public OverrideResult applyRatingOverride(PolicyPeriod period, double scheduleCreditPercentage, BigDecimal manualRateOverride, String underwriterUser, String overrideReason) {
+        LOGGER.log(Level.FINE, "→ UWRatingOverrideEngine.applyRatingOverride");
         OverrideResult result = new OverrideResult();
         if (period == null || period.getTotalPremium() == null) return result;
 
@@ -60,28 +63,44 @@ public class UWRatingOverrideEngine {
         private BigDecimal adjustedPremium = BigDecimal.ZERO;
         private BigDecimal premiumDelta = BigDecimal.ZERO;
 
-        public String getPolicyNumber() { return policyNumber; }
-        public void setPolicyNumber(String policyNumber) { this.policyNumber = policyNumber; }
+        public String getPolicyNumber() {
+        LOGGER.log(Level.FINE, "→ UWRatingOverrideEngine.getPolicyNumber"); return policyNumber; }
+        public void setPolicyNumber(String policyNumber) {
+        LOGGER.log(Level.FINE, "→ UWRatingOverrideEngine.setPolicyNumber"); this.policyNumber = policyNumber; }
 
-        public String getUnderwriterUser() { return underwriterUser; }
-        public void setUnderwriterUser(String underwriterUser) { this.underwriterUser = underwriterUser; }
+        public String getUnderwriterUser() {
+        LOGGER.log(Level.FINE, "→ UWRatingOverrideEngine.getUnderwriterUser"); return underwriterUser; }
+        public void setUnderwriterUser(String underwriterUser) {
+        LOGGER.log(Level.FINE, "→ UWRatingOverrideEngine.setUnderwriterUser"); this.underwriterUser = underwriterUser; }
 
-        public String getOverrideReason() { return overrideReason; }
-        public void setOverrideReason(String overrideReason) { this.overrideReason = overrideReason; }
+        public String getOverrideReason() {
+        LOGGER.log(Level.FINE, "→ UWRatingOverrideEngine.getOverrideReason"); return overrideReason; }
+        public void setOverrideReason(String overrideReason) {
+        LOGGER.log(Level.FINE, "→ UWRatingOverrideEngine.setOverrideReason"); this.overrideReason = overrideReason; }
 
-        public double getScheduleCreditPercentage() { return scheduleCreditPercentage; }
-        public void setScheduleCreditPercentage(double scheduleCreditPercentage) { this.scheduleCreditPercentage = scheduleCreditPercentage; }
+        public double getScheduleCreditPercentage() {
+        LOGGER.log(Level.FINE, "→ UWRatingOverrideEngine.getScheduleCreditPercentage"); return scheduleCreditPercentage; }
+        public void setScheduleCreditPercentage(double scheduleCreditPercentage) {
+        LOGGER.log(Level.FINE, "→ UWRatingOverrideEngine.setScheduleCreditPercentage"); this.scheduleCreditPercentage = scheduleCreditPercentage; }
 
-        public boolean isManualOverrideApplied() { return manualOverrideApplied; }
-        public void setManualOverrideApplied(boolean manualOverrideApplied) { this.manualOverrideApplied = manualOverrideApplied; }
+        public boolean isManualOverrideApplied() {
+        LOGGER.log(Level.FINE, "→ UWRatingOverrideEngine.isManualOverrideApplied"); return manualOverrideApplied; }
+        public void setManualOverrideApplied(boolean manualOverrideApplied) {
+        LOGGER.log(Level.FINE, "→ UWRatingOverrideEngine.setManualOverrideApplied"); this.manualOverrideApplied = manualOverrideApplied; }
 
-        public BigDecimal getOriginalPremium() { return originalPremium; }
-        public void setOriginalPremium(BigDecimal originalPremium) { this.originalPremium = originalPremium; }
+        public BigDecimal getOriginalPremium() {
+        LOGGER.log(Level.FINE, "→ UWRatingOverrideEngine.getOriginalPremium"); return originalPremium; }
+        public void setOriginalPremium(BigDecimal originalPremium) {
+        LOGGER.log(Level.FINE, "→ UWRatingOverrideEngine.setOriginalPremium"); this.originalPremium = originalPremium; }
 
-        public BigDecimal getAdjustedPremium() { return adjustedPremium; }
-        public void setAdjustedPremium(BigDecimal adjustedPremium) { this.adjustedPremium = adjustedPremium; }
+        public BigDecimal getAdjustedPremium() {
+        LOGGER.log(Level.FINE, "→ UWRatingOverrideEngine.getAdjustedPremium"); return adjustedPremium; }
+        public void setAdjustedPremium(BigDecimal adjustedPremium) {
+        LOGGER.log(Level.FINE, "→ UWRatingOverrideEngine.setAdjustedPremium"); this.adjustedPremium = adjustedPremium; }
 
-        public BigDecimal getPremiumDelta() { return premiumDelta; }
-        public void setPremiumDelta(BigDecimal premiumDelta) { this.premiumDelta = premiumDelta; }
+        public BigDecimal getPremiumDelta() {
+        LOGGER.log(Level.FINE, "→ UWRatingOverrideEngine.getPremiumDelta"); return premiumDelta; }
+        public void setPremiumDelta(BigDecimal premiumDelta) {
+        LOGGER.log(Level.FINE, "→ UWRatingOverrideEngine.setPremiumDelta"); this.premiumDelta = premiumDelta; }
     }
 }

@@ -7,10 +7,15 @@ import com.guidewire.pc.model.RICession;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class ReinsuranceRIRulesEngine {
+    private static final Logger LOGGER = Logger.getLogger(ReinsuranceRIRulesEngine.class.getName());
+
 
     public static List<String> evaluateReinsuranceRules(PolicyPeriod period, RIAgreement agreement, BigDecimal grossExposure) {
+        LOGGER.log(Level.FINE, "→ ReinsuranceRIRulesEngine.evaluateReinsuranceRules");
         List<String> issues = new ArrayList<>();
         if (period == null || agreement == null) return issues;
 

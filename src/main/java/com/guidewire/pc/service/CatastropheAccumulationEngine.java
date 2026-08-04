@@ -13,13 +13,16 @@ public class CatastropheAccumulationEngine {
 
     private final BigDecimal MAX_POSTAL_CODE_AGGREGATION_LIMIT = new BigDecimal("10000000.00"); // $10M
 
-    private CatastropheAccumulationEngine() {}
+    private CatastropheAccumulationEngine() {
+        LOGGER.log(Level.FINE, "→ CatastropheAccumulationEngine.CatastropheAccumulationEngine");}
 
     public static CatastropheAccumulationEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ CatastropheAccumulationEngine.getInstance");
         return instance;
     }
 
     public CatAccumulationResult evaluateRiskAccumulation(PolicyPeriod period, String postalCode, String perilZone, BigDecimal buildingLimit) {
+        LOGGER.log(Level.FINE, "→ CatastropheAccumulationEngine.evaluateRiskAccumulation");
         CatAccumulationResult result = new CatAccumulationResult();
         if (buildingLimit == null) buildingLimit = new BigDecimal("1000000.00");
 
@@ -65,31 +68,49 @@ public class CatastropheAccumulationEngine {
         private boolean aggregationCapExceeded;
         private String underwritingAction;
 
-        public String getPolicyNumber() { return policyNumber; }
-        public void setPolicyNumber(String policyNumber) { this.policyNumber = policyNumber; }
+        public String getPolicyNumber() {
+        LOGGER.log(Level.FINE, "→ CatastropheAccumulationEngine.getPolicyNumber"); return policyNumber; }
+        public void setPolicyNumber(String policyNumber) {
+        LOGGER.log(Level.FINE, "→ CatastropheAccumulationEngine.setPolicyNumber"); this.policyNumber = policyNumber; }
 
-        public String getPostalCode() { return postalCode; }
-        public void setPostalCode(String postalCode) { this.postalCode = postalCode; }
+        public String getPostalCode() {
+        LOGGER.log(Level.FINE, "→ CatastropheAccumulationEngine.getPostalCode"); return postalCode; }
+        public void setPostalCode(String postalCode) {
+        LOGGER.log(Level.FINE, "→ CatastropheAccumulationEngine.setPostalCode"); this.postalCode = postalCode; }
 
-        public String getPerilZone() { return perilZone; }
-        public void setPerilZone(String perilZone) { this.perilZone = perilZone; }
+        public String getPerilZone() {
+        LOGGER.log(Level.FINE, "→ CatastropheAccumulationEngine.getPerilZone"); return perilZone; }
+        public void setPerilZone(String perilZone) {
+        LOGGER.log(Level.FINE, "→ CatastropheAccumulationEngine.setPerilZone"); this.perilZone = perilZone; }
 
-        public BigDecimal getBuildingLimit() { return buildingLimit; }
-        public void setBuildingLimit(BigDecimal buildingLimit) { this.buildingLimit = buildingLimit; }
+        public BigDecimal getBuildingLimit() {
+        LOGGER.log(Level.FINE, "→ CatastropheAccumulationEngine.getBuildingLimit"); return buildingLimit; }
+        public void setBuildingLimit(BigDecimal buildingLimit) {
+        LOGGER.log(Level.FINE, "→ CatastropheAccumulationEngine.setBuildingLimit"); this.buildingLimit = buildingLimit; }
 
-        public BigDecimal getPmlAmount() { return pmlAmount; }
-        public void setPmlAmount(BigDecimal pmlAmount) { this.pmlAmount = pmlAmount; }
+        public BigDecimal getPmlAmount() {
+        LOGGER.log(Level.FINE, "→ CatastropheAccumulationEngine.getPmlAmount"); return pmlAmount; }
+        public void setPmlAmount(BigDecimal pmlAmount) {
+        LOGGER.log(Level.FINE, "→ CatastropheAccumulationEngine.setPmlAmount"); this.pmlAmount = pmlAmount; }
 
-        public BigDecimal getAalAmount() { return aalAmount; }
-        public void setAalAmount(BigDecimal aalAmount) { this.aalAmount = aalAmount; }
+        public BigDecimal getAalAmount() {
+        LOGGER.log(Level.FINE, "→ CatastropheAccumulationEngine.getAalAmount"); return aalAmount; }
+        public void setAalAmount(BigDecimal aalAmount) {
+        LOGGER.log(Level.FINE, "→ CatastropheAccumulationEngine.setAalAmount"); this.aalAmount = aalAmount; }
 
-        public BigDecimal getTotalPostalCodeExposure() { return totalPostalCodeExposure; }
-        public void setTotalPostalCodeExposure(BigDecimal totalPostalCodeExposure) { this.totalPostalCodeExposure = totalPostalCodeExposure; }
+        public BigDecimal getTotalPostalCodeExposure() {
+        LOGGER.log(Level.FINE, "→ CatastropheAccumulationEngine.getTotalPostalCodeExposure"); return totalPostalCodeExposure; }
+        public void setTotalPostalCodeExposure(BigDecimal totalPostalCodeExposure) {
+        LOGGER.log(Level.FINE, "→ CatastropheAccumulationEngine.setTotalPostalCodeExposure"); this.totalPostalCodeExposure = totalPostalCodeExposure; }
 
-        public boolean isAggregationCapExceeded() { return aggregationCapExceeded; }
-        public void setAggregationCapExceeded(boolean aggregationCapExceeded) { this.aggregationCapExceeded = aggregationCapExceeded; }
+        public boolean isAggregationCapExceeded() {
+        LOGGER.log(Level.FINE, "→ CatastropheAccumulationEngine.isAggregationCapExceeded"); return aggregationCapExceeded; }
+        public void setAggregationCapExceeded(boolean aggregationCapExceeded) {
+        LOGGER.log(Level.FINE, "→ CatastropheAccumulationEngine.setAggregationCapExceeded"); this.aggregationCapExceeded = aggregationCapExceeded; }
 
-        public String getUnderwritingAction() { return underwritingAction; }
-        public void setUnderwritingAction(String underwritingAction) { this.underwritingAction = underwritingAction; }
+        public String getUnderwritingAction() {
+        LOGGER.log(Level.FINE, "→ CatastropheAccumulationEngine.getUnderwritingAction"); return underwritingAction; }
+        public void setUnderwritingAction(String underwritingAction) {
+        LOGGER.log(Level.FINE, "→ CatastropheAccumulationEngine.setUnderwritingAction"); this.underwritingAction = underwritingAction; }
     }
 }

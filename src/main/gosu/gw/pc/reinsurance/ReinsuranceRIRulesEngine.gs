@@ -10,6 +10,7 @@ import java.util.List
 class ReinsuranceRIRulesEngine {
 
   public static function evaluateReinsuranceRules(period : PolicyPeriod, agreement : RIAgreement, grossExposure : BigDecimal) : List<String> {
+    print("[GW-LOG] → ReinsuranceRIRulesEngine.evaluateReinsuranceRules")
     var issues = new ArrayList<String>()
     if (period == null or agreement == null) return issues
 

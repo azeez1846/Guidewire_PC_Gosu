@@ -6,15 +6,21 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class CPRatingService {
+    private static final Logger LOGGER = Logger.getLogger(CPRatingService.class.getName());
+
 
     public static BigDecimal rateCommercialProperty(PolicyPeriod period, BigDecimal buildingLimit, BigDecimal bppLimit, String protectionClass) {
+        LOGGER.log(Level.FINE, "→ CPRatingService.rateCommercialProperty");
         return rateCommercialPropertyExtended(period, buildingLimit, bppLimit, protectionClass, false, false, false);
     }
 
     public static BigDecimal rateCommercialPropertyExtended(PolicyPeriod period, BigDecimal buildingLimit, BigDecimal bppLimit, String protectionClass,
                                                              boolean hasEarthquake, boolean hasFlood, boolean hasSprinkler) {
+        LOGGER.log(Level.FINE, "→ CPRatingService.rateCommercialPropertyExtended");
         if (period == null) return BigDecimal.ZERO;
 
         BigDecimal bldg = buildingLimit != null ? buildingLimit : new BigDecimal("1000000.00");
@@ -48,6 +54,7 @@ public class CPRatingService {
     }
 
     public static List<String> validateCommercialPropertyLine(PolicyPeriod period, BigDecimal buildingLimit, int coinsurance) {
+        LOGGER.log(Level.FINE, "→ CPRatingService.validateCommercialPropertyLine");
         List<String> errors = new ArrayList<>();
         if (period == null) return errors;
 

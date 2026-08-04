@@ -18,6 +18,7 @@ class ApprovalAuthority {
   public property get CanApproveHighRisk() : boolean { return _canApproveHighRisk }
 
   public function canApproveIssue(issue : UWIssue, requestedLimit : BigDecimal) : boolean {
+    print("[GW-LOG] → ApprovalAuthority.canApproveIssue")
     if (requestedLimit != null and requestedLimit.compareTo(_maxPolicyLimit) > 0) {
       return false
     }
@@ -28,6 +29,7 @@ class ApprovalAuthority {
   }
 
   public static function getUnderwriterProfile(username : String) : ApprovalAuthority {
+    print("[GW-LOG] → ApprovalAuthority.getUnderwriterProfile")
     if ("su".equalsIgnoreCase(username) or "uw_senior".equalsIgnoreCase(username)) {
       return new ApprovalAuthority(username, new BigDecimal("10000000.00"), true)
     }

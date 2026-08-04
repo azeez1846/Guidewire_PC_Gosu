@@ -6,6 +6,7 @@ import com.guidewire.pc.model.PolicyPeriod;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class SearchService {
     private static final Logger LOGGER = Logger.getLogger(SearchService.class.getName());
@@ -13,9 +14,11 @@ public class SearchService {
 
     private final DataStoreService dataStore = DataStoreService.getInstance();
 
-    private SearchService() {}
+    private SearchService() {
+        LOGGER.log(Level.FINE, "→ SearchService.SearchService");}
 
     public static SearchService getInstance() {
+        LOGGER.log(Level.FINE, "→ SearchService.getInstance");
         return instance;
     }
 
@@ -35,23 +38,36 @@ public class SearchService {
         private List<PolicyPeriod> matchingSubmissions = new ArrayList<>();
 
         public SearchResult(String query) {
+        LOGGER.log(Level.FINE, "→ SearchService.SearchResult");
             this.query = query != null ? query.trim() : "";
             this.resultType = SearchResultType.NO_MATCH;
         }
 
-        public String getQuery() { return query; }
-        public SearchResultType getResultType() { return resultType; }
-        public void setResultType(SearchResultType resultType) { this.resultType = resultType; }
-        public Account getDirectAccount() { return directAccount; }
-        public void setDirectAccount(Account directAccount) { this.directAccount = directAccount; }
-        public PolicyPeriod getDirectSubmission() { return directSubmission; }
-        public void setDirectSubmission(PolicyPeriod directSubmission) { this.directSubmission = directSubmission; }
-        public List<Account> getMatchingAccounts() { return matchingAccounts; }
-        public void setMatchingAccounts(List<Account> matchingAccounts) { this.matchingAccounts = matchingAccounts; }
-        public List<PolicyPeriod> getMatchingSubmissions() { return matchingSubmissions; }
-        public void setMatchingSubmissions(List<PolicyPeriod> matchingSubmissions) { this.matchingSubmissions = matchingSubmissions; }
+        public String getQuery() {
+        LOGGER.log(Level.FINE, "→ SearchService.getQuery"); return query; }
+        public SearchResultType getResultType() {
+        LOGGER.log(Level.FINE, "→ SearchService.getResultType"); return resultType; }
+        public void setResultType(SearchResultType resultType) {
+        LOGGER.log(Level.FINE, "→ SearchService.setResultType"); this.resultType = resultType; }
+        public Account getDirectAccount() {
+        LOGGER.log(Level.FINE, "→ SearchService.getDirectAccount"); return directAccount; }
+        public void setDirectAccount(Account directAccount) {
+        LOGGER.log(Level.FINE, "→ SearchService.setDirectAccount"); this.directAccount = directAccount; }
+        public PolicyPeriod getDirectSubmission() {
+        LOGGER.log(Level.FINE, "→ SearchService.getDirectSubmission"); return directSubmission; }
+        public void setDirectSubmission(PolicyPeriod directSubmission) {
+        LOGGER.log(Level.FINE, "→ SearchService.setDirectSubmission"); this.directSubmission = directSubmission; }
+        public List<Account> getMatchingAccounts() {
+        LOGGER.log(Level.FINE, "→ SearchService.getMatchingAccounts"); return matchingAccounts; }
+        public void setMatchingAccounts(List<Account> matchingAccounts) {
+        LOGGER.log(Level.FINE, "→ SearchService.setMatchingAccounts"); this.matchingAccounts = matchingAccounts; }
+        public List<PolicyPeriod> getMatchingSubmissions() {
+        LOGGER.log(Level.FINE, "→ SearchService.getMatchingSubmissions"); return matchingSubmissions; }
+        public void setMatchingSubmissions(List<PolicyPeriod> matchingSubmissions) {
+        LOGGER.log(Level.FINE, "→ SearchService.setMatchingSubmissions"); this.matchingSubmissions = matchingSubmissions; }
 
         public String getTargetUrl() {
+        LOGGER.log(Level.FINE, "→ SearchService.getTargetUrl");
             if (resultType == SearchResultType.DIRECT_ACCOUNT && directAccount != null) {
                 return "/?page=account-detail&accNum=" + directAccount.getAccountNumber();
             } else if (resultType == SearchResultType.DIRECT_SUBMISSION && directSubmission != null) {
@@ -62,6 +78,7 @@ public class SearchService {
     }
 
     public SearchResult executeSearch(String rawQuery) {
+        LOGGER.log(Level.FINE, "→ SearchService.executeSearch");
         LOGGER.log(java.util.logging.Level.INFO, "Executing Search & QuickJump query: {0}", rawQuery);
         if (rawQuery == null || rawQuery.trim().isEmpty()) {
             return new SearchResult("");
@@ -124,6 +141,7 @@ public class SearchService {
     }
 
     private boolean matchesAccount(Account a, String qUpper) {
+        LOGGER.log(Level.FINE, "→ SearchService.matchesAccount");
         if (a == null) return false;
         return (a.getAccountNumber() != null && a.getAccountNumber().toUpperCase().contains(qUpper)) ||
                 (a.getAccountHolderName() != null && a.getAccountHolderName().toUpperCase().contains(qUpper)) ||
@@ -134,6 +152,7 @@ public class SearchService {
     }
 
     private boolean matchesSubmission(PolicyPeriod s, String qUpper) {
+        LOGGER.log(Level.FINE, "→ SearchService.matchesSubmission");
         if (s == null) return false;
         return (s.getJobNumber() != null && s.getJobNumber().toUpperCase().contains(qUpper)) ||
                 (s.getPolicyNumber() != null && s.getPolicyNumber().toUpperCase().contains(qUpper)) ||

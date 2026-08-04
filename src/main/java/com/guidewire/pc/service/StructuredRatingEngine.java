@@ -11,18 +11,22 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class StructuredRatingEngine {
     private static final Logger LOGGER = Logger.getLogger(StructuredRatingEngine.class.getName());
     private static final StructuredRatingEngine instance = new StructuredRatingEngine();
 
-    private StructuredRatingEngine() {}
+    private StructuredRatingEngine() {
+        LOGGER.log(Level.FINE, "→ StructuredRatingEngine.StructuredRatingEngine");}
 
     public static StructuredRatingEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ StructuredRatingEngine.getInstance");
         return instance;
     }
 
     public List<Cost> rateMultiLineStructured(PolicyPeriod period) {
+        LOGGER.log(Level.FINE, "→ StructuredRatingEngine.rateMultiLineStructured");
         LOGGER.info("[Structured Rating Engine] Initiating concurrent Virtual Thread multi-line rating...");
 
         try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {

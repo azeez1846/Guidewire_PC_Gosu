@@ -11,13 +11,16 @@ public class TelematicsRatingEngine {
     private static final Logger LOGGER = Logger.getLogger(TelematicsRatingEngine.class.getName());
     private static final TelematicsRatingEngine instance = new TelematicsRatingEngine();
 
-    private TelematicsRatingEngine() {}
+    private TelematicsRatingEngine() {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.TelematicsRatingEngine");}
 
     public static TelematicsRatingEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.getInstance");
         return instance;
     }
 
     public TelematicsResult evaluateTelematicsDrivingScore(PolicyPeriod period, double hardBrakesPer1k, double rapidAccelerationsPer1k, double lateNightDrivingPct, double speedingEventsPer1k) {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.evaluateTelematicsDrivingScore");
         TelematicsResult result = new TelematicsResult();
         if (period == null) return result;
 
@@ -79,37 +82,59 @@ public class TelematicsRatingEngine {
         private BigDecimal adjustmentAmount = BigDecimal.ZERO;
         private BigDecimal adjustedPremium = BigDecimal.ZERO;
 
-        public String getPolicyNumber() { return policyNumber; }
-        public void setPolicyNumber(String policyNumber) { this.policyNumber = policyNumber; }
+        public String getPolicyNumber() {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.getPolicyNumber"); return policyNumber; }
+        public void setPolicyNumber(String policyNumber) {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.setPolicyNumber"); this.policyNumber = policyNumber; }
 
-        public BigDecimal getBasePremium() { return basePremium; }
-        public void setBasePremium(BigDecimal basePremium) { this.basePremium = basePremium; }
+        public BigDecimal getBasePremium() {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.getBasePremium"); return basePremium; }
+        public void setBasePremium(BigDecimal basePremium) {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.setBasePremium"); this.basePremium = basePremium; }
 
-        public double getHardBrakesPer1k() { return hardBrakesPer1k; }
-        public void setHardBrakesPer1k(double hardBrakesPer1k) { this.hardBrakesPer1k = hardBrakesPer1k; }
+        public double getHardBrakesPer1k() {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.getHardBrakesPer1k"); return hardBrakesPer1k; }
+        public void setHardBrakesPer1k(double hardBrakesPer1k) {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.setHardBrakesPer1k"); this.hardBrakesPer1k = hardBrakesPer1k; }
 
-        public double getRapidAccelerationsPer1k() { return rapidAccelerationsPer1k; }
-        public void setRapidAccelerationsPer1k(double rapidAccelerationsPer1k) { this.rapidAccelerationsPer1k = rapidAccelerationsPer1k; }
+        public double getRapidAccelerationsPer1k() {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.getRapidAccelerationsPer1k"); return rapidAccelerationsPer1k; }
+        public void setRapidAccelerationsPer1k(double rapidAccelerationsPer1k) {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.setRapidAccelerationsPer1k"); this.rapidAccelerationsPer1k = rapidAccelerationsPer1k; }
 
-        public double getLateNightDrivingPct() { return lateNightDrivingPct; }
-        public void setLateNightDrivingPct(double lateNightDrivingPct) { this.lateNightDrivingPct = lateNightDrivingPct; }
+        public double getLateNightDrivingPct() {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.getLateNightDrivingPct"); return lateNightDrivingPct; }
+        public void setLateNightDrivingPct(double lateNightDrivingPct) {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.setLateNightDrivingPct"); this.lateNightDrivingPct = lateNightDrivingPct; }
 
-        public double getSpeedingEventsPer1k() { return speedingEventsPer1k; }
-        public void setSpeedingEventsPer1k(double speedingEventsPer1k) { this.speedingEventsPer1k = speedingEventsPer1k; }
+        public double getSpeedingEventsPer1k() {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.getSpeedingEventsPer1k"); return speedingEventsPer1k; }
+        public void setSpeedingEventsPer1k(double speedingEventsPer1k) {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.setSpeedingEventsPer1k"); this.speedingEventsPer1k = speedingEventsPer1k; }
 
-        public double getSafetyScore() { return safetyScore; }
-        public void setSafetyScore(double safetyScore) { this.safetyScore = safetyScore; }
+        public double getSafetyScore() {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.getSafetyScore"); return safetyScore; }
+        public void setSafetyScore(double safetyScore) {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.setSafetyScore"); this.safetyScore = safetyScore; }
 
-        public double getRateAdjustmentPct() { return rateAdjustmentPct; }
-        public void setRateAdjustmentPct(double rateAdjustmentPct) { this.rateAdjustmentPct = rateAdjustmentPct; }
+        public double getRateAdjustmentPct() {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.getRateAdjustmentPct"); return rateAdjustmentPct; }
+        public void setRateAdjustmentPct(double rateAdjustmentPct) {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.setRateAdjustmentPct"); this.rateAdjustmentPct = rateAdjustmentPct; }
 
-        public String getDrivingTier() { return drivingTier; }
-        public void setDrivingTier(String drivingTier) { this.drivingTier = drivingTier; }
+        public String getDrivingTier() {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.getDrivingTier"); return drivingTier; }
+        public void setDrivingTier(String drivingTier) {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.setDrivingTier"); this.drivingTier = drivingTier; }
 
-        public BigDecimal getAdjustmentAmount() { return adjustmentAmount; }
-        public void setAdjustmentAmount(BigDecimal adjustmentAmount) { this.adjustmentAmount = adjustmentAmount; }
+        public BigDecimal getAdjustmentAmount() {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.getAdjustmentAmount"); return adjustmentAmount; }
+        public void setAdjustmentAmount(BigDecimal adjustmentAmount) {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.setAdjustmentAmount"); this.adjustmentAmount = adjustmentAmount; }
 
-        public BigDecimal getAdjustedPremium() { return adjustedPremium; }
-        public void setAdjustedPremium(BigDecimal adjustedPremium) { this.adjustedPremium = adjustedPremium; }
+        public BigDecimal getAdjustedPremium() {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.getAdjustedPremium"); return adjustedPremium; }
+        public void setAdjustedPremium(BigDecimal adjustedPremium) {
+        LOGGER.log(Level.FINE, "→ TelematicsRatingEngine.setAdjustedPremium"); this.adjustedPremium = adjustedPremium; }
     }
 }

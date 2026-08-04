@@ -15,13 +15,16 @@ public class TelematicsIntegrationService {
     private static final Logger LOGGER = Logger.getLogger(TelematicsIntegrationService.class.getName());
     private static final TelematicsIntegrationService instance = new TelematicsIntegrationService();
 
-    private TelematicsIntegrationService() {}
+    private TelematicsIntegrationService() {
+        LOGGER.log(Level.FINE, "→ TelematicsIntegrationService.TelematicsIntegrationService");}
 
     public static TelematicsIntegrationService getInstance() {
+        LOGGER.log(Level.FINE, "→ TelematicsIntegrationService.getInstance");
         return instance;
     }
 
     public TelematicsResponse executeTelematicsIngestion(String fleetId, String accountNumber, Integer activeVehiclesCount) {
+        LOGGER.log(Level.FINE, "→ TelematicsIntegrationService.executeTelematicsIngestion");
         LOGGER.log(Level.INFO, "[PolicyCenter Telematics IG Bridge] Invoking Telematics IG JAR for Fleet: {0} (Account: {1})",
                 new Object[]{fleetId, accountNumber});
 

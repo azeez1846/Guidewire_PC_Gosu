@@ -7,14 +7,17 @@ import java.util.UUID
 class ESignaturePlugin implements IGosuPlugin {
 
   override function getPluginName() : String {
+    print("[GW-LOG] → ESignaturePlugin.getPluginName")
     return "ESignaturePlugin"
   }
 
   override function isAvailable() : boolean {
+    print("[GW-LOG] → ESignaturePlugin.isAvailable")
     return true
   }
 
   public function createSignatureEnvelope(jobNumber : String, signerEmail : String, documentName : String) : Map<String, Object> {
+    print("[GW-LOG] → ESignaturePlugin.createSignatureEnvelope")
     var result = new HashMap<String, Object>()
 
     if (jobNumber == null or signerEmail == null) {
@@ -36,6 +39,7 @@ class ESignaturePlugin implements IGosuPlugin {
   }
 
   public function processSignatureCallback(envelopeId : String, event : String) : Map<String, Object> {
+    print("[GW-LOG] → ESignaturePlugin.processSignatureCallback")
     var result = new HashMap<String, Object>()
     result.put("envelopeId", envelopeId)
 

@@ -8,6 +8,7 @@ import java.util.ArrayList
 class UnderwritingRulesEngine {
 
   public static function evaluateRules(period : PolicyPeriod) : List<UWIssue> {
+    print("[GW-LOG] → UnderwritingRulesEngine.evaluateRules")
     var issues = new ArrayList<UWIssue>()
 
     if (period == null) return issues

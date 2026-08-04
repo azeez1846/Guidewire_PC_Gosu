@@ -23,6 +23,7 @@ class AccountService {
   }
 
   private function initSampleAccounts() {
+    print("[GW-LOG] → AccountService.initSampleAccounts")
     var acc1 = new Account()
     acc1.AccountNumber = "A0001001"
     acc1.AccountHolderName = "Acme Logistics Inc."
@@ -63,10 +64,12 @@ class AccountService {
   }
 
   public function getAllAccounts() : List<Account> {
+    print("[GW-LOG] → AccountService.getAllAccounts")
     return _accounts
   }
 
   public function findByNumber(accountNum : String) : Account {
+    print("[GW-LOG] → AccountService.findByNumber")
     if (accountNum == null) return null
     for (acc in _accounts) {
       if (acc?.AccountNumber != null and acc.AccountNumber.equalsIgnoreCase(accountNum)) {
@@ -77,12 +80,14 @@ class AccountService {
   }
 
   public function generateAccountNumber() : String {
+    print("[GW-LOG] → AccountService.generateAccountNumber")
     var num = "A000" + _accountCounter
     _accountCounter = _accountCounter + 1
     return num
   }
 
   public function createAccount(newAcc : Account) : Account {
+    print("[GW-LOG] → AccountService.createAccount")
     if (newAcc?.AccountNumber == null or newAcc.AccountNumber.length() == 0) {
       newAcc.AccountNumber = generateAccountNumber()
     }

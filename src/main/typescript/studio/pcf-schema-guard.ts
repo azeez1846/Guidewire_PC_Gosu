@@ -1,4 +1,5 @@
 import { WidgetType, ValidationError } from '../types/guidewire-pcf';
+import { GWLogger } from '../GWLogger';
 
 export class PCFSchemaGuard {
   private static readonly ALLOWED_PARENTS: Record<WidgetType, WidgetType[]> = {
@@ -28,11 +29,13 @@ export class PCFSchemaGuard {
   };
 
   public static isValidParent(childType: WidgetType, parentType: WidgetType): boolean {
+    GWLogger.log('pcf-schema-guard', 'isValidParent');
     const allowed = this.ALLOWED_PARENTS[childType];
     return !!allowed && allowed.includes(parentType);
   }
 
   public static validatePlacement(widgetId: string, childType: WidgetType, parentType: WidgetType): ValidationError[] {
+    GWLogger.log('pcf-schema-guard', 'validatePlacement');
     const errors: ValidationError[] = [];
     if (!this.isValidParent(childType, parentType)) {
       const allowed = this.ALLOWED_PARENTS[childType] || [];

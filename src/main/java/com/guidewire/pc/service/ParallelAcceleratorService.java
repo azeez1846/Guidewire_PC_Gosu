@@ -8,6 +8,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class ParallelAcceleratorService {
     private static final Logger LOGGER = Logger.getLogger(ParallelAcceleratorService.class.getName());
@@ -17,9 +18,11 @@ public class ParallelAcceleratorService {
     private final RatingEngine ratingEngine = RatingEngine.getInstance();
     private final AIUnderwritingAssistant aiAssistant = AIUnderwritingAssistant.getInstance();
 
-    private ParallelAcceleratorService() {}
+    private ParallelAcceleratorService() {
+        LOGGER.log(Level.FINE, "→ ParallelAcceleratorService.ParallelAcceleratorService");}
 
     public static ParallelAcceleratorService getInstance() {
+        LOGGER.log(Level.FINE, "→ ParallelAcceleratorService.getInstance");
         return instance;
     }
 
@@ -30,18 +33,28 @@ public class ParallelAcceleratorService {
         private Object aiUnderwritingResult;
         private final Map<String, Object> extraResults = new HashMap<>();
 
-        public long getExecutionTimeMs() { return executionTimeMs; }
-        public void setExecutionTimeMs(long executionTimeMs) { this.executionTimeMs = executionTimeMs; }
-        public Object getVinResult() { return vinResult; }
-        public void setVinResult(Object vinResult) { this.vinResult = vinResult; }
-        public Object getRatingResult() { return ratingResult; }
-        public void setRatingResult(Object ratingResult) { this.ratingResult = ratingResult; }
-        public Object getAiUnderwritingResult() { return aiUnderwritingResult; }
-        public void setAiUnderwritingResult(Object aiUnderwritingResult) { this.aiUnderwritingResult = aiUnderwritingResult; }
-        public Map<String, Object> getExtraResults() { return extraResults; }
+        public long getExecutionTimeMs() {
+        LOGGER.log(Level.FINE, "→ ParallelAcceleratorService.getExecutionTimeMs"); return executionTimeMs; }
+        public void setExecutionTimeMs(long executionTimeMs) {
+        LOGGER.log(Level.FINE, "→ ParallelAcceleratorService.setExecutionTimeMs"); this.executionTimeMs = executionTimeMs; }
+        public Object getVinResult() {
+        LOGGER.log(Level.FINE, "→ ParallelAcceleratorService.getVinResult"); return vinResult; }
+        public void setVinResult(Object vinResult) {
+        LOGGER.log(Level.FINE, "→ ParallelAcceleratorService.setVinResult"); this.vinResult = vinResult; }
+        public Object getRatingResult() {
+        LOGGER.log(Level.FINE, "→ ParallelAcceleratorService.getRatingResult"); return ratingResult; }
+        public void setRatingResult(Object ratingResult) {
+        LOGGER.log(Level.FINE, "→ ParallelAcceleratorService.setRatingResult"); this.ratingResult = ratingResult; }
+        public Object getAiUnderwritingResult() {
+        LOGGER.log(Level.FINE, "→ ParallelAcceleratorService.getAiUnderwritingResult"); return aiUnderwritingResult; }
+        public void setAiUnderwritingResult(Object aiUnderwritingResult) {
+        LOGGER.log(Level.FINE, "→ ParallelAcceleratorService.setAiUnderwritingResult"); this.aiUnderwritingResult = aiUnderwritingResult; }
+        public Map<String, Object> getExtraResults() {
+        LOGGER.log(Level.FINE, "→ ParallelAcceleratorService.getExtraResults"); return extraResults; }
     }
 
     public ParallelEvaluationResult evaluatePolicyAcceleratorsInParallel(String vin, PolicyPeriod period) {
+        LOGGER.log(Level.FINE, "→ ParallelAcceleratorService.evaluatePolicyAcceleratorsInParallel");
         long startTime = System.currentTimeMillis();
         ParallelEvaluationResult result = new ParallelEvaluationResult();
 

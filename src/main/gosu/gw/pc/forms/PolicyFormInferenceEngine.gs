@@ -8,6 +8,7 @@ import java.util.List
 class PolicyFormInferenceEngine {
 
   public static function inferPolicyForms(period : PolicyPeriod) : List<PolicyForm> {
+    print("[GW-LOG] → PolicyFormInferenceEngine.inferPolicyForms")
     var forms = new ArrayList<PolicyForm>()
     if (period == null) return forms
 

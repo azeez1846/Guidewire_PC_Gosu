@@ -7,6 +7,7 @@ import java.time.LocalDate
 class OOSEndorsementEngine {
 
   public static function isOutOfSequence(oosEffDate : String, priorEndorsementEffDates : List<String>) : boolean {
+    print("[GW-LOG] → OOSEndorsementEngine.isOutOfSequence")
     if (oosEffDate == null or priorEndorsementEffDates == null or priorEndorsementEffDates.isEmpty()) return false
 
     try {
@@ -25,6 +26,7 @@ class OOSEndorsementEngine {
   }
 
   public static function createOOSBranch(period : PolicyPeriod, oosEffDate : String) : PolicyPeriod {
+    print("[GW-LOG] → OOSEndorsementEngine.createOOSBranch")
     if (period == null) return null
 
     var oosBranch = new PolicyPeriod()
@@ -46,6 +48,7 @@ class OOSEndorsementEngine {
   }
 
   public static function mergeOOSSlice(oosBranch : PolicyPeriod, latestPeriod : PolicyPeriod) : PolicyPeriod {
+    print("[GW-LOG] → OOSEndorsementEngine.mergeOOSSlice")
     if (oosBranch == null or latestPeriod == null) return latestPeriod
 
     latestPeriod.setBodilyInjuryLimit(oosBranch.BodilyInjuryLimit)

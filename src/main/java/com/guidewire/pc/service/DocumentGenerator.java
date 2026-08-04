@@ -18,13 +18,16 @@ public class DocumentGenerator {
     private static final Logger LOGGER = Logger.getLogger(DocumentGenerator.class.getName());
     private static final DocumentGenerator instance = new DocumentGenerator();
 
-    private DocumentGenerator() {}
+    private DocumentGenerator() {
+        LOGGER.log(Level.FINE, "→ DocumentGenerator.DocumentGenerator");}
 
     public static DocumentGenerator getInstance() {
+        LOGGER.log(Level.FINE, "→ DocumentGenerator.getInstance");
         return instance;
     }
 
     public byte[] generatePolicyBinderPdf(PolicyPeriod period) throws IOException {
+        LOGGER.log(Level.FINE, "→ DocumentGenerator.generatePolicyBinderPdf");
         LOGGER.log(Level.INFO, "Generating Policy Binder PDF document for job: {0}", period.getJobNumber());
 
         try (PDDocument document = new PDDocument()) {
@@ -106,6 +109,7 @@ public class DocumentGenerator {
     }
 
     private void writeTextLine(PDPageContentStream cs, PDType1Font font, int fontSize, int x, int y, String text) throws IOException {
+        LOGGER.log(Level.FINE, "→ DocumentGenerator.writeTextLine");
         cs.beginText();
         cs.setFont(font, fontSize);
         cs.newLineAtOffset(x, y);

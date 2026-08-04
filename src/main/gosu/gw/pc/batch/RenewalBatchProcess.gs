@@ -12,14 +12,17 @@ import java.util.concurrent.atomic.AtomicInteger
 class RenewalBatchProcess implements BatchProcess {
 
   override public function getType() : String {
+    print("[GW-LOG] → RenewalBatchProcess.getType")
     return "GosuRenewalBatch"
   }
 
   override public function getDescription() : String {
+    print("[GW-LOG] → RenewalBatchProcess.getDescription")
     return "Gosu-native Virtual Thread Policy Renewal Batch Process evaluating expiring policies."
   }
 
   override public function run() : BatchProcessResult {
+    print("[GW-LOG] → RenewalBatchProcess.run")
     var dataStore = DataStoreService.getInstance()
     var submissions = dataStore.getSubmissions()
     var renewalsCreated = new AtomicInteger(0)

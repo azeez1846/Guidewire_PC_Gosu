@@ -8,6 +8,7 @@ import java.util.List
 class GLValidationRules {
 
   public static function validateGeneralLiabilityLine(period : PolicyPeriod, exposureAmount : BigDecimal, coverageForm : String) : List<String> {
+    print("[GW-LOG] → GLValidationRules.validateGeneralLiabilityLine")
     var errors = new ArrayList<String>()
     if (period == null) return errors
 

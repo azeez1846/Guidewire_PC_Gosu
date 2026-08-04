@@ -15,9 +15,11 @@ public class OOSMergeEngine {
 
     private final DataStoreService dataStore = DataStoreService.getInstance();
 
-    private OOSMergeEngine() {}
+    private OOSMergeEngine() {
+        LOGGER.log(Level.FINE, "→ OOSMergeEngine.OOSMergeEngine");}
 
     public static OOSMergeEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ OOSMergeEngine.getInstance");
         return instance;
     }
 
@@ -25,6 +27,7 @@ public class OOSMergeEngine {
      * Executes Out-Of-Sequence (OOS) Endorsement Timeline Splitting & Forward Merging
      */
     public OOSSliceTimeline processOOSEndorsement(String policyNumber, String backdatedEffectiveDateStr, String newBiLimit, String newCollisionDed) {
+        LOGGER.log(Level.FINE, "→ OOSMergeEngine.processOOSEndorsement");
         PolicyPeriod basePeriod = dataStore.findPolicyByPolicyNumber(policyNumber);
         if (basePeriod == null) {
             basePeriod = dataStore.getSubmissions().isEmpty() ? null : dataStore.getSubmissions().get(0);

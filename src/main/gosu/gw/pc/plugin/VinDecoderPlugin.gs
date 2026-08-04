@@ -6,14 +6,17 @@ import java.util.Map
 class VinDecoderPlugin implements IGosuPlugin {
 
   override function getPluginName() : String {
+    print("[GW-LOG] → VinDecoderPlugin.getPluginName")
     return "VinDecoderPlugin"
   }
 
   override function isAvailable() : boolean {
+    print("[GW-LOG] → VinDecoderPlugin.isAvailable")
     return true
   }
 
   public function decodeVin(vin : String) : Map<String, Object> {
+    print("[GW-LOG] → VinDecoderPlugin.decodeVin")
     var result = new HashMap<String, Object>()
 
     if (vin == null or vin.trim().length() != 17) {

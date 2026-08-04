@@ -11,6 +11,7 @@ import java.util.List
 class OOSConflictResolver {
 
   public static function detectConflicts(oosBranch : PolicyPeriod, latestPeriod : PolicyPeriod) : List<String> {
+    print("[GW-LOG] → OOSConflictResolver.detectConflicts")
     var conflicts = new ArrayList<String>()
     if (oosBranch == null or latestPeriod == null) return conflicts
 
@@ -26,6 +27,7 @@ class OOSConflictResolver {
   }
 
   public static function calculateOOSPremiumDelta(oosBranch : PolicyPeriod, latestPeriod : PolicyPeriod, newAnnualPremium : BigDecimal) : BigDecimal {
+    print("[GW-LOG] → OOSConflictResolver.calculateOOSPremiumDelta")
     if (oosBranch == null or latestPeriod == null or newAnnualPremium == null) return BigDecimal.ZERO
 
     try {

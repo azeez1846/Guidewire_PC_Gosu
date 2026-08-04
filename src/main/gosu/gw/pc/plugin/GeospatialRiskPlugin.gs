@@ -6,14 +6,17 @@ import java.util.Map
 class GeospatialRiskPlugin implements IGosuPlugin {
 
   override function getPluginName() : String {
+    print("[GW-LOG] → GeospatialRiskPlugin.getPluginName")
     return "GeospatialRiskPlugin"
   }
 
   override function isAvailable() : boolean {
+    print("[GW-LOG] → GeospatialRiskPlugin.isAvailable")
     return true
   }
 
   public function evaluateLocationRisk(city : String, state : String, postalCode : String) : Map<String, Object> {
+    print("[GW-LOG] → GeospatialRiskPlugin.evaluateLocationRisk")
     var result = new HashMap<String, Object>()
     result.put("city", city)
     result.put("state", state)

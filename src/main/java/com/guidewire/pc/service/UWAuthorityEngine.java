@@ -14,9 +14,11 @@ public class UWAuthorityEngine {
     private static final Logger LOGGER = Logger.getLogger(UWAuthorityEngine.class.getName());
     private static final UWAuthorityEngine instance = new UWAuthorityEngine();
 
-    private UWAuthorityEngine() {}
+    private UWAuthorityEngine() {
+        LOGGER.log(Level.FINE, "→ UWAuthorityEngine.UWAuthorityEngine");}
 
     public static UWAuthorityEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ UWAuthorityEngine.getInstance");
         return instance;
     }
 
@@ -25,6 +27,7 @@ public class UWAuthorityEngine {
      * and attaches generated UWIssues to the PolicyPeriod.
      */
     public List<UWIssue> evaluatePolicy(PolicyPeriod period) {
+        LOGGER.log(Level.FINE, "→ UWAuthorityEngine.evaluatePolicy");
         if (period == null) return new ArrayList<>();
 
         List<UWIssue> generatedIssues = new ArrayList<>();

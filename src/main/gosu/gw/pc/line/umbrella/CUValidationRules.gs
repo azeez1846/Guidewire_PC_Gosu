@@ -8,6 +8,7 @@ import java.util.List
 class CUValidationRules {
 
   public static function validateCommercialUmbrellaLine(period : PolicyPeriod, limitAmount : BigDecimal, underlyingPolicyCount : int) : List<String> {
+    print("[GW-LOG] → CUValidationRules.validateCommercialUmbrellaLine")
     var errors = new ArrayList<String>()
     if (period == null) return errors
 

@@ -11,13 +11,16 @@ public class ProrationRefundEngine {
     private static final Logger LOGGER = Logger.getLogger(ProrationRefundEngine.class.getName());
     private static final ProrationRefundEngine instance = new ProrationRefundEngine();
 
-    private ProrationRefundEngine() {}
+    private ProrationRefundEngine() {
+        LOGGER.log(Level.FINE, "→ ProrationRefundEngine.ProrationRefundEngine");}
 
     public static ProrationRefundEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ ProrationRefundEngine.getInstance");
         return instance;
     }
 
     public RefundCalculationResult calculateCancellationRefund(PolicyPeriod period, long daysInForce, long totalTermDays, boolean isInsuredInitiated) {
+        LOGGER.log(Level.FINE, "→ ProrationRefundEngine.calculateCancellationRefund");
         RefundCalculationResult result = new RefundCalculationResult();
         if (period == null || period.getTotalPremium() == null) return result;
 
@@ -65,25 +68,39 @@ public class ProrationRefundEngine {
         private BigDecimal refundAmount = BigDecimal.ZERO;
         private BigDecimal shortRatePenalty = BigDecimal.ZERO;
 
-        public String getCancellationType() { return cancellationType; }
-        public void setCancellationType(String cancellationType) { this.cancellationType = cancellationType; }
+        public String getCancellationType() {
+        LOGGER.log(Level.FINE, "→ ProrationRefundEngine.getCancellationType"); return cancellationType; }
+        public void setCancellationType(String cancellationType) {
+        LOGGER.log(Level.FINE, "→ ProrationRefundEngine.setCancellationType"); this.cancellationType = cancellationType; }
 
-        public long getDaysInForce() { return daysInForce; }
-        public void setDaysInForce(long daysInForce) { this.daysInForce = daysInForce; }
+        public long getDaysInForce() {
+        LOGGER.log(Level.FINE, "→ ProrationRefundEngine.getDaysInForce"); return daysInForce; }
+        public void setDaysInForce(long daysInForce) {
+        LOGGER.log(Level.FINE, "→ ProrationRefundEngine.setDaysInForce"); this.daysInForce = daysInForce; }
 
-        public long getTotalTermDays() { return totalTermDays; }
-        public void setTotalTermDays(long totalTermDays) { this.totalTermDays = totalTermDays; }
+        public long getTotalTermDays() {
+        LOGGER.log(Level.FINE, "→ ProrationRefundEngine.getTotalTermDays"); return totalTermDays; }
+        public void setTotalTermDays(long totalTermDays) {
+        LOGGER.log(Level.FINE, "→ ProrationRefundEngine.setTotalTermDays"); this.totalTermDays = totalTermDays; }
 
-        public double getProRataFactor() { return proRataFactor; }
-        public void setProRataFactor(double proRataFactor) { this.proRataFactor = proRataFactor; }
+        public double getProRataFactor() {
+        LOGGER.log(Level.FINE, "→ ProrationRefundEngine.getProRataFactor"); return proRataFactor; }
+        public void setProRataFactor(double proRataFactor) {
+        LOGGER.log(Level.FINE, "→ ProrationRefundEngine.setProRataFactor"); this.proRataFactor = proRataFactor; }
 
-        public BigDecimal getEarnedPremium() { return earnedPremium; }
-        public void setEarnedPremium(BigDecimal earnedPremium) { this.earnedPremium = earnedPremium; }
+        public BigDecimal getEarnedPremium() {
+        LOGGER.log(Level.FINE, "→ ProrationRefundEngine.getEarnedPremium"); return earnedPremium; }
+        public void setEarnedPremium(BigDecimal earnedPremium) {
+        LOGGER.log(Level.FINE, "→ ProrationRefundEngine.setEarnedPremium"); this.earnedPremium = earnedPremium; }
 
-        public BigDecimal getRefundAmount() { return refundAmount; }
-        public void setRefundAmount(BigDecimal refundAmount) { this.refundAmount = refundAmount; }
+        public BigDecimal getRefundAmount() {
+        LOGGER.log(Level.FINE, "→ ProrationRefundEngine.getRefundAmount"); return refundAmount; }
+        public void setRefundAmount(BigDecimal refundAmount) {
+        LOGGER.log(Level.FINE, "→ ProrationRefundEngine.setRefundAmount"); this.refundAmount = refundAmount; }
 
-        public BigDecimal getShortRatePenalty() { return shortRatePenalty; }
-        public void setShortRatePenalty(BigDecimal shortRatePenalty) { this.shortRatePenalty = shortRatePenalty; }
+        public BigDecimal getShortRatePenalty() {
+        LOGGER.log(Level.FINE, "→ ProrationRefundEngine.getShortRatePenalty"); return shortRatePenalty; }
+        public void setShortRatePenalty(BigDecimal shortRatePenalty) {
+        LOGGER.log(Level.FINE, "→ ProrationRefundEngine.setShortRatePenalty"); this.shortRatePenalty = shortRatePenalty; }
     }
 }

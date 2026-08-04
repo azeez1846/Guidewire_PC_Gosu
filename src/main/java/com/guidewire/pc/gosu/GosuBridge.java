@@ -7,12 +7,17 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class GosuBridge {
+    private static final Logger LOGGER = Logger.getLogger(GosuBridge.class.getName());
+
 
     private static boolean initialized = false;
 
     public static synchronized void initGosuEngine(File rootDir) {
+        LOGGER.log(Level.FINE, "→ GosuBridge.initGosuEngine");
         if (initialized) return;
 
         try {
@@ -46,6 +51,7 @@ public class GosuBridge {
     private static long lastLoadedTime = System.currentTimeMillis();
 
     public static synchronized void reloadScripts() {
+        LOGGER.log(Level.FINE, "→ GosuBridge.reloadScripts");
         lastLoadedTime = System.currentTimeMillis();
         initialized = false;
         initGosuEngine(new File("."));
@@ -53,10 +59,12 @@ public class GosuBridge {
     }
 
     public static Object eval(String expression) {
+        LOGGER.log(Level.FINE, "→ GosuBridge.eval");
         return evalWithBindings(expression, null);
     }
 
     public static Object evalWithBindings(String expression, Map<String, Object> bindings) {
+        LOGGER.log(Level.FINE, "→ GosuBridge.evalWithBindings");
         try {
             Class<?> gosuCls = Class.forName("gw.lang.Gosu");
             for (Method m : gosuCls.getMethods()) {
@@ -69,6 +77,7 @@ public class GosuBridge {
     }
 
     public static Object invokeStatic(String className, String methodName, Object... args) {
+        LOGGER.log(Level.FINE, "→ GosuBridge.invokeStatic");
         try {
             Class<?> cls = Class.forName(className);
             for (Method m : cls.getMethods()) {
@@ -83,6 +92,7 @@ public class GosuBridge {
     }
 
     public static Object invokeMethod(Object target, String methodName, Object... args) {
+        LOGGER.log(Level.FINE, "→ GosuBridge.invokeMethod");
         if (target == null) return null;
         try {
             Class<?> cls = target.getClass();
@@ -98,6 +108,7 @@ public class GosuBridge {
     }
 
     public static Object construct(String className, Object... args) {
+        LOGGER.log(Level.FINE, "→ GosuBridge.construct");
         try {
             Class<?> cls = Class.forName(className);
             for (Constructor<?> c : cls.getConstructors()) {

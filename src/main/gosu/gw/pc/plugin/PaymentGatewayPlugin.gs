@@ -11,14 +11,17 @@ import java.util.UUID
 class PaymentGatewayPlugin implements IGosuPlugin {
 
   override function getPluginName() : String {
+    print("[GW-LOG] → PaymentGatewayPlugin.getPluginName")
     return "PaymentGatewayPlugin"
   }
 
   override function isAvailable() : boolean {
+    print("[GW-LOG] → PaymentGatewayPlugin.isAvailable")
     return true
   }
 
   public function processDownPayment(accountNumber : String, amount : BigDecimal, paymentMethod : String) : String {
+    print("[GW-LOG] → PaymentGatewayPlugin.processDownPayment")
     if (amount == null or amount.compareTo(BigDecimal.ZERO) <= 0) {
       return "FAILED: Down payment amount must be greater than $0.00."
     }
@@ -27,6 +30,7 @@ class PaymentGatewayPlugin implements IGosuPlugin {
   }
 
   public function tokenizePaymentMethod(cardNumber : String, expiryMonth : int, expiryYear : int) : Map<String, Object> {
+    print("[GW-LOG] → PaymentGatewayPlugin.tokenizePaymentMethod")
     var result = new HashMap<String, Object>()
     if (cardNumber == null or cardNumber.trim().length() < 13) {
       result.put("success", false)
@@ -46,6 +50,7 @@ class PaymentGatewayPlugin implements IGosuPlugin {
   }
 
   public function generateInstallmentSchedule(totalPremium : BigDecimal, numberOfInstallments : int) : List<Map<String, Object>> {
+    print("[GW-LOG] → PaymentGatewayPlugin.generateInstallmentSchedule")
     var schedule = new ArrayList<Map<String, Object>>()
     if (totalPremium == null or totalPremium.compareTo(BigDecimal.ZERO) <= 0 or numberOfInstallments <= 0) {
       return schedule

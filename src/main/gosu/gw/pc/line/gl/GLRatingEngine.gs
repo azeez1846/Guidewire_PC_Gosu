@@ -7,6 +7,7 @@ import java.math.RoundingMode
 class GLRatingEngine {
 
   public static function rateGeneralLiability(period : PolicyPeriod, exposureBasisAmount : BigDecimal, baseRatePer1000 : BigDecimal, isClaimsMade : boolean) : BigDecimal {
+    print("[GW-LOG] → GLRatingEngine.rateGeneralLiability")
     if (period == null or exposureBasisAmount == null) return BigDecimal.ZERO
 
     var rate = baseRatePer1000 != null ? baseRatePer1000 : new BigDecimal("4.50") // $4.50 per $1,000 exposure

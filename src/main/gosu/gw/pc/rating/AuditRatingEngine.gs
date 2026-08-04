@@ -10,6 +10,7 @@ import java.time.LocalDate
 class AuditRatingEngine {
 
   public static function calculateAuditPremiumAdjustment(auditInfo : AuditInformation, period : PolicyPeriod) : BigDecimal {
+    print("[GW-LOG] → AuditRatingEngine.calculateAuditPremiumAdjustment")
     if (auditInfo == null or period == null) return BigDecimal.ZERO
 
     var estimated = auditInfo.EstimatedExposure
@@ -29,6 +30,7 @@ class AuditRatingEngine {
   }
 
   public static function createAuditTransaction(auditInfo : AuditInformation, period : PolicyPeriod) : Transaction {
+    print("[GW-LOG] → AuditRatingEngine.createAuditTransaction")
     if (auditInfo == null or period == null) return null
 
     var adjustment = calculateAuditPremiumAdjustment(auditInfo, period)

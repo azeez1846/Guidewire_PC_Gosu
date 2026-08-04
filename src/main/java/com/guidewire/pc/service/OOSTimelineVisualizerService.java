@@ -5,6 +5,7 @@ import com.guidewire.pc.model.PolicyPeriod;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * Out-of-Sequence (OOS) Endorsement Timeline Slice Visualizer Service.
@@ -13,13 +14,16 @@ public class OOSTimelineVisualizerService {
     private static final Logger LOGGER = Logger.getLogger(OOSTimelineVisualizerService.class.getName());
     private static final OOSTimelineVisualizerService instance = new OOSTimelineVisualizerService();
 
-    private OOSTimelineVisualizerService() {}
+    private OOSTimelineVisualizerService() {
+        LOGGER.log(Level.FINE, "→ OOSTimelineVisualizerService.OOSTimelineVisualizerService");}
 
     public static OOSTimelineVisualizerService getInstance() {
+        LOGGER.log(Level.FINE, "→ OOSTimelineVisualizerService.getInstance");
         return instance;
     }
 
     public Map<String, Object> generateTimelineSlices(String jobNumber) {
+        LOGGER.log(Level.FINE, "→ OOSTimelineVisualizerService.generateTimelineSlices");
         PolicyPeriod period = DataStoreService.getInstance().findSubmission(jobNumber);
         if (period == null) {
             period = DataStoreService.getInstance().findSubmission("S0001001");

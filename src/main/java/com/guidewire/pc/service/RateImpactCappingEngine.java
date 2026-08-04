@@ -11,13 +11,16 @@ public class RateImpactCappingEngine {
     private static final Logger LOGGER = Logger.getLogger(RateImpactCappingEngine.class.getName());
     private static final RateImpactCappingEngine instance = new RateImpactCappingEngine();
 
-    private RateImpactCappingEngine() {}
+    private RateImpactCappingEngine() {
+        LOGGER.log(Level.FINE, "→ RateImpactCappingEngine.RateImpactCappingEngine");}
 
     public static RateImpactCappingEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ RateImpactCappingEngine.getInstance");
         return instance;
     }
 
     public RateCapResult applyRenewalRateCap(PolicyPeriod priorTermPeriod, BigDecimal uncappedProposedPremium, double maxRateCapPercentage) {
+        LOGGER.log(Level.FINE, "→ RateImpactCappingEngine.applyRenewalRateCap");
         RateCapResult result = new RateCapResult();
         if (priorTermPeriod == null || priorTermPeriod.getTotalPremium() == null) return result;
 
@@ -64,28 +67,44 @@ public class RateImpactCappingEngine {
         private BigDecimal cappedRenewalPremium = BigDecimal.ZERO;
         private BigDecimal carrierSubsidyAmount = BigDecimal.ZERO;
 
-        public String getPolicyNumber() { return policyNumber; }
-        public void setPolicyNumber(String policyNumber) { this.policyNumber = policyNumber; }
+        public String getPolicyNumber() {
+        LOGGER.log(Level.FINE, "→ RateImpactCappingEngine.getPolicyNumber"); return policyNumber; }
+        public void setPolicyNumber(String policyNumber) {
+        LOGGER.log(Level.FINE, "→ RateImpactCappingEngine.setPolicyNumber"); this.policyNumber = policyNumber; }
 
-        public BigDecimal getPriorTermPremium() { return priorTermPremium; }
-        public void setPriorTermPremium(BigDecimal priorTermPremium) { this.priorTermPremium = priorTermPremium; }
+        public BigDecimal getPriorTermPremium() {
+        LOGGER.log(Level.FINE, "→ RateImpactCappingEngine.getPriorTermPremium"); return priorTermPremium; }
+        public void setPriorTermPremium(BigDecimal priorTermPremium) {
+        LOGGER.log(Level.FINE, "→ RateImpactCappingEngine.setPriorTermPremium"); this.priorTermPremium = priorTermPremium; }
 
-        public BigDecimal getUncappedProposedPremium() { return uncappedProposedPremium; }
-        public void setUncappedProposedPremium(BigDecimal uncappedProposedPremium) { this.uncappedProposedPremium = uncappedProposedPremium; }
+        public BigDecimal getUncappedProposedPremium() {
+        LOGGER.log(Level.FINE, "→ RateImpactCappingEngine.getUncappedProposedPremium"); return uncappedProposedPremium; }
+        public void setUncappedProposedPremium(BigDecimal uncappedProposedPremium) {
+        LOGGER.log(Level.FINE, "→ RateImpactCappingEngine.setUncappedProposedPremium"); this.uncappedProposedPremium = uncappedProposedPremium; }
 
-        public double getMaxRateCapPercentage() { return maxRateCapPercentage; }
-        public void setMaxRateCapPercentage(double maxRateCapPercentage) { this.maxRateCapPercentage = maxRateCapPercentage; }
+        public double getMaxRateCapPercentage() {
+        LOGGER.log(Level.FINE, "→ RateImpactCappingEngine.getMaxRateCapPercentage"); return maxRateCapPercentage; }
+        public void setMaxRateCapPercentage(double maxRateCapPercentage) {
+        LOGGER.log(Level.FINE, "→ RateImpactCappingEngine.setMaxRateCapPercentage"); this.maxRateCapPercentage = maxRateCapPercentage; }
 
-        public double getUncappedIncreasePercentage() { return uncappedIncreasePercentage; }
-        public void setUncappedIncreasePercentage(double uncappedIncreasePercentage) { this.uncappedIncreasePercentage = uncappedIncreasePercentage; }
+        public double getUncappedIncreasePercentage() {
+        LOGGER.log(Level.FINE, "→ RateImpactCappingEngine.getUncappedIncreasePercentage"); return uncappedIncreasePercentage; }
+        public void setUncappedIncreasePercentage(double uncappedIncreasePercentage) {
+        LOGGER.log(Level.FINE, "→ RateImpactCappingEngine.setUncappedIncreasePercentage"); this.uncappedIncreasePercentage = uncappedIncreasePercentage; }
 
-        public boolean isRateCapApplied() { return rateCapApplied; }
-        public void setRateCapApplied(boolean rateCapApplied) { this.rateCapApplied = rateCapApplied; }
+        public boolean isRateCapApplied() {
+        LOGGER.log(Level.FINE, "→ RateImpactCappingEngine.isRateCapApplied"); return rateCapApplied; }
+        public void setRateCapApplied(boolean rateCapApplied) {
+        LOGGER.log(Level.FINE, "→ RateImpactCappingEngine.setRateCapApplied"); this.rateCapApplied = rateCapApplied; }
 
-        public BigDecimal getCappedRenewalPremium() { return cappedRenewalPremium; }
-        public void setCappedRenewalPremium(BigDecimal cappedRenewalPremium) { this.cappedRenewalPremium = cappedRenewalPremium; }
+        public BigDecimal getCappedRenewalPremium() {
+        LOGGER.log(Level.FINE, "→ RateImpactCappingEngine.getCappedRenewalPremium"); return cappedRenewalPremium; }
+        public void setCappedRenewalPremium(BigDecimal cappedRenewalPremium) {
+        LOGGER.log(Level.FINE, "→ RateImpactCappingEngine.setCappedRenewalPremium"); this.cappedRenewalPremium = cappedRenewalPremium; }
 
-        public BigDecimal getCarrierSubsidyAmount() { return carrierSubsidyAmount; }
-        public void setCarrierSubsidyAmount(BigDecimal carrierSubsidyAmount) { this.carrierSubsidyAmount = carrierSubsidyAmount; }
+        public BigDecimal getCarrierSubsidyAmount() {
+        LOGGER.log(Level.FINE, "→ RateImpactCappingEngine.getCarrierSubsidyAmount"); return carrierSubsidyAmount; }
+        public void setCarrierSubsidyAmount(BigDecimal carrierSubsidyAmount) {
+        LOGGER.log(Level.FINE, "→ RateImpactCappingEngine.setCarrierSubsidyAmount"); this.carrierSubsidyAmount = carrierSubsidyAmount; }
     }
 }

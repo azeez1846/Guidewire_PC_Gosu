@@ -23,8 +23,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class GuidewirePolicyCenterServlet extends HttpServlet {
+    private static final Logger LOGGER = Logger.getLogger(GuidewirePolicyCenterServlet.class.getName());
     private final PCFParser pcfParser;
     private final DataStoreService dataStore;
 
@@ -36,15 +39,18 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        LOGGER.log(Level.FINE, "→ GuidewirePolicyCenterServlet.doGet");
         processRequest(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        LOGGER.log(Level.FINE, "→ GuidewirePolicyCenterServlet.doPost");
         processRequest(req, resp);
     }
 
     private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        LOGGER.log(Level.FINE, "→ GuidewirePolicyCenterServlet.processRequest");
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         SecurityUtils.addSecurityHeaders(resp);
@@ -192,6 +198,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
     // HTML RENDERERS FOR JETTY SERVLET
 
     private String getHeaderCSS() {
+        LOGGER.log(Level.FINE, "→ GuidewirePolicyCenterServlet.getHeaderCSS");
         return "<style>" +
                 ":root { --gw-navy: #1C2B39; --gw-blue: #0A66C2; --gw-header: #1E2D3D; --gw-bg: #F4F6F9; --gw-sidebar: #273849; --gw-accent: #0073B1; }" +
                 "* { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }" +
@@ -252,6 +259,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
     }
 
     private String renderLoginPage(boolean hasError) {
+        LOGGER.log(Level.FINE, "→ GuidewirePolicyCenterServlet.renderLoginPage");
         return "<!DOCTYPE html><html><head><title>Login - Guidewire PolicyCenter (Jetty)</title>" + getHeaderCSS() + "</head>" +
                 "<body style='justify-content: center; align-items: center; background: #1C2B39;'>" +
                 "<div style='width: 380px; background: white; border-radius: 8px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center;'>" +
@@ -271,6 +279,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
     }
 
     private String renderHeader(String activeTab) {
+        LOGGER.log(Level.FINE, "→ GuidewirePolicyCenterServlet.renderHeader");
         return "<div class='gw-header'>" +
                 "<div class='gw-brand'><span class='gw-brand-logo'>GW</span> Guidewire PolicyCenter <span style='font-size:11px; font-weight:normal; opacity:0.8;'>v10.0 (Jetty)</span></div>" +
                 "<div class='gw-search-box'>" +
@@ -300,6 +309,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
     }
 
     private String renderSearchPage(String rawQuery, Map<String, String> params) {
+        LOGGER.log(Level.FINE, "→ GuidewirePolicyCenterServlet.renderSearchPage");
         String query = rawQuery != null ? rawQuery.trim() : "";
         String entityFilter = params.getOrDefault("entity", "all");
 
@@ -414,6 +424,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
     }
 
     private String renderDesktopPage(String tab, String searchQuery) {
+        LOGGER.log(Level.FINE, "→ GuidewirePolicyCenterServlet.renderDesktopPage");
         StringBuilder sb = new StringBuilder();
         sb.append("<!DOCTYPE html><html><head><title>Desktop - Guidewire PolicyCenter (Jetty)</title>").append(getHeaderCSS()).append("</head><body>");
         sb.append(renderHeader("desktop"));
@@ -528,6 +539,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
     }
 
     private String renderNewAccountPage(Map<String, String> params, HttpServletResponse resp) throws IOException {
+        LOGGER.log(Level.FINE, "→ GuidewirePolicyCenterServlet.renderNewAccountPage");
         if (params.containsKey("action") && "create".equals(params.get("action"))) {
             Account acc = new Account();
             acc.setAccountHolderName(params.get("accountHolderName"));
@@ -653,6 +665,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
     }
 
     private String renderAccountDetailPage(String accNum) {
+        LOGGER.log(Level.FINE, "→ GuidewirePolicyCenterServlet.renderAccountDetailPage");
         Account acc = dataStore.findAccount(accNum);
         if (acc == null) return "Account Not Found";
 
@@ -715,6 +728,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
     }
 
     private String renderNewSubmissionPage(Map<String, String> params, HttpServletResponse resp) throws IOException {
+        LOGGER.log(Level.FINE, "→ GuidewirePolicyCenterServlet.renderNewSubmissionPage");
         if (params.containsKey("action") && "create".equals(params.get("action"))) {
             String accNum = params.get("accNum");
             Account acc = dataStore.findAccount(accNum);
@@ -780,12 +794,14 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
     }
 
     private String handleCopySubmission(String jobNum, HttpServletResponse resp) throws IOException {
+        LOGGER.log(Level.FINE, "→ GuidewirePolicyCenterServlet.handleCopySubmission");
         PolicyPeriod copied = com.guidewire.pc.service.PolicyLifecycleService.getInstance().copySubmission(jobNum);
         resp.sendRedirect("/?page=submission-wizard&jobNum=" + copied.getJobNumber() + "&step=step1");
         return null;
     }
 
     private String renderSubmissionWizard(String jobNum, String step, Map<String, String> params) {
+        LOGGER.log(Level.FINE, "→ GuidewirePolicyCenterServlet.renderSubmissionWizard");
         PolicyPeriod sub = dataStore.findSubmission(jobNum);
         if (sub == null) return "Submission Not Found";
 
@@ -973,6 +989,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
     }
 
     private String renderPolicyChangePage(String origJobNum, Map<String, String> params, HttpServletResponse resp) throws IOException {
+        LOGGER.log(Level.FINE, "→ GuidewirePolicyCenterServlet.renderPolicyChangePage");
         PolicyPeriod orig = dataStore.findSubmission(origJobNum);
         if (orig == null) return "Original Policy Period Not Found";
 
@@ -1027,6 +1044,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
     }
 
     private String renderCancellationPage(String origJobNum, Map<String, String> params, HttpServletResponse resp) throws IOException {
+        LOGGER.log(Level.FINE, "→ GuidewirePolicyCenterServlet.renderCancellationPage");
         PolicyPeriod orig = dataStore.findSubmission(origJobNum);
         if (orig == null) return "Original Policy Period Not Found";
 
@@ -1080,6 +1098,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
     }
 
     private String renderUWIssuesPage() {
+        LOGGER.log(Level.FINE, "→ GuidewirePolicyCenterServlet.renderUWIssuesPage");
         StringBuilder sb = new StringBuilder();
         sb.append("<!DOCTYPE html><html><head><title>Underwriting Issues Dashboard - Guidewire PolicyCenter</title>").append(getHeaderCSS()).append("</head><body>");
         sb.append(renderHeader("desktop"));
@@ -1121,6 +1140,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
     }
 
     private String renderInlandMarinePage() {
+        LOGGER.log(Level.FINE, "→ GuidewirePolicyCenterServlet.renderInlandMarinePage");
         StringBuilder sb = new StringBuilder();
         sb.append("<!DOCTYPE html><html><head><title>Inland Marine Line - Guidewire PolicyCenter</title>").append(getHeaderCSS()).append("</head><body>");
         sb.append(renderHeader("desktop"));
@@ -1143,6 +1163,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
     }
 
     private String renderFraudDashboardPage() {
+        LOGGER.log(Level.FINE, "→ GuidewirePolicyCenterServlet.renderFraudDashboardPage");
         StringBuilder sb = new StringBuilder();
         sb.append("<!DOCTYPE html><html><head><title>SIU Fraud Risk Dashboard - Guidewire PolicyCenter</title>").append(getHeaderCSS()).append("</head><body>");
         sb.append(renderHeader("desktop"));
@@ -1171,6 +1192,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
     }
 
     private String renderReinsuranceLedgerPage() {
+        LOGGER.log(Level.FINE, "→ GuidewirePolicyCenterServlet.renderReinsuranceLedgerPage");
         StringBuilder sb = new StringBuilder();
         sb.append("<!DOCTYPE html><html><head><title>Reinsurance Ledger & Treaties - Guidewire PolicyCenter</title>").append(getHeaderCSS()).append("</head><body>");
         sb.append(renderHeader("desktop"));
@@ -1198,6 +1220,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
     }
 
     private String renderFeaturesPage() {
+        LOGGER.log(Level.FINE, "→ GuidewirePolicyCenterServlet.renderFeaturesPage");
         StringBuilder sb = new StringBuilder();
         sb.append("<!DOCTYPE html><html><head><title>Enterprise Features Suite (24) - Guidewire PolicyCenter</title>")
           .append(getHeaderCSS())
@@ -1337,4 +1360,3 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
         return sb.toString();
     }
 }
-

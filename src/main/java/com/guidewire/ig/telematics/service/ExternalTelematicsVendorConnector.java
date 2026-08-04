@@ -7,12 +7,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 @Service
 public class ExternalTelematicsVendorConnector {
     private static final Logger LOGGER = Logger.getLogger(ExternalTelematicsVendorConnector.class.getName());
 
     public TelematicsResponse performTelematicsIngestion(TelematicsLookupRequest req) {
+        LOGGER.log(Level.FINE, "→ ExternalTelematicsVendorConnector.performTelematicsIngestion");
         String fleetId = req.getFleetId() != null ? req.getFleetId() : "FLT-CA-90812";
         int vehicleCount = req.getActiveVehiclesCount() != null ? req.getActiveVehiclesCount() : 15;
 

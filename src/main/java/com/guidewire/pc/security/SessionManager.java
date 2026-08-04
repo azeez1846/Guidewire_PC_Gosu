@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class SessionManager {
     private static final Logger LOGGER = Logger.getLogger(SessionManager.class.getName());
@@ -20,6 +21,7 @@ public class SessionManager {
         private volatile long lastAccessedTime;
 
         public UserSession(String sessionId, String username) {
+        LOGGER.log(Level.FINE, "→ SessionManager.UserSession");
             this.sessionId = sessionId;
             this.username = username;
             this.creationTime = System.currentTimeMillis();
@@ -27,33 +29,41 @@ public class SessionManager {
         }
 
         public String getSessionId() {
+        LOGGER.log(Level.FINE, "→ SessionManager.getSessionId");
             return sessionId;
         }
 
         public String getUsername() {
+        LOGGER.log(Level.FINE, "→ SessionManager.getUsername");
             return username;
         }
 
         public long getCreationTime() {
+        LOGGER.log(Level.FINE, "→ SessionManager.getCreationTime");
             return creationTime;
         }
 
         public long getLastAccessedTime() {
+        LOGGER.log(Level.FINE, "→ SessionManager.getLastAccessedTime");
             return lastAccessedTime;
         }
 
         public void touch() {
+        LOGGER.log(Level.FINE, "→ SessionManager.touch");
             this.lastAccessedTime = System.currentTimeMillis();
         }
 
         public boolean isExpired(long timeoutMs) {
+        LOGGER.log(Level.FINE, "→ SessionManager.isExpired");
             return (System.currentTimeMillis() - lastAccessedTime) > timeoutMs;
         }
     }
 
-    private SessionManager() {}
+    private SessionManager() {
+        LOGGER.log(Level.FINE, "→ SessionManager.SessionManager");}
 
     public static synchronized SessionManager getInstance() {
+        LOGGER.log(Level.FINE, "→ SessionManager.getInstance");
         if (instance == null) {
             instance = new SessionManager();
         }
@@ -61,6 +71,7 @@ public class SessionManager {
     }
 
     public String createSession(String username) {
+        LOGGER.log(Level.FINE, "→ SessionManager.createSession");
         if (username == null || username.trim().isEmpty()) {
             throw new IllegalArgumentException("Username cannot be empty");
         }
@@ -73,6 +84,7 @@ public class SessionManager {
     }
 
     public UserSession validateSession(String sessionId) {
+        LOGGER.log(Level.FINE, "→ SessionManager.validateSession");
         if (sessionId == null || sessionId.trim().isEmpty()) {
             return null;
         }
@@ -95,6 +107,7 @@ public class SessionManager {
     }
 
     public boolean invalidateSession(String sessionId) {
+        LOGGER.log(Level.FINE, "→ SessionManager.invalidateSession");
         if (sessionId == null) return false;
         UserSession removed = activeSessions.remove(sessionId.trim());
         if (removed != null) {
@@ -105,19 +118,23 @@ public class SessionManager {
     }
 
     public void cleanExpiredSessions() {
+        LOGGER.log(Level.FINE, "→ SessionManager.cleanExpiredSessions");
         activeSessions.entrySet().removeIf(entry -> entry.getValue().isExpired(sessionTimeoutMs));
     }
 
     public int getActiveSessionCount() {
+        LOGGER.log(Level.FINE, "→ SessionManager.getActiveSessionCount");
         cleanExpiredSessions();
         return activeSessions.size();
     }
 
     public void setSessionTimeoutMs(long timeoutMs) {
+        LOGGER.log(Level.FINE, "→ SessionManager.setSessionTimeoutMs");
         this.sessionTimeoutMs = timeoutMs;
     }
 
     public void clearAllSessions() {
+        LOGGER.log(Level.FINE, "→ SessionManager.clearAllSessions");
         activeSessions.clear();
     }
 }

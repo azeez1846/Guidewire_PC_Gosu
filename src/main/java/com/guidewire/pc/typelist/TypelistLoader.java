@@ -9,20 +9,27 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class TypelistLoader {
+    private static final Logger LOGGER = Logger.getLogger(TypelistLoader.class.getName());
+
     private static final TypelistLoader INSTANCE = new TypelistLoader();
     private final Map<String, Map<String, TypeKey>> typelists = new ConcurrentHashMap<>();
 
     private TypelistLoader() {
+        LOGGER.log(Level.FINE, "→ TypelistLoader.TypelistLoader");
         loadTypelists();
     }
 
     public static TypelistLoader getInstance() {
+        LOGGER.log(Level.FINE, "→ TypelistLoader.getInstance");
         return INSTANCE;
     }
 
     public final synchronized void loadTypelists() {
+        LOGGER.log(Level.FINE, "→ TypelistLoader.loadTypelists");
         typelists.clear();
         File dir = new File("config/metadata/typelist");
         if (!dir.exists() || !dir.isDirectory()) {
@@ -41,6 +48,7 @@ public class TypelistLoader {
     }
 
     private void parseTypelistFile(File file) {
+        LOGGER.log(Level.FINE, "→ TypelistLoader.parseTypelistFile");
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -74,6 +82,7 @@ public class TypelistLoader {
     }
 
     public TypeKey getTypeKey(String typelistName, String code) {
+        LOGGER.log(Level.FINE, "→ TypelistLoader.getTypeKey");
         if (typelistName == null || code == null) return null;
         Map<String, TypeKey> map = typelists.get(typelistName);
         if (map != null) {
@@ -85,6 +94,7 @@ public class TypelistLoader {
     }
 
     public List<TypeKey> getTypeKeys(String typelistName) {
+        LOGGER.log(Level.FINE, "→ TypelistLoader.getTypeKeys");
         Map<String, TypeKey> map = typelists.get(typelistName);
         if (map == null) return Collections.emptyList();
         return new ArrayList<>(map.values());

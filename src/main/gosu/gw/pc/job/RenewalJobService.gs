@@ -9,6 +9,7 @@ import java.time.LocalDate
 class RenewalJobService {
 
   public static function startRenewal(period : PolicyPeriod) : PolicyPeriod {
+    print("[GW-LOG] → RenewalJobService.startRenewal")
     if (period == null) return null
 
     var renewal = new PolicyPeriod()
@@ -44,6 +45,7 @@ class RenewalJobService {
   }
 
   public static function calculateRenewalQuote(renewal : PolicyPeriod, priorPeriod : PolicyPeriod) : PolicyPeriod {
+    print("[GW-LOG] → RenewalJobService.calculateRenewalQuote")
     if (renewal == null) return null
 
     // Base rate calculation for renewal (5% inflation / rate adjustment)
@@ -73,6 +75,7 @@ class RenewalJobService {
   }
 
   public static function bindRenewal(renewal : PolicyPeriod) : PolicyPeriod {
+    print("[GW-LOG] → RenewalJobService.bindRenewal")
     if (renewal == null) return null
     renewal.setStatus(PCConstants.STATUS_BOUND)
     return renewal

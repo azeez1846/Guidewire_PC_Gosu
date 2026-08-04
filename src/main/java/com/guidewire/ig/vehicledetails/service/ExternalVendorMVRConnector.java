@@ -25,6 +25,7 @@ public class ExternalVendorMVRConnector {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public VehicleDetailsResponse performOutboundVendorLookup(VehicleLookupRequest req) {
+        LOGGER.log(Level.FINE, "→ ExternalVendorMVRConnector.performOutboundVendorLookup");
         String vin = req.getVin() != null ? req.getVin().trim().toUpperCase() : "1FA6P8CF0R5100001";
         String driverLicense = req.getDriverLicenseNumber() != null ? req.getDriverLicenseNumber().trim().toUpperCase() : "DL-CA-9948123";
         String state = req.getDriverState() != null ? req.getDriverState() : "CA";
@@ -97,6 +98,7 @@ public class ExternalVendorMVRConnector {
     }
 
     private VehicleSpecs fetchLiveNhtsaVinDetails(String vin, String fallbackMake, String fallbackModel, Integer fallbackYear) {
+        LOGGER.log(Level.FINE, "→ ExternalVendorMVRConnector.fetchLiveNhtsaVinDetails");
         VehicleSpecs specs = new VehicleSpecs();
         specs.setVin(vin);
         specs.setAntiTheftDeviceType("PASSIVE_GPS_TRACKER");

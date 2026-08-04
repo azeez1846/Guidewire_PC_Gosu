@@ -9,6 +9,7 @@ import java.security.MessageDigest
 class PolicyDocumentPluginImpl implements IPolicyDocumentPlugin {
 
   override public function generatePolicyBinder(period : PolicyPeriod) : Map<String, Object> {
+    print("[GW-LOG] → PolicyDocumentPluginImpl.generatePolicyBinder")
     var sb = new StringBuilder()
     sb.append("====================================================\n")
     sb.append("         GUIDEWIRE POLICYCENTER BINDER SUMMARY      \n")
@@ -25,6 +26,7 @@ class PolicyDocumentPluginImpl implements IPolicyDocumentPlugin {
   }
 
   override public function generateDecSheet(period : PolicyPeriod) : Map<String, Object> {
+    print("[GW-LOG] → PolicyDocumentPluginImpl.generateDecSheet")
     var sb = new StringBuilder()
     sb.append("====================================================\n")
     sb.append("        POLICY DECLARATION PAGE (DEC SHEET)        \n")
@@ -44,6 +46,7 @@ class PolicyDocumentPluginImpl implements IPolicyDocumentPlugin {
   }
 
   override public function generateCertificateOfInsurance(period : PolicyPeriod, certificateHolder : String) : Map<String, Object> {
+    print("[GW-LOG] → PolicyDocumentPluginImpl.generateCertificateOfInsurance")
     var sb = new StringBuilder()
     sb.append("====================================================\n")
     sb.append("  ACORD 25 CERTIFICATE OF LIABILITY INSURANCE       \n")
@@ -61,6 +64,7 @@ class PolicyDocumentPluginImpl implements IPolicyDocumentPlugin {
   }
 
   private function createDocumentResponse(filename : String, mimeType : String, content : String) : Map<String, Object> {
+    print("[GW-LOG] → PolicyDocumentPluginImpl.createDocumentResponse")
     var map = new HashMap<String, Object>()
     var bytes = content.getBytes(StandardCharsets.UTF_8)
     

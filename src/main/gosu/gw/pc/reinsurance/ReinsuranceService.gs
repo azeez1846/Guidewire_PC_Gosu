@@ -9,6 +9,7 @@ import java.math.RoundingMode
 class ReinsuranceService {
 
   public static function calculateCession(period : PolicyPeriod, agreement : RIAgreement, grossLimit : BigDecimal) : RICession {
+    print("[GW-LOG] → ReinsuranceService.calculateCession")
     if (period == null or agreement == null) return null
 
     var cession = new RICession()

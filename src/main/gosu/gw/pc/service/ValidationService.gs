@@ -10,10 +10,12 @@ import java.util.ArrayList
 class ValidationService {
 
   public static function validateSubmission(sub : PolicyPeriod) : List<String> {
+    print("[GW-LOG] → ValidationService.validateSubmission")
     return validateAtLevel(sub, ValidationLevel.Default)
   }
 
   public static function validateAtLevel(sub : PolicyPeriod, level : ValidationLevel) : List<String> {
+    print("[GW-LOG] → ValidationService.validateAtLevel")
     var errors = new ArrayList<String>()
 
     if (sub == null) {

@@ -8,6 +8,7 @@ import java.util.List
 class WCValidationRules {
 
   public static function validateWorkersCompLine(period : PolicyPeriod, estimatedPayroll : BigDecimal, expMod : BigDecimal) : List<String> {
+    print("[GW-LOG] → WCValidationRules.validateWorkersCompLine")
     var errors = new ArrayList<String>()
     if (period == null) return errors
 

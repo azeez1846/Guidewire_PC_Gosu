@@ -6,15 +6,21 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class GLRatingService {
+    private static final Logger LOGGER = Logger.getLogger(GLRatingService.class.getName());
+
 
     public static BigDecimal rateGeneralLiability(PolicyPeriod period, BigDecimal exposureBasisAmount, BigDecimal baseRatePer1000, boolean isClaimsMade) {
+        LOGGER.log(Level.FINE, "→ GLRatingService.rateGeneralLiability");
         return rateGeneralLiabilityExtended(period, exposureBasisAmount, baseRatePer1000, isClaimsMade, false, 0);
     }
 
     public static BigDecimal rateGeneralLiabilityExtended(PolicyPeriod period, BigDecimal exposureBasisAmount, BigDecimal baseRatePer1000,
                                                           boolean isClaimsMade, boolean hasCyberExtension, int additionalInsuredCount) {
+        LOGGER.log(Level.FINE, "→ GLRatingService.rateGeneralLiabilityExtended");
         if (period == null || exposureBasisAmount == null) return BigDecimal.ZERO;
 
         BigDecimal rate = baseRatePer1000 != null ? baseRatePer1000 : new BigDecimal("4.50");
@@ -39,6 +45,7 @@ public class GLRatingService {
     }
 
     public static List<String> validateGeneralLiabilityLine(PolicyPeriod period, BigDecimal exposureAmount, String coverageForm) {
+        LOGGER.log(Level.FINE, "→ GLRatingService.validateGeneralLiabilityLine");
         List<String> errors = new ArrayList<>();
         if (period == null) return errors;
 

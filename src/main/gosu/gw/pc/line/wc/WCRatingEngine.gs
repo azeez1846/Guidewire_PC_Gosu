@@ -7,6 +7,7 @@ import java.math.RoundingMode
 class WCRatingEngine {
 
   public static function rateWorkersComp(period : PolicyPeriod, estimatedPayroll : BigDecimal, expMod : BigDecimal, classRate : BigDecimal) : BigDecimal {
+    print("[GW-LOG] → WCRatingEngine.rateWorkersComp")
     if (period == null) return BigDecimal.ZERO
 
     var payroll = estimatedPayroll != null ? estimatedPayroll : new BigDecimal("100000.00")

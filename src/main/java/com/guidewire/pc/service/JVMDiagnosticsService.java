@@ -9,18 +9,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class JVMDiagnosticsService {
     private static final Logger LOGGER = Logger.getLogger(JVMDiagnosticsService.class.getName());
     private static final JVMDiagnosticsService instance = new JVMDiagnosticsService();
 
-    private JVMDiagnosticsService() {}
+    private JVMDiagnosticsService() {
+        LOGGER.log(Level.FINE, "→ JVMDiagnosticsService.JVMDiagnosticsService");}
 
     public static JVMDiagnosticsService getInstance() {
+        LOGGER.log(Level.FINE, "→ JVMDiagnosticsService.getInstance");
         return instance;
     }
 
     public Map<String, Object> getJVMDiagnostics() {
+        LOGGER.log(Level.FINE, "→ JVMDiagnosticsService.getJVMDiagnostics");
         Map<String, Object> diag = new HashMap<>();
 
         // 1. Runtime System Properties

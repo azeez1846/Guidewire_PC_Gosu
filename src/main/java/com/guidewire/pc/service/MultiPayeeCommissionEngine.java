@@ -13,13 +13,16 @@ public class MultiPayeeCommissionEngine {
     private static final Logger LOGGER = Logger.getLogger(MultiPayeeCommissionEngine.class.getName());
     private static final MultiPayeeCommissionEngine instance = new MultiPayeeCommissionEngine();
 
-    private MultiPayeeCommissionEngine() {}
+    private MultiPayeeCommissionEngine() {
+        LOGGER.log(Level.FINE, "→ MultiPayeeCommissionEngine.MultiPayeeCommissionEngine");}
 
     public static MultiPayeeCommissionEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ MultiPayeeCommissionEngine.getInstance");
         return instance;
     }
 
     public BillingCommissionResult calculateMultiPayeeCommission(PolicyPeriod period, String primaryPayee, double primaryPayeeSplit, String secondaryPayee, BigDecimal annualAgencyVolume) {
+        LOGGER.log(Level.FINE, "→ MultiPayeeCommissionEngine.calculateMultiPayeeCommission");
         BillingCommissionResult result = new BillingCommissionResult();
         if (period == null || period.getTotalPremium() == null) return result;
 
@@ -66,14 +69,18 @@ public class MultiPayeeCommissionEngine {
         private final BigDecimal splitAmount;
 
         public PayeeSplit(String payeeName, double splitPercentage, BigDecimal splitAmount) {
+        LOGGER.log(Level.FINE, "→ MultiPayeeCommissionEngine.PayeeSplit");
             this.payeeName = payeeName;
             this.splitPercentage = splitPercentage;
             this.splitAmount = splitAmount;
         }
 
-        public String getPayeeName() { return payeeName; }
-        public double getSplitPercentage() { return splitPercentage; }
-        public BigDecimal getSplitAmount() { return splitAmount; }
+        public String getPayeeName() {
+        LOGGER.log(Level.FINE, "→ MultiPayeeCommissionEngine.getPayeeName"); return payeeName; }
+        public double getSplitPercentage() {
+        LOGGER.log(Level.FINE, "→ MultiPayeeCommissionEngine.getSplitPercentage"); return splitPercentage; }
+        public BigDecimal getSplitAmount() {
+        LOGGER.log(Level.FINE, "→ MultiPayeeCommissionEngine.getSplitAmount"); return splitAmount; }
     }
 
     public static class BillingCommissionResult {
@@ -83,19 +90,29 @@ public class MultiPayeeCommissionEngine {
         private double commissionRate;
         private BigDecimal commissionAmount = BigDecimal.ZERO;
 
-        public String getPolicyNumber() { return policyNumber; }
-        public void setPolicyNumber(String policyNumber) { this.policyNumber = policyNumber; }
+        public String getPolicyNumber() {
+        LOGGER.log(Level.FINE, "→ MultiPayeeCommissionEngine.getPolicyNumber"); return policyNumber; }
+        public void setPolicyNumber(String policyNumber) {
+        LOGGER.log(Level.FINE, "→ MultiPayeeCommissionEngine.setPolicyNumber"); this.policyNumber = policyNumber; }
 
-        public BigDecimal getTotalPremium() { return totalPremium; }
-        public void setTotalPremium(BigDecimal totalPremium) { this.totalPremium = totalPremium; }
+        public BigDecimal getTotalPremium() {
+        LOGGER.log(Level.FINE, "→ MultiPayeeCommissionEngine.getTotalPremium"); return totalPremium; }
+        public void setTotalPremium(BigDecimal totalPremium) {
+        LOGGER.log(Level.FINE, "→ MultiPayeeCommissionEngine.setTotalPremium"); this.totalPremium = totalPremium; }
 
-        public List<PayeeSplit> getPayeeSplits() { return payeeSplits; }
-        public void setPayeeSplits(List<PayeeSplit> payeeSplits) { this.payeeSplits = payeeSplits; }
+        public List<PayeeSplit> getPayeeSplits() {
+        LOGGER.log(Level.FINE, "→ MultiPayeeCommissionEngine.getPayeeSplits"); return payeeSplits; }
+        public void setPayeeSplits(List<PayeeSplit> payeeSplits) {
+        LOGGER.log(Level.FINE, "→ MultiPayeeCommissionEngine.setPayeeSplits"); this.payeeSplits = payeeSplits; }
 
-        public double getCommissionRate() { return commissionRate; }
-        public void setCommissionRate(double commissionRate) { this.commissionRate = commissionRate; }
+        public double getCommissionRate() {
+        LOGGER.log(Level.FINE, "→ MultiPayeeCommissionEngine.getCommissionRate"); return commissionRate; }
+        public void setCommissionRate(double commissionRate) {
+        LOGGER.log(Level.FINE, "→ MultiPayeeCommissionEngine.setCommissionRate"); this.commissionRate = commissionRate; }
 
-        public BigDecimal getCommissionAmount() { return commissionAmount; }
-        public void setCommissionAmount(BigDecimal commissionAmount) { this.commissionAmount = commissionAmount; }
+        public BigDecimal getCommissionAmount() {
+        LOGGER.log(Level.FINE, "→ MultiPayeeCommissionEngine.getCommissionAmount"); return commissionAmount; }
+        public void setCommissionAmount(BigDecimal commissionAmount) {
+        LOGGER.log(Level.FINE, "→ MultiPayeeCommissionEngine.setCommissionAmount"); this.commissionAmount = commissionAmount; }
     }
 }

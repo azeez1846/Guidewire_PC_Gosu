@@ -23,18 +23,25 @@ public class BillingCenterService {
         private String status; // Pending, Paid, PastDue
 
         public PaymentInstallment(int installmentNumber, String dueDate, BigDecimal amount, String status) {
+        LOGGER.log(Level.FINE, "→ BillingCenterService.PaymentInstallment");
             this.installmentNumber = installmentNumber;
             this.dueDate = dueDate;
             this.amount = amount;
             this.status = status;
         }
 
-        public int getInstallmentNumber() { return installmentNumber; }
-        public String getDueDate() { return dueDate; }
-        public BigDecimal getAmount() { return amount; }
-        public void setAmount(BigDecimal amount) { this.amount = amount; }
-        public String getStatus() { return status; }
-        public void setStatus(String status) { this.status = status; }
+        public int getInstallmentNumber() {
+        LOGGER.log(Level.FINE, "→ BillingCenterService.getInstallmentNumber"); return installmentNumber; }
+        public String getDueDate() {
+        LOGGER.log(Level.FINE, "→ BillingCenterService.getDueDate"); return dueDate; }
+        public BigDecimal getAmount() {
+        LOGGER.log(Level.FINE, "→ BillingCenterService.getAmount"); return amount; }
+        public void setAmount(BigDecimal amount) {
+        LOGGER.log(Level.FINE, "→ BillingCenterService.setAmount"); this.amount = amount; }
+        public String getStatus() {
+        LOGGER.log(Level.FINE, "→ BillingCenterService.getStatus"); return status; }
+        public void setStatus(String status) {
+        LOGGER.log(Level.FINE, "→ BillingCenterService.setStatus"); this.status = status; }
     }
 
     public static class BillingSchedule {
@@ -44,25 +51,33 @@ public class BillingCenterService {
         private final List<PaymentInstallment> installments;
 
         public BillingSchedule(String policyNumber, String planName, BigDecimal totalPremium, List<PaymentInstallment> installments) {
+        LOGGER.log(Level.FINE, "→ BillingCenterService.BillingSchedule");
             this.policyNumber = policyNumber;
             this.planName = planName;
             this.totalPremium = totalPremium;
             this.installments = installments;
         }
 
-        public String getPolicyNumber() { return policyNumber; }
-        public String getPlanName() { return planName; }
-        public BigDecimal getTotalPremium() { return totalPremium; }
-        public List<PaymentInstallment> getInstallments() { return installments; }
+        public String getPolicyNumber() {
+        LOGGER.log(Level.FINE, "→ BillingCenterService.getPolicyNumber"); return policyNumber; }
+        public String getPlanName() {
+        LOGGER.log(Level.FINE, "→ BillingCenterService.getPlanName"); return planName; }
+        public BigDecimal getTotalPremium() {
+        LOGGER.log(Level.FINE, "→ BillingCenterService.getTotalPremium"); return totalPremium; }
+        public List<PaymentInstallment> getInstallments() {
+        LOGGER.log(Level.FINE, "→ BillingCenterService.getInstallments"); return installments; }
     }
 
-    private BillingCenterService() {}
+    private BillingCenterService() {
+        LOGGER.log(Level.FINE, "→ BillingCenterService.BillingCenterService");}
 
     public static BillingCenterService getInstance() {
+        LOGGER.log(Level.FINE, "→ BillingCenterService.getInstance");
         return instance;
     }
 
     public BillingSchedule generateSchedule(PolicyPeriod period, String planName) {
+        LOGGER.log(Level.FINE, "→ BillingCenterService.generateSchedule");
         if (period == null) throw new IllegalArgumentException("Policy period cannot be null");
         BigDecimal totalPrem = period.getTotalPremium() != null ? period.getTotalPremium() : PCConstants.DEFAULT_BASE_PREMIUM;
         String pName = planName != null ? planName : "FourPay";
@@ -100,6 +115,7 @@ public class BillingCenterService {
     }
 
     public boolean applyPayment(BillingSchedule schedule, int installmentNumber, BigDecimal paymentAmount) {
+        LOGGER.log(Level.FINE, "→ BillingCenterService.applyPayment");
         if (schedule == null || paymentAmount == null || paymentAmount.compareTo(BigDecimal.ZERO) <= 0) return false;
         for (PaymentInstallment inst : schedule.getInstallments()) {
             if (inst.getInstallmentNumber() == installmentNumber) {
@@ -113,6 +129,7 @@ public class BillingCenterService {
     }
 
     public boolean applyLateFees(BillingSchedule schedule, int installmentNumber, BigDecimal lateFeeAmount) {
+        LOGGER.log(Level.FINE, "→ BillingCenterService.applyLateFees");
         if (schedule == null || lateFeeAmount == null) return false;
         for (PaymentInstallment inst : schedule.getInstallments()) {
             if (inst.getInstallmentNumber() == installmentNumber && "Pending".equalsIgnoreCase(inst.getStatus())) {
@@ -127,6 +144,7 @@ public class BillingCenterService {
     }
 
     public BigDecimal calculateOutstandingBalance(BillingSchedule schedule) {
+        LOGGER.log(Level.FINE, "→ BillingCenterService.calculateOutstandingBalance");
         if (schedule == null || schedule.getInstallments() == null) return BigDecimal.ZERO;
         BigDecimal balance = BigDecimal.ZERO;
         for (PaymentInstallment inst : schedule.getInstallments()) {
@@ -138,6 +156,7 @@ public class BillingCenterService {
     }
 
     public String generateInvoiceHtml(PolicyPeriod period, BillingSchedule schedule) {
+        LOGGER.log(Level.FINE, "→ BillingCenterService.generateInvoiceHtml");
         StringBuilder sb = new StringBuilder();
         sb.append("<!DOCTYPE html><html><head><style>")
           .append("body { font-family: system-ui, sans-serif; background: #0f172a; color: #f8fafc; padding: 20px; }")

@@ -11,13 +11,16 @@ public class SlidingScaleDividendEngine {
     private static final Logger LOGGER = Logger.getLogger(SlidingScaleDividendEngine.class.getName());
     private static final SlidingScaleDividendEngine instance = new SlidingScaleDividendEngine();
 
-    private SlidingScaleDividendEngine() {}
+    private SlidingScaleDividendEngine() {
+        LOGGER.log(Level.FINE, "→ SlidingScaleDividendEngine.SlidingScaleDividendEngine");}
 
     public static SlidingScaleDividendEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ SlidingScaleDividendEngine.getInstance");
         return instance;
     }
 
     public DividendResult calculatePolicyholderDividend(PolicyPeriod period, BigDecimal annualIncurredLosses) {
+        LOGGER.log(Level.FINE, "→ SlidingScaleDividendEngine.calculatePolicyholderDividend");
         DividendResult result = new DividendResult();
         if (period == null || period.getTotalPremium() == null) return result;
 
@@ -69,28 +72,44 @@ public class SlidingScaleDividendEngine {
         private BigDecimal dividendAmount = BigDecimal.ZERO;
         private BigDecimal netPolicyCost = BigDecimal.ZERO;
 
-        public String getPolicyNumber() { return policyNumber; }
-        public void setPolicyNumber(String policyNumber) { this.policyNumber = policyNumber; }
+        public String getPolicyNumber() {
+        LOGGER.log(Level.FINE, "→ SlidingScaleDividendEngine.getPolicyNumber"); return policyNumber; }
+        public void setPolicyNumber(String policyNumber) {
+        LOGGER.log(Level.FINE, "→ SlidingScaleDividendEngine.setPolicyNumber"); this.policyNumber = policyNumber; }
 
-        public BigDecimal getTotalPremium() { return totalPremium; }
-        public void setTotalPremium(BigDecimal totalPremium) { this.totalPremium = totalPremium; }
+        public BigDecimal getTotalPremium() {
+        LOGGER.log(Level.FINE, "→ SlidingScaleDividendEngine.getTotalPremium"); return totalPremium; }
+        public void setTotalPremium(BigDecimal totalPremium) {
+        LOGGER.log(Level.FINE, "→ SlidingScaleDividendEngine.setTotalPremium"); this.totalPremium = totalPremium; }
 
-        public BigDecimal getAnnualIncurredLosses() { return annualIncurredLosses; }
-        public void setAnnualIncurredLosses(BigDecimal annualIncurredLosses) { this.annualIncurredLosses = annualIncurredLosses; }
+        public BigDecimal getAnnualIncurredLosses() {
+        LOGGER.log(Level.FINE, "→ SlidingScaleDividendEngine.getAnnualIncurredLosses"); return annualIncurredLosses; }
+        public void setAnnualIncurredLosses(BigDecimal annualIncurredLosses) {
+        LOGGER.log(Level.FINE, "→ SlidingScaleDividendEngine.setAnnualIncurredLosses"); this.annualIncurredLosses = annualIncurredLosses; }
 
-        public double getLossRatio() { return lossRatio; }
-        public void setLossRatio(double lossRatio) { this.lossRatio = lossRatio; }
+        public double getLossRatio() {
+        LOGGER.log(Level.FINE, "→ SlidingScaleDividendEngine.getLossRatio"); return lossRatio; }
+        public void setLossRatio(double lossRatio) {
+        LOGGER.log(Level.FINE, "→ SlidingScaleDividendEngine.setLossRatio"); this.lossRatio = lossRatio; }
 
-        public double getDividendPercentage() { return dividendPercentage; }
-        public void setDividendPercentage(double dividendPercentage) { this.dividendPercentage = dividendPercentage; }
+        public double getDividendPercentage() {
+        LOGGER.log(Level.FINE, "→ SlidingScaleDividendEngine.getDividendPercentage"); return dividendPercentage; }
+        public void setDividendPercentage(double dividendPercentage) {
+        LOGGER.log(Level.FINE, "→ SlidingScaleDividendEngine.setDividendPercentage"); this.dividendPercentage = dividendPercentage; }
 
-        public String getDividendTier() { return dividendTier; }
-        public void setDividendTier(String dividendTier) { this.dividendTier = dividendTier; }
+        public String getDividendTier() {
+        LOGGER.log(Level.FINE, "→ SlidingScaleDividendEngine.getDividendTier"); return dividendTier; }
+        public void setDividendTier(String dividendTier) {
+        LOGGER.log(Level.FINE, "→ SlidingScaleDividendEngine.setDividendTier"); this.dividendTier = dividendTier; }
 
-        public BigDecimal getDividendAmount() { return dividendAmount; }
-        public void setDividendAmount(BigDecimal dividendAmount) { this.dividendAmount = dividendAmount; }
+        public BigDecimal getDividendAmount() {
+        LOGGER.log(Level.FINE, "→ SlidingScaleDividendEngine.getDividendAmount"); return dividendAmount; }
+        public void setDividendAmount(BigDecimal dividendAmount) {
+        LOGGER.log(Level.FINE, "→ SlidingScaleDividendEngine.setDividendAmount"); this.dividendAmount = dividendAmount; }
 
-        public BigDecimal getNetPolicyCost() { return netPolicyCost; }
-        public void setNetPolicyCost(BigDecimal netPolicyCost) { this.netPolicyCost = netPolicyCost; }
+        public BigDecimal getNetPolicyCost() {
+        LOGGER.log(Level.FINE, "→ SlidingScaleDividendEngine.getNetPolicyCost"); return netPolicyCost; }
+        public void setNetPolicyCost(BigDecimal netPolicyCost) {
+        LOGGER.log(Level.FINE, "→ SlidingScaleDividendEngine.setNetPolicyCost"); this.netPolicyCost = netPolicyCost; }
     }
 }

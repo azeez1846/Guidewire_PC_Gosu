@@ -11,13 +11,16 @@ public class CyberLiabilityEngine {
     private static final Logger LOGGER = Logger.getLogger(CyberLiabilityEngine.class.getName());
     private static final CyberLiabilityEngine instance = new CyberLiabilityEngine();
 
-    private CyberLiabilityEngine() {}
+    private CyberLiabilityEngine() {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.CyberLiabilityEngine");}
 
     public static CyberLiabilityEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.getInstance");
         return instance;
     }
 
     public CyberResult evaluateCyberSecurityControls(PolicyPeriod period, boolean mfaEnabled, boolean offlineBackupsDaily, boolean edrDeployed, boolean employeePhishingTrained) {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.evaluateCyberSecurityControls");
         CyberResult result = new CyberResult();
         if (period == null) return result;
 
@@ -84,40 +87,64 @@ public class CyberLiabilityEngine {
         private String securityTier;
         private BigDecimal adjustedCyberPremium = BigDecimal.ZERO;
 
-        public String getPolicyNumber() { return policyNumber; }
-        public void setPolicyNumber(String policyNumber) { this.policyNumber = policyNumber; }
+        public String getPolicyNumber() {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.getPolicyNumber"); return policyNumber; }
+        public void setPolicyNumber(String policyNumber) {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.setPolicyNumber"); this.policyNumber = policyNumber; }
 
-        public BigDecimal getBaseCyberPremium() { return baseCyberPremium; }
-        public void setBaseCyberPremium(BigDecimal baseCyberPremium) { this.baseCyberPremium = baseCyberPremium; }
+        public BigDecimal getBaseCyberPremium() {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.getBaseCyberPremium"); return baseCyberPremium; }
+        public void setBaseCyberPremium(BigDecimal baseCyberPremium) {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.setBaseCyberPremium"); this.baseCyberPremium = baseCyberPremium; }
 
-        public boolean isMfaEnabled() { return mfaEnabled; }
-        public void setMfaEnabled(boolean mfaEnabled) { this.mfaEnabled = mfaEnabled; }
+        public boolean isMfaEnabled() {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.isMfaEnabled"); return mfaEnabled; }
+        public void setMfaEnabled(boolean mfaEnabled) {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.setMfaEnabled"); this.mfaEnabled = mfaEnabled; }
 
-        public boolean isOfflineBackupsDaily() { return offlineBackupsDaily; }
-        public void setOfflineBackupsDaily(boolean offlineBackupsDaily) { this.offlineBackupsDaily = offlineBackupsDaily; }
+        public boolean isOfflineBackupsDaily() {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.isOfflineBackupsDaily"); return offlineBackupsDaily; }
+        public void setOfflineBackupsDaily(boolean offlineBackupsDaily) {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.setOfflineBackupsDaily"); this.offlineBackupsDaily = offlineBackupsDaily; }
 
-        public boolean isEdrDeployed() { return edrDeployed; }
-        public void setEdrDeployed(boolean edrDeployed) { this.edrDeployed = edrDeployed; }
+        public boolean isEdrDeployed() {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.isEdrDeployed"); return edrDeployed; }
+        public void setEdrDeployed(boolean edrDeployed) {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.setEdrDeployed"); this.edrDeployed = edrDeployed; }
 
-        public boolean isEmployeePhishingTrained() { return employeePhishingTrained; }
-        public void setEmployeePhishingTrained(boolean employeePhishingTrained) { this.employeePhishingTrained = employeePhishingTrained; }
+        public boolean isEmployeePhishingTrained() {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.isEmployeePhishingTrained"); return employeePhishingTrained; }
+        public void setEmployeePhishingTrained(boolean employeePhishingTrained) {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.setEmployeePhishingTrained"); this.employeePhishingTrained = employeePhishingTrained; }
 
-        public int getActiveControlCount() { return activeControlCount; }
-        public void setActiveControlCount(int activeControlCount) { this.activeControlCount = activeControlCount; }
+        public int getActiveControlCount() {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.getActiveControlCount"); return activeControlCount; }
+        public void setActiveControlCount(int activeControlCount) {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.setActiveControlCount"); this.activeControlCount = activeControlCount; }
 
-        public double getRateModifier() { return rateModifier; }
-        public void setRateModifier(double rateModifier) { this.rateModifier = rateModifier; }
+        public double getRateModifier() {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.getRateModifier"); return rateModifier; }
+        public void setRateModifier(double rateModifier) {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.setRateModifier"); this.rateModifier = rateModifier; }
 
-        public BigDecimal getRansomwareSubLimit() { return ransomwareSubLimit; }
-        public void setRansomwareSubLimit(BigDecimal ransomwareSubLimit) { this.ransomwareSubLimit = ransomwareSubLimit; }
+        public BigDecimal getRansomwareSubLimit() {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.getRansomwareSubLimit"); return ransomwareSubLimit; }
+        public void setRansomwareSubLimit(BigDecimal ransomwareSubLimit) {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.setRansomwareSubLimit"); this.ransomwareSubLimit = ransomwareSubLimit; }
 
-        public boolean isSubLimitCapped() { return subLimitCapped; }
-        public void setSubLimitCapped(boolean subLimitCapped) { this.subLimitCapped = subLimitCapped; }
+        public boolean isSubLimitCapped() {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.isSubLimitCapped"); return subLimitCapped; }
+        public void setSubLimitCapped(boolean subLimitCapped) {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.setSubLimitCapped"); this.subLimitCapped = subLimitCapped; }
 
-        public String getSecurityTier() { return securityTier; }
-        public void setSecurityTier(String securityTier) { this.securityTier = securityTier; }
+        public String getSecurityTier() {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.getSecurityTier"); return securityTier; }
+        public void setSecurityTier(String securityTier) {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.setSecurityTier"); this.securityTier = securityTier; }
 
-        public BigDecimal getAdjustedCyberPremium() { return adjustedCyberPremium; }
-        public void setAdjustedCyberPremium(BigDecimal adjustedCyberPremium) { this.adjustedCyberPremium = adjustedCyberPremium; }
+        public BigDecimal getAdjustedCyberPremium() {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.getAdjustedCyberPremium"); return adjustedCyberPremium; }
+        public void setAdjustedCyberPremium(BigDecimal adjustedCyberPremium) {
+        LOGGER.log(Level.FINE, "→ CyberLiabilityEngine.setAdjustedCyberPremium"); this.adjustedCyberPremium = adjustedCyberPremium; }
     }
 }

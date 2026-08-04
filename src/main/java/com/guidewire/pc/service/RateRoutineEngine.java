@@ -21,14 +21,17 @@ public class RateRoutineEngine {
     private final Map<String, RateTable> rateTables = new HashMap<>();
 
     private RateRoutineEngine() {
+        LOGGER.log(Level.FINE, "→ RateRoutineEngine.RateRoutineEngine");
         seedRateTables();
     }
 
     public static RateRoutineEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ RateRoutineEngine.getInstance");
         return instance;
     }
 
     private void seedRateTables() {
+        LOGGER.log(Level.FINE, "→ RateRoutineEngine.seedRateTables");
         RateTable autoTable = new RateTable("Commercial Auto Rate Matrix", "RT_COMM_AUTO", PCConstants.PRODUCT_COMMERCIAL_AUTO);
         autoTable.addEntry(new RateTableEntry(PCConstants.PRODUCT_COMMERCIAL_AUTO, "CA", "Territory_01", "Standard", new BigDecimal("1200.00"), 1.15, 1.00));
         autoTable.addEntry(new RateTableEntry(PCConstants.PRODUCT_COMMERCIAL_AUTO, "CA", "Territory_02", "HighRisk", new BigDecimal("1500.00"), 1.25, 1.20));
@@ -43,6 +46,7 @@ public class RateRoutineEngine {
     }
 
     public RateRoutineResult executeRateRoutine(PolicyPeriod period) {
+        LOGGER.log(Level.FINE, "→ RateRoutineEngine.executeRateRoutine");
         RateRoutineResult result = new RateRoutineResult();
         if (period == null) return result;
 
@@ -105,9 +109,13 @@ public class RateRoutineEngine {
         private BigDecimal finalPremium = BigDecimal.ZERO;
         private final List<String> executionSteps = new ArrayList<>();
 
-        public void addStep(String step) { this.executionSteps.add(step); }
-        public BigDecimal getFinalPremium() { return finalPremium; }
-        public void setFinalPremium(BigDecimal finalPremium) { this.finalPremium = finalPremium; }
-        public List<String> getExecutionSteps() { return executionSteps; }
+        public void addStep(String step) {
+        LOGGER.log(Level.FINE, "→ RateRoutineEngine.addStep"); this.executionSteps.add(step); }
+        public BigDecimal getFinalPremium() {
+        LOGGER.log(Level.FINE, "→ RateRoutineEngine.getFinalPremium"); return finalPremium; }
+        public void setFinalPremium(BigDecimal finalPremium) {
+        LOGGER.log(Level.FINE, "→ RateRoutineEngine.setFinalPremium"); this.finalPremium = finalPremium; }
+        public List<String> getExecutionSteps() {
+        LOGGER.log(Level.FINE, "→ RateRoutineEngine.getExecutionSteps"); return executionSteps; }
     }
 }

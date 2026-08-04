@@ -1,7 +1,12 @@
 package com.guidewire.pc.util;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public final class DisplayProperties {
-    private DisplayProperties() {}
+    private static final Logger LOGGER = Logger.getLogger(DisplayProperties.class.getName());
+
+    private DisplayProperties() {
+        LOGGER.log(Level.FINE, "→ DisplayProperties.DisplayProperties");}
 
     // REST & Error API Messages
     public static final String ERR_JOB_NOT_FOUND = "Requested Policy Job/Submission was not found.";

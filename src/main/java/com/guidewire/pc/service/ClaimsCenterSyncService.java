@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * ClaimsCenter (CC) Synchronizer & Earned-to-Loss Ratio Analytics Engine.
@@ -14,13 +15,16 @@ public class ClaimsCenterSyncService {
     private static final Logger LOGGER = Logger.getLogger(ClaimsCenterSyncService.class.getName());
     private static final ClaimsCenterSyncService instance = new ClaimsCenterSyncService();
 
-    private ClaimsCenterSyncService() {}
+    private ClaimsCenterSyncService() {
+        LOGGER.log(Level.FINE, "→ ClaimsCenterSyncService.ClaimsCenterSyncService");}
 
     public static ClaimsCenterSyncService getInstance() {
+        LOGGER.log(Level.FINE, "→ ClaimsCenterSyncService.getInstance");
         return instance;
     }
 
     public Map<String, Object> calculateAccountLossRatioAndSyncClaims(String accountNumber) {
+        LOGGER.log(Level.FINE, "→ ClaimsCenterSyncService.calculateAccountLossRatioAndSyncClaims");
         Account account = DataStoreService.getInstance().findAccount(accountNumber);
         if (account == null) {
             account = DataStoreService.getInstance().findAccount("A0001001");

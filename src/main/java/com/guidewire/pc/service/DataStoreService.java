@@ -27,11 +27,13 @@ public class DataStoreService {
     private volatile boolean cacheLoaded = false;
 
     private DataStoreService() {
+        LOGGER.log(Level.FINE, "→ DataStoreService.DataStoreService");
         seedSampleDataIfEmpty();
         warmupCacheFromDb();
     }
 
     public static synchronized DataStoreService getInstance() {
+        LOGGER.log(Level.FINE, "→ DataStoreService.getInstance");
         if (instance == null) {
             instance = new DataStoreService();
         }
@@ -39,10 +41,12 @@ public class DataStoreService {
     }
 
     private Connection getConnection() throws SQLException {
+        LOGGER.log(Level.FINE, "→ DataStoreService.getConnection");
         return DatabaseService.getInstance().getConnection();
     }
 
     private synchronized void warmupCacheFromDb() {
+        LOGGER.log(Level.FINE, "→ DataStoreService.warmupCacheFromDb");
         if (cacheLoaded) return;
         try {
             // Load Accounts into cache
@@ -77,6 +81,7 @@ public class DataStoreService {
     }
 
     public final synchronized void resetToSeedData() {
+        LOGGER.log(Level.FINE, "→ DataStoreService.resetToSeedData");
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
             stmt.execute("DELETE FROM POLICY_PERIODS");
             stmt.execute("DELETE FROM ACTIVITIES");
@@ -94,6 +99,7 @@ public class DataStoreService {
     }
 
     private void seedSampleDataIfEmpty() {
+        LOGGER.log(Level.FINE, "→ DataStoreService.seedSampleDataIfEmpty");
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
             ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM ACCOUNTS");
             if (rs.next() && rs.getInt(1) > 0) {
@@ -217,6 +223,7 @@ public class DataStoreService {
     }
 
     private void insertAccountToDb(Account a) {
+        LOGGER.log(Level.FINE, "→ DataStoreService.insertAccountToDb");
         String sql = "INSERT INTO ACCOUNTS (account_number, account_holder_name, account_holder_type, fein, " +
                 "address_line1, address_line2, city, state, postal_code, phone, email, account_status, " +
                 "producer_code, industry_code, org_type, create_time) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -249,6 +256,7 @@ public class DataStoreService {
     }
 
     private void insertSubmissionToDb(PolicyPeriod sub) {
+        LOGGER.log(Level.FINE, "→ DataStoreService.insertSubmissionToDb");
         String sql = "INSERT INTO POLICY_PERIODS (job_number, policy_number, product_code, status, job_type, " +
                 "effective_date, expiration_date, term_months, base_state, producer_code, account_number, " +
                 "bodily_injury_limit, property_damage_limit, comprehensive_deductible, collision_deductible, " +
@@ -284,6 +292,7 @@ public class DataStoreService {
     }
 
     private void insertActivityToDb(Activity act) {
+        LOGGER.log(Level.FINE, "→ DataStoreService.insertActivityToDb");
         String sql = "INSERT INTO ACTIVITIES (subject, description, priority, status, due_date, assigned_user, " +
                 "related_account_id, related_job_number, create_time) VALUES (?,?,?,?,?,?,?,?,?)";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -307,6 +316,7 @@ public class DataStoreService {
     }
 
     public synchronized Activity createActivity(Activity act) {
+        LOGGER.log(Level.FINE, "→ DataStoreService.createActivity");
         if (act.getCreateTime() == null) {
             act.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         }
@@ -315,6 +325,7 @@ public class DataStoreService {
     }
 
     public List<Account> getAccounts() {
+        LOGGER.log(Level.FINE, "→ DataStoreService.getAccounts");
         if (!accountCache.isEmpty()) {
             return new ArrayList<>(accountCache.values());
         }
@@ -322,6 +333,7 @@ public class DataStoreService {
     }
 
     private List<Account> loadAccountsFromDb() {
+        LOGGER.log(Level.FINE, "→ DataStoreService.loadAccountsFromDb");
         List<Account> list = new ArrayList<>();
         String sql = "SELECT * FROM ACCOUNTS ORDER BY create_time DESC";
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -336,6 +348,7 @@ public class DataStoreService {
     }
 
     public List<PolicyPeriod> getSubmissions() {
+        LOGGER.log(Level.FINE, "→ DataStoreService.getSubmissions");
         if (!submissionCache.isEmpty()) {
             return new ArrayList<>(submissionCache.values());
         }
@@ -343,6 +356,7 @@ public class DataStoreService {
     }
 
     private List<PolicyPeriod> loadSubmissionsFromDb() {
+        LOGGER.log(Level.FINE, "→ DataStoreService.loadSubmissionsFromDb");
         List<PolicyPeriod> list = new ArrayList<>();
         String sql = "SELECT * FROM POLICY_PERIODS ORDER BY create_time DESC";
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -357,6 +371,7 @@ public class DataStoreService {
     }
 
     public List<Activity> getActivities() {
+        LOGGER.log(Level.FINE, "→ DataStoreService.getActivities");
         if (!activityCache.isEmpty()) {
             return new ArrayList<>(activityCache.values());
         }
@@ -364,6 +379,7 @@ public class DataStoreService {
     }
 
     private List<Activity> loadActivitiesFromDb() {
+        LOGGER.log(Level.FINE, "→ DataStoreService.loadActivitiesFromDb");
         List<Activity> list = new ArrayList<>();
         String sql = "SELECT * FROM ACTIVITIES ORDER BY create_time DESC";
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -387,18 +403,22 @@ public class DataStoreService {
     }
 
     public int getAccountCount() {
+        LOGGER.log(Level.FINE, "→ DataStoreService.getAccountCount");
         return !accountCache.isEmpty() ? accountCache.size() : loadAccountsFromDb().size();
     }
 
     public int getSubmissionCount() {
+        LOGGER.log(Level.FINE, "→ DataStoreService.getSubmissionCount");
         return !submissionCache.isEmpty() ? submissionCache.size() : loadSubmissionsFromDb().size();
     }
 
     public int getActivityCount() {
+        LOGGER.log(Level.FINE, "→ DataStoreService.getActivityCount");
         return !activityCache.isEmpty() ? activityCache.size() : loadActivitiesFromDb().size();
     }
 
     public Account findAccount(String accountNumber) {
+        LOGGER.log(Level.FINE, "→ DataStoreService.findAccount");
         if (accountNumber == null) return null;
         Account cached = accountCache.get(accountNumber.toUpperCase());
         if (cached != null) return cached;
@@ -420,10 +440,12 @@ public class DataStoreService {
     }
 
     public Account findAccountByNumber(String accountNumber) {
+        LOGGER.log(Level.FINE, "→ DataStoreService.findAccountByNumber");
         return findAccount(accountNumber);
     }
 
     public PolicyPeriod findSubmission(String jobNumber) {
+        LOGGER.log(Level.FINE, "→ DataStoreService.findSubmission");
         if (jobNumber == null) return null;
         PolicyPeriod cached = submissionCache.get(jobNumber.toUpperCase());
         if (cached != null) return cached;
@@ -445,6 +467,7 @@ public class DataStoreService {
     }
 
     public synchronized Account createAccount(Account newAccount) {
+        LOGGER.log(Level.FINE, "→ DataStoreService.createAccount");
         if (newAccount.getAccountNumber() == null || newAccount.getAccountNumber().trim().isEmpty()) {
             newAccount.setAccountNumber("A000" + com.guidewire.pc.util.SequenceGenerator.nextId());
         }
@@ -457,6 +480,7 @@ public class DataStoreService {
     }
 
     public PolicyPeriod findPolicyByPolicyNumber(String policyNumber) {
+        LOGGER.log(Level.FINE, "→ DataStoreService.findPolicyByPolicyNumber");
         if (policyNumber == null) return null;
         for (PolicyPeriod p : submissionCache.values()) {
             if (policyNumber.equalsIgnoreCase(p.getPolicyNumber())) {
@@ -483,6 +507,7 @@ public class DataStoreService {
     }
 
     public synchronized void updateSubmission(PolicyPeriod period) {
+        LOGGER.log(Level.FINE, "→ DataStoreService.updateSubmission");
         if (period == null || period.getJobNumber() == null) return;
         submissionCache.put(period.getJobNumber().toUpperCase(), period);
 
@@ -505,6 +530,7 @@ public class DataStoreService {
     }
 
     public synchronized PolicyPeriod createSubmission(PolicyPeriod submission) {
+        LOGGER.log(Level.FINE, "→ DataStoreService.createSubmission");
         if (submission.getJobNumber() == null || submission.getJobNumber().trim().isEmpty()) {
             submission.setJobNumber("S000" + com.guidewire.pc.util.SequenceGenerator.nextId());
         }
@@ -518,6 +544,7 @@ public class DataStoreService {
     }
 
     private Account mapResultSetToAccount(ResultSet rs) throws SQLException {
+        LOGGER.log(Level.FINE, "→ DataStoreService.mapResultSetToAccount");
         Account a = new Account();
         a.setAccountNumber(rs.getString("account_number"));
         a.setAccountHolderName(rs.getString("account_holder_name"));
@@ -539,6 +566,7 @@ public class DataStoreService {
     }
 
     private PolicyPeriod mapResultSetToPolicyPeriod(ResultSet rs) throws SQLException {
+        LOGGER.log(Level.FINE, "→ DataStoreService.mapResultSetToPolicyPeriod");
         PolicyPeriod p = new PolicyPeriod();
         p.setJobNumber(rs.getString("job_number"));
         p.setPolicyNumber(rs.getString("policy_number"));
@@ -568,10 +596,12 @@ public class DataStoreService {
     }
 
     public synchronized Account saveAccount(Account acc) {
+        LOGGER.log(Level.FINE, "→ DataStoreService.saveAccount");
         return createAccount(acc);
     }
 
     public synchronized PolicyPeriod saveSubmission(PolicyPeriod period) {
+        LOGGER.log(Level.FINE, "→ DataStoreService.saveSubmission");
         if (period.getCreateTime() == null) {
             period.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         }

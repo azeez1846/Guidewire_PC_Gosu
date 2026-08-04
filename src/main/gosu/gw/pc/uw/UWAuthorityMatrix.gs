@@ -14,6 +14,7 @@ class UWAuthorityMatrix {
   public static final var ROLE_CHIEF_UW : String = "Chief Underwriter"
 
   public static function getAuthorityLimitForRole(role : String) : BigDecimal {
+    print("[GW-LOG] → UWAuthorityMatrix.getAuthorityLimitForRole")
     if (ROLE_JUNIOR_UW.equalsIgnoreCase(role)) return new BigDecimal("250000.00")
     if (ROLE_STANDARD_UW.equalsIgnoreCase(role)) return new BigDecimal("1000000.00")
     if (ROLE_SENIOR_UW.equalsIgnoreCase(role)) return new BigDecimal("5000000.00")
@@ -23,6 +24,7 @@ class UWAuthorityMatrix {
   }
 
   public static function getRequiredApprovalRole(issueKey : String, totalPremium : BigDecimal) : String {
+    print("[GW-LOG] → UWAuthorityMatrix.getRequiredApprovalRole")
     if ("UW_HIGH_LIMIT".equalsIgnoreCase(issueKey)) {
       return ROLE_SENIOR_UW
     }
@@ -39,6 +41,7 @@ class UWAuthorityMatrix {
   }
 
   public static function canUserApproveIssue(userRole : String, issueKey : String, totalPremium : BigDecimal) : boolean {
+    print("[GW-LOG] → UWAuthorityMatrix.canUserApproveIssue")
     var requiredRole = getRequiredApprovalRole(issueKey, totalPremium)
     var userLimit = getAuthorityLimitForRole(userRole)
     var requiredLimit = getAuthorityLimitForRole(requiredRole)
@@ -47,6 +50,7 @@ class UWAuthorityMatrix {
   }
 
   public static function evaluateAuthorityIssues(period : PolicyPeriod) : List<UWIssue> {
+    print("[GW-LOG] → UWAuthorityMatrix.evaluateAuthorityIssues")
     var issues = new ArrayList<UWIssue>()
     if (period == null) return issues
 

@@ -7,12 +7,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 @Service
 public class ExternalCreditFraudVendorConnector {
     private static final Logger LOGGER = Logger.getLogger(ExternalCreditFraudVendorConnector.class.getName());
 
     public CreditFraudResponse performCreditAndFraudEvaluation(CreditLookupRequest req) {
+        LOGGER.log(Level.FINE, "→ ExternalCreditFraudVendorConnector.performCreditAndFraudEvaluation");
         String name = req.getAccountHolderName() != null ? req.getAccountHolderName().toUpperCase() : "APEX HOLDINGS";
         String fein = req.getFeinOrSsn() != null ? req.getFeinOrSsn() : "98-7654321";
 

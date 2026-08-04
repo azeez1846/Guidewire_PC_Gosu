@@ -11,13 +11,16 @@ public class CoinsurancePenaltyEngine {
     private static final Logger LOGGER = Logger.getLogger(CoinsurancePenaltyEngine.class.getName());
     private static final CoinsurancePenaltyEngine instance = new CoinsurancePenaltyEngine();
 
-    private CoinsurancePenaltyEngine() {}
+    private CoinsurancePenaltyEngine() {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.CoinsurancePenaltyEngine");}
 
     public static CoinsurancePenaltyEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.getInstance");
         return instance;
     }
 
     public CoinsuranceResult calculateClaimPayoutWithCoinsurance(PolicyPeriod period, BigDecimal buildingReplacementValue, BigDecimal actualBuildingLimit, double coinsurancePercentage, BigDecimal claimLossAmount, BigDecimal deductible) {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.calculateClaimPayoutWithCoinsurance");
         CoinsuranceResult result = new CoinsuranceResult();
         if (buildingReplacementValue == null) buildingReplacementValue = new BigDecimal("2000000.00");
         if (actualBuildingLimit == null) actualBuildingLimit = new BigDecimal("1200000.00");
@@ -76,37 +79,59 @@ public class CoinsurancePenaltyEngine {
         private BigDecimal coinsurancePenaltyAmount = BigDecimal.ZERO;
         private BigDecimal netClaimPayout = BigDecimal.ZERO;
 
-        public String getPolicyNumber() { return policyNumber; }
-        public void setPolicyNumber(String policyNumber) { this.policyNumber = policyNumber; }
+        public String getPolicyNumber() {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.getPolicyNumber"); return policyNumber; }
+        public void setPolicyNumber(String policyNumber) {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.setPolicyNumber"); this.policyNumber = policyNumber; }
 
-        public BigDecimal getBuildingReplacementValue() { return buildingReplacementValue; }
-        public void setBuildingReplacementValue(BigDecimal buildingReplacementValue) { this.buildingReplacementValue = buildingReplacementValue; }
+        public BigDecimal getBuildingReplacementValue() {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.getBuildingReplacementValue"); return buildingReplacementValue; }
+        public void setBuildingReplacementValue(BigDecimal buildingReplacementValue) {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.setBuildingReplacementValue"); this.buildingReplacementValue = buildingReplacementValue; }
 
-        public BigDecimal getActualBuildingLimit() { return actualBuildingLimit; }
-        public void setActualBuildingLimit(BigDecimal actualBuildingLimit) { this.actualBuildingLimit = actualBuildingLimit; }
+        public BigDecimal getActualBuildingLimit() {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.getActualBuildingLimit"); return actualBuildingLimit; }
+        public void setActualBuildingLimit(BigDecimal actualBuildingLimit) {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.setActualBuildingLimit"); this.actualBuildingLimit = actualBuildingLimit; }
 
-        public double getCoinsurancePercentage() { return coinsurancePercentage; }
-        public void setCoinsurancePercentage(double coinsurancePercentage) { this.coinsurancePercentage = coinsurancePercentage; }
+        public double getCoinsurancePercentage() {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.getCoinsurancePercentage"); return coinsurancePercentage; }
+        public void setCoinsurancePercentage(double coinsurancePercentage) {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.setCoinsurancePercentage"); this.coinsurancePercentage = coinsurancePercentage; }
 
-        public BigDecimal getRequiredCoinsuranceLimit() { return requiredCoinsuranceLimit; }
-        public void setRequiredCoinsuranceLimit(BigDecimal requiredCoinsuranceLimit) { this.requiredCoinsuranceLimit = requiredCoinsuranceLimit; }
+        public BigDecimal getRequiredCoinsuranceLimit() {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.getRequiredCoinsuranceLimit"); return requiredCoinsuranceLimit; }
+        public void setRequiredCoinsuranceLimit(BigDecimal requiredCoinsuranceLimit) {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.setRequiredCoinsuranceLimit"); this.requiredCoinsuranceLimit = requiredCoinsuranceLimit; }
 
-        public boolean isCoinsuranceRequirementMet() { return coinsuranceRequirementMet; }
-        public void setCoinsuranceRequirementMet(boolean coinsuranceRequirementMet) { this.coinsuranceRequirementMet = coinsuranceRequirementMet; }
+        public boolean isCoinsuranceRequirementMet() {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.isCoinsuranceRequirementMet"); return coinsuranceRequirementMet; }
+        public void setCoinsuranceRequirementMet(boolean coinsuranceRequirementMet) {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.setCoinsuranceRequirementMet"); this.coinsuranceRequirementMet = coinsuranceRequirementMet; }
 
-        public BigDecimal getClaimLossAmount() { return claimLossAmount; }
-        public void setClaimLossAmount(BigDecimal claimLossAmount) { this.claimLossAmount = claimLossAmount; }
+        public BigDecimal getClaimLossAmount() {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.getClaimLossAmount"); return claimLossAmount; }
+        public void setClaimLossAmount(BigDecimal claimLossAmount) {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.setClaimLossAmount"); this.claimLossAmount = claimLossAmount; }
 
-        public BigDecimal getDeductible() { return deductible; }
-        public void setDeductible(BigDecimal deductible) { this.deductible = deductible; }
+        public BigDecimal getDeductible() {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.getDeductible"); return deductible; }
+        public void setDeductible(BigDecimal deductible) {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.setDeductible"); this.deductible = deductible; }
 
-        public BigDecimal getGrossPayoutBeforeDeductible() { return grossPayoutBeforeDeductible; }
-        public void setGrossPayoutBeforeDeductible(BigDecimal grossPayoutBeforeDeductible) { this.grossPayoutBeforeDeductible = grossPayoutBeforeDeductible; }
+        public BigDecimal getGrossPayoutBeforeDeductible() {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.getGrossPayoutBeforeDeductible"); return grossPayoutBeforeDeductible; }
+        public void setGrossPayoutBeforeDeductible(BigDecimal grossPayoutBeforeDeductible) {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.setGrossPayoutBeforeDeductible"); this.grossPayoutBeforeDeductible = grossPayoutBeforeDeductible; }
 
-        public BigDecimal getCoinsurancePenaltyAmount() { return coinsurancePenaltyAmount; }
-        public void setCoinsurancePenaltyAmount(BigDecimal coinsurancePenaltyAmount) { this.coinsurancePenaltyAmount = coinsurancePenaltyAmount; }
+        public BigDecimal getCoinsurancePenaltyAmount() {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.getCoinsurancePenaltyAmount"); return coinsurancePenaltyAmount; }
+        public void setCoinsurancePenaltyAmount(BigDecimal coinsurancePenaltyAmount) {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.setCoinsurancePenaltyAmount"); this.coinsurancePenaltyAmount = coinsurancePenaltyAmount; }
 
-        public BigDecimal getNetClaimPayout() { return netClaimPayout; }
-        public void setNetClaimPayout(BigDecimal netClaimPayout) { this.netClaimPayout = netClaimPayout; }
+        public BigDecimal getNetClaimPayout() {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.getNetClaimPayout"); return netClaimPayout; }
+        public void setNetClaimPayout(BigDecimal netClaimPayout) {
+        LOGGER.log(Level.FINE, "→ CoinsurancePenaltyEngine.setNetClaimPayout"); this.netClaimPayout = netClaimPayout; }
     }
 }

@@ -1,9 +1,14 @@
 package com.guidewire.pc.constants;
 
 import java.math.BigDecimal;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public final class PCConstants {
-    private PCConstants() {}
+    private static final Logger LOGGER = Logger.getLogger(PCConstants.class.getName());
+
+    private PCConstants() {
+        LOGGER.log(Level.FINE, "→ PCConstants.PCConstants");}
 
     // Policy & Period Statuses
     public static final String STATUS_DRAFT = "Draft";

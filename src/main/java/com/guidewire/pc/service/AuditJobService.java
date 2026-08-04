@@ -7,10 +7,15 @@ import com.guidewire.pc.model.Transaction;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class AuditJobService {
+    private static final Logger LOGGER = Logger.getLogger(AuditJobService.class.getName());
+
 
     public static AuditInformation startAudit(PolicyPeriod period, String auditType, String auditMethod, BigDecimal estimatedExposure) {
+        LOGGER.log(Level.FINE, "→ AuditJobService.startAudit");
         if (period == null) return null;
 
         AuditInformation auditInfo = new AuditInformation(
@@ -26,6 +31,7 @@ public class AuditJobService {
     }
 
     public static AuditInformation enterAuditedExposure(AuditInformation auditInfo, BigDecimal auditedExposure) {
+        LOGGER.log(Level.FINE, "→ AuditJobService.enterAuditedExposure");
         if (auditInfo == null) return null;
 
         auditInfo.setAuditedExposure(auditedExposure != null ? auditedExposure : BigDecimal.ZERO);
@@ -34,6 +40,7 @@ public class AuditJobService {
     }
 
     public static BigDecimal calculateAuditAdjustment(AuditInformation auditInfo, PolicyPeriod period) {
+        LOGGER.log(Level.FINE, "→ AuditJobService.calculateAuditAdjustment");
         if (auditInfo == null || period == null) return BigDecimal.ZERO;
 
         BigDecimal estimated = auditInfo.getEstimatedExposure();
@@ -54,6 +61,7 @@ public class AuditJobService {
     }
 
     public static AuditInformation closeAudit(AuditInformation auditInfo, PolicyPeriod period) {
+        LOGGER.log(Level.FINE, "→ AuditJobService.closeAudit");
         if (auditInfo == null) return null;
 
         calculateAuditAdjustment(auditInfo, period);
@@ -64,6 +72,7 @@ public class AuditJobService {
     }
 
     public static Transaction createAuditTransaction(AuditInformation auditInfo, PolicyPeriod period) {
+        LOGGER.log(Level.FINE, "→ AuditJobService.createAuditTransaction");
         if (auditInfo == null || period == null) return null;
 
         BigDecimal adjustment = calculateAuditAdjustment(auditInfo, period);

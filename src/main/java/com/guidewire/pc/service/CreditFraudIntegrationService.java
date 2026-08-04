@@ -15,13 +15,16 @@ public class CreditFraudIntegrationService {
     private static final Logger LOGGER = Logger.getLogger(CreditFraudIntegrationService.class.getName());
     private static final CreditFraudIntegrationService instance = new CreditFraudIntegrationService();
 
-    private CreditFraudIntegrationService() {}
+    private CreditFraudIntegrationService() {
+        LOGGER.log(Level.FINE, "→ CreditFraudIntegrationService.CreditFraudIntegrationService");}
 
     public static CreditFraudIntegrationService getInstance() {
+        LOGGER.log(Level.FINE, "→ CreditFraudIntegrationService.getInstance");
         return instance;
     }
 
     public CreditFraudResponse executeCreditAndFraudLookup(String accountHolderName, String feinOrSsn, String orgType, String state) {
+        LOGGER.log(Level.FINE, "→ CreditFraudIntegrationService.executeCreditAndFraudLookup");
         LOGGER.log(Level.INFO, "[PolicyCenter Credit IG Bridge] Invoking Credit & OFAC IG JAR for: {0} (FEIN: {1})",
                 new Object[]{accountHolderName, feinOrSsn});
 

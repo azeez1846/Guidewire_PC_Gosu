@@ -6,6 +6,7 @@ import com.guidewire.pc.model.PolicyPeriod;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * ACORD 125 / 126 Document & Payload Ingestion Service.
@@ -15,13 +16,16 @@ public class AcordIngestionService {
     private static final Logger LOGGER = Logger.getLogger(AcordIngestionService.class.getName());
     private static final AcordIngestionService instance = new AcordIngestionService();
 
-    private AcordIngestionService() {}
+    private AcordIngestionService() {
+        LOGGER.log(Level.FINE, "→ AcordIngestionService.AcordIngestionService");}
 
     public static AcordIngestionService getInstance() {
+        LOGGER.log(Level.FINE, "→ AcordIngestionService.getInstance");
         return instance;
     }
 
     public Map<String, Object> parseAndIngestAcordPayload(Map<String, Object> acordPayload) {
+        LOGGER.log(Level.FINE, "→ AcordIngestionService.parseAndIngestAcordPayload");
         String acordFormType = (String) acordPayload.getOrDefault("acordFormType", "ACORD_125_COMMERCIAL_AUTO");
         String applicantName = (String) acordPayload.getOrDefault("applicantName", "Apex Industrial Logistics LLC");
         String fein = (String) acordPayload.getOrDefault("fein", "98-7654321");

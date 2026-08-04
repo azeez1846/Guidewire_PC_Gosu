@@ -11,13 +11,16 @@ public class PollutionHazardEngine {
     private static final Logger LOGGER = Logger.getLogger(PollutionHazardEngine.class.getName());
     private static final PollutionHazardEngine instance = new PollutionHazardEngine();
 
-    private PollutionHazardEngine() {}
+    private PollutionHazardEngine() {
+        LOGGER.log(Level.FINE, "→ PollutionHazardEngine.PollutionHazardEngine");}
 
     public static PollutionHazardEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ PollutionHazardEngine.getInstance");
         return instance;
     }
 
     public PollutionResult assessPollutionHazard(PolicyPeriod period, int ustCount, int chemicalHazardScore, double proximityToWaterwayMiles, int facilityAgeYears) {
+        LOGGER.log(Level.FINE, "→ PollutionHazardEngine.assessPollutionHazard");
         PollutionResult result = new PollutionResult();
         if (period == null) return result;
 
@@ -76,34 +79,54 @@ public class PollutionHazardEngine {
         private String hazardCategory;
         private BigDecimal recommendedContainmentDeductible = BigDecimal.ZERO;
 
-        public String getPolicyNumber() { return policyNumber; }
-        public void setPolicyNumber(String policyNumber) { this.policyNumber = policyNumber; }
+        public String getPolicyNumber() {
+        LOGGER.log(Level.FINE, "→ PollutionHazardEngine.getPolicyNumber"); return policyNumber; }
+        public void setPolicyNumber(String policyNumber) {
+        LOGGER.log(Level.FINE, "→ PollutionHazardEngine.setPolicyNumber"); this.policyNumber = policyNumber; }
 
-        public BigDecimal getBasePremium() { return basePremium; }
-        public void setBasePremium(BigDecimal basePremium) { this.basePremium = basePremium; }
+        public BigDecimal getBasePremium() {
+        LOGGER.log(Level.FINE, "→ PollutionHazardEngine.getBasePremium"); return basePremium; }
+        public void setBasePremium(BigDecimal basePremium) {
+        LOGGER.log(Level.FINE, "→ PollutionHazardEngine.setBasePremium"); this.basePremium = basePremium; }
 
-        public int getUstCount() { return ustCount; }
-        public void setUstCount(int ustCount) { this.ustCount = ustCount; }
+        public int getUstCount() {
+        LOGGER.log(Level.FINE, "→ PollutionHazardEngine.getUstCount"); return ustCount; }
+        public void setUstCount(int ustCount) {
+        LOGGER.log(Level.FINE, "→ PollutionHazardEngine.setUstCount"); this.ustCount = ustCount; }
 
-        public int getChemicalHazardScore() { return chemicalHazardScore; }
-        public void setChemicalHazardScore(int chemicalHazardScore) { this.chemicalHazardScore = chemicalHazardScore; }
+        public int getChemicalHazardScore() {
+        LOGGER.log(Level.FINE, "→ PollutionHazardEngine.getChemicalHazardScore"); return chemicalHazardScore; }
+        public void setChemicalHazardScore(int chemicalHazardScore) {
+        LOGGER.log(Level.FINE, "→ PollutionHazardEngine.setChemicalHazardScore"); this.chemicalHazardScore = chemicalHazardScore; }
 
-        public double getProximityToWaterwayMiles() { return proximityToWaterwayMiles; }
-        public void setProximityToWaterwayMiles(double proximityToWaterwayMiles) { this.proximityToWaterwayMiles = proximityToWaterwayMiles; }
+        public double getProximityToWaterwayMiles() {
+        LOGGER.log(Level.FINE, "→ PollutionHazardEngine.getProximityToWaterwayMiles"); return proximityToWaterwayMiles; }
+        public void setProximityToWaterwayMiles(double proximityToWaterwayMiles) {
+        LOGGER.log(Level.FINE, "→ PollutionHazardEngine.setProximityToWaterwayMiles"); this.proximityToWaterwayMiles = proximityToWaterwayMiles; }
 
-        public int getFacilityAgeYears() { return facilityAgeYears; }
-        public void setFacilityAgeYears(int facilityAgeYears) { this.facilityAgeYears = facilityAgeYears; }
+        public int getFacilityAgeYears() {
+        LOGGER.log(Level.FINE, "→ PollutionHazardEngine.getFacilityAgeYears"); return facilityAgeYears; }
+        public void setFacilityAgeYears(int facilityAgeYears) {
+        LOGGER.log(Level.FINE, "→ PollutionHazardEngine.setFacilityAgeYears"); this.facilityAgeYears = facilityAgeYears; }
 
-        public double getEnvironmentalHazardMultiplier() { return environmentalHazardMultiplier; }
-        public void setEnvironmentalHazardMultiplier(double environmentalHazardMultiplier) { this.environmentalHazardMultiplier = environmentalHazardMultiplier; }
+        public double getEnvironmentalHazardMultiplier() {
+        LOGGER.log(Level.FINE, "→ PollutionHazardEngine.getEnvironmentalHazardMultiplier"); return environmentalHazardMultiplier; }
+        public void setEnvironmentalHazardMultiplier(double environmentalHazardMultiplier) {
+        LOGGER.log(Level.FINE, "→ PollutionHazardEngine.setEnvironmentalHazardMultiplier"); this.environmentalHazardMultiplier = environmentalHazardMultiplier; }
 
-        public BigDecimal getRatedEnvironmentalPremium() { return ratedEnvironmentalPremium; }
-        public void setRatedEnvironmentalPremium(BigDecimal ratedEnvironmentalPremium) { this.ratedEnvironmentalPremium = ratedEnvironmentalPremium; }
+        public BigDecimal getRatedEnvironmentalPremium() {
+        LOGGER.log(Level.FINE, "→ PollutionHazardEngine.getRatedEnvironmentalPremium"); return ratedEnvironmentalPremium; }
+        public void setRatedEnvironmentalPremium(BigDecimal ratedEnvironmentalPremium) {
+        LOGGER.log(Level.FINE, "→ PollutionHazardEngine.setRatedEnvironmentalPremium"); this.ratedEnvironmentalPremium = ratedEnvironmentalPremium; }
 
-        public String getHazardCategory() { return hazardCategory; }
-        public void setHazardCategory(String hazardCategory) { this.hazardCategory = hazardCategory; }
+        public String getHazardCategory() {
+        LOGGER.log(Level.FINE, "→ PollutionHazardEngine.getHazardCategory"); return hazardCategory; }
+        public void setHazardCategory(String hazardCategory) {
+        LOGGER.log(Level.FINE, "→ PollutionHazardEngine.setHazardCategory"); this.hazardCategory = hazardCategory; }
 
-        public BigDecimal getRecommendedContainmentDeductible() { return recommendedContainmentDeductible; }
-        public void setRecommendedContainmentDeductible(BigDecimal recommendedContainmentDeductible) { this.recommendedContainmentDeductible = recommendedContainmentDeductible; }
+        public BigDecimal getRecommendedContainmentDeductible() {
+        LOGGER.log(Level.FINE, "→ PollutionHazardEngine.getRecommendedContainmentDeductible"); return recommendedContainmentDeductible; }
+        public void setRecommendedContainmentDeductible(BigDecimal recommendedContainmentDeductible) {
+        LOGGER.log(Level.FINE, "→ PollutionHazardEngine.setRecommendedContainmentDeductible"); this.recommendedContainmentDeductible = recommendedContainmentDeductible; }
     }
 }

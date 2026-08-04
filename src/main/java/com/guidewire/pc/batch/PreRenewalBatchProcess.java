@@ -19,15 +19,18 @@ public class PreRenewalBatchProcess implements BatchProcess {
     private static final Logger LOGGER = Logger.getLogger(PreRenewalBatchProcess.class.getName());
 
     @Override
-    public String getType() { return "PreRenewal"; }
+    public String getType() {
+        LOGGER.log(Level.FINE, "→ PreRenewalBatchProcess.getType"); return "PreRenewal"; }
 
     @Override
     public String getDescription() {
+        LOGGER.log(Level.FINE, "→ PreRenewalBatchProcess.getDescription");
         return "Guidewire OOTB Pre-Renewal Batch Engine: Scans policies within 60 days of expiration, runs pre-renewal underwriting checks, creates renewal jobs, and re-rates using Virtual Threads.";
     }
 
     @Override
     public BatchProcessResult run() {
+        LOGGER.log(Level.FINE, "→ PreRenewalBatchProcess.run");
         LOGGER.info("Executing Guidewire Batch Job: PreRenewalBatchProcess on Virtual Threads...");
         DataStoreService dataStore = DataStoreService.getInstance();
         List<PolicyPeriod> submissions = dataStore.getSubmissions();

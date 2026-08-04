@@ -11,13 +11,16 @@ public class FloodZoneRatingEngine {
     private static final Logger LOGGER = Logger.getLogger(FloodZoneRatingEngine.class.getName());
     private static final FloodZoneRatingEngine instance = new FloodZoneRatingEngine();
 
-    private FloodZoneRatingEngine() {}
+    private FloodZoneRatingEngine() {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.FloodZoneRatingEngine");}
 
     public static FloodZoneRatingEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.getInstance");
         return instance;
     }
 
     public FloodResult rateFloodZoneRisk(PolicyPeriod period, String floodZone, double lowestFloorElevationFt, double baseFloodElevationBFE, boolean hasFloodProofVents) {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.rateFloodZoneRisk");
         FloodResult result = new FloodResult();
         if (period == null) return result;
 
@@ -83,37 +86,59 @@ public class FloodZoneRatingEngine {
         private BigDecimal adjustmentAmount = BigDecimal.ZERO;
         private BigDecimal finalFloodPremium = BigDecimal.ZERO;
 
-        public String getPolicyNumber() { return policyNumber; }
-        public void setPolicyNumber(String policyNumber) { this.policyNumber = policyNumber; }
+        public String getPolicyNumber() {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.getPolicyNumber"); return policyNumber; }
+        public void setPolicyNumber(String policyNumber) {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.setPolicyNumber"); this.policyNumber = policyNumber; }
 
-        public BigDecimal getBaseFloodPremium() { return baseFloodPremium; }
-        public void setBaseFloodPremium(BigDecimal baseFloodPremium) { this.baseFloodPremium = baseFloodPremium; }
+        public BigDecimal getBaseFloodPremium() {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.getBaseFloodPremium"); return baseFloodPremium; }
+        public void setBaseFloodPremium(BigDecimal baseFloodPremium) {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.setBaseFloodPremium"); this.baseFloodPremium = baseFloodPremium; }
 
-        public String getFloodZone() { return floodZone; }
-        public void setFloodZone(String floodZone) { this.floodZone = floodZone; }
+        public String getFloodZone() {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.getFloodZone"); return floodZone; }
+        public void setFloodZone(String floodZone) {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.setFloodZone"); this.floodZone = floodZone; }
 
-        public double getLowestFloorElevationFt() { return lowestFloorElevationFt; }
-        public void setLowestFloorElevationFt(double lowestFloorElevationFt) { this.lowestFloorElevationFt = lowestFloorElevationFt; }
+        public double getLowestFloorElevationFt() {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.getLowestFloorElevationFt"); return lowestFloorElevationFt; }
+        public void setLowestFloorElevationFt(double lowestFloorElevationFt) {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.setLowestFloorElevationFt"); this.lowestFloorElevationFt = lowestFloorElevationFt; }
 
-        public double getBaseFloodElevationBFE() { return baseFloodElevationBFE; }
-        public void setBaseFloodElevationBFE(double baseFloodElevationBFE) { this.baseFloodElevationBFE = baseFloodElevationBFE; }
+        public double getBaseFloodElevationBFE() {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.getBaseFloodElevationBFE"); return baseFloodElevationBFE; }
+        public void setBaseFloodElevationBFE(double baseFloodElevationBFE) {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.setBaseFloodElevationBFE"); this.baseFloodElevationBFE = baseFloodElevationBFE; }
 
-        public double getElevationDifferentialFt() { return elevationDifferentialFt; }
-        public void setElevationDifferentialFt(double elevationDifferentialFt) { this.elevationDifferentialFt = elevationDifferentialFt; }
+        public double getElevationDifferentialFt() {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.getElevationDifferentialFt"); return elevationDifferentialFt; }
+        public void setElevationDifferentialFt(double elevationDifferentialFt) {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.setElevationDifferentialFt"); this.elevationDifferentialFt = elevationDifferentialFt; }
 
-        public boolean isHasFloodProofVents() { return hasFloodProofVents; }
-        public void setHasFloodProofVents(boolean hasFloodProofVents) { this.hasFloodProofVents = hasFloodProofVents; }
+        public boolean isHasFloodProofVents() {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.isHasFloodProofVents"); return hasFloodProofVents; }
+        public void setHasFloodProofVents(boolean hasFloodProofVents) {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.setHasFloodProofVents"); this.hasFloodProofVents = hasFloodProofVents; }
 
-        public double getRateAdjustmentPct() { return rateAdjustmentPct; }
-        public void setRateAdjustmentPct(double rateAdjustmentPct) { this.rateAdjustmentPct = rateAdjustmentPct; }
+        public double getRateAdjustmentPct() {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.getRateAdjustmentPct"); return rateAdjustmentPct; }
+        public void setRateAdjustmentPct(double rateAdjustmentPct) {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.setRateAdjustmentPct"); this.rateAdjustmentPct = rateAdjustmentPct; }
 
-        public String getRatingCategory() { return ratingCategory; }
-        public void setRatingCategory(String ratingCategory) { this.ratingCategory = ratingCategory; }
+        public String getRatingCategory() {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.getRatingCategory"); return ratingCategory; }
+        public void setRatingCategory(String ratingCategory) {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.setRatingCategory"); this.ratingCategory = ratingCategory; }
 
-        public BigDecimal getAdjustmentAmount() { return adjustmentAmount; }
-        public void setAdjustmentAmount(BigDecimal adjustmentAmount) { this.adjustmentAmount = adjustmentAmount; }
+        public BigDecimal getAdjustmentAmount() {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.getAdjustmentAmount"); return adjustmentAmount; }
+        public void setAdjustmentAmount(BigDecimal adjustmentAmount) {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.setAdjustmentAmount"); this.adjustmentAmount = adjustmentAmount; }
 
-        public BigDecimal getFinalFloodPremium() { return finalFloodPremium; }
-        public void setFinalFloodPremium(BigDecimal finalFloodPremium) { this.finalFloodPremium = finalFloodPremium; }
+        public BigDecimal getFinalFloodPremium() {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.getFinalFloodPremium"); return finalFloodPremium; }
+        public void setFinalFloodPremium(BigDecimal finalFloodPremium) {
+        LOGGER.log(Level.FINE, "→ FloodZoneRatingEngine.setFinalFloodPremium"); this.finalFloodPremium = finalFloodPremium; }
     }
 }

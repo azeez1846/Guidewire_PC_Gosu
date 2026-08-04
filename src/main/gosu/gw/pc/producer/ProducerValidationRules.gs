@@ -8,6 +8,7 @@ import java.util.List
 class ProducerValidationRules {
 
   public static function validateProducerForPolicy(period : PolicyPeriod, producer : ProducerCode) : List<String> {
+    print("[GW-LOG] → ProducerValidationRules.validateProducerForPolicy")
     var errors = new ArrayList<String>()
     if (period == null or producer == null) return errors
 

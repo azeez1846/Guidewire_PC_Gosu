@@ -15,10 +15,12 @@ public class DatabaseService {
     private static DatabaseService instance;
 
     private DatabaseService() {
+        LOGGER.log(Level.FINE, "→ DatabaseService.DatabaseService");
         initDatabase();
     }
 
     public static synchronized DatabaseService getInstance() {
+        LOGGER.log(Level.FINE, "→ DatabaseService.getInstance");
         if (instance == null) {
             instance = new DatabaseService();
         }
@@ -26,6 +28,7 @@ public class DatabaseService {
     }
 
     public Connection getConnection() throws SQLException {
+        LOGGER.log(Level.FINE, "→ DatabaseService.getConnection");
         try {
             Class.forName(DB_DRIVER);
         } catch (ClassNotFoundException e) {
@@ -35,6 +38,7 @@ public class DatabaseService {
     }
 
     private void initDatabase() {
+        LOGGER.log(Level.FINE, "→ DatabaseService.initDatabase");
         File dataDir = new File("./data");
         if (!dataDir.exists()) {
             dataDir.mkdirs();

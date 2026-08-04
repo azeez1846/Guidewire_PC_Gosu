@@ -22,12 +22,16 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class GuidewireRestServlet extends HttpServlet {
+    private static final Logger LOGGER = Logger.getLogger(GuidewireRestServlet.class.getName());
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final DataStoreService dataStore = DataStoreService.getInstance();
 
     private boolean isAuthenticated(HttpServletRequest req) {
+        LOGGER.log(Level.FINE, "→ GuidewireRestServlet.isAuthenticated");
         String authHeader = req.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring("Bearer ".length()).trim();
@@ -54,6 +58,7 @@ public class GuidewireRestServlet extends HttpServlet {
 
     @Override
     protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        LOGGER.log(Level.FINE, "→ GuidewireRestServlet.doOptions");
         SecurityUtils.addSecurityHeaders(resp);
         resp.setHeader("Access-Control-Allow-Origin", "*");
         resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -63,6 +68,7 @@ public class GuidewireRestServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        LOGGER.log(Level.FINE, "→ GuidewireRestServlet.doGet");
         SecurityUtils.addSecurityHeaders(resp);
         String path = req.getPathInfo();
         resp.setContentType("application/json");
@@ -246,6 +252,7 @@ public class GuidewireRestServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        LOGGER.log(Level.FINE, "→ GuidewireRestServlet.doPost");
         SecurityUtils.addSecurityHeaders(resp);
         String path = req.getPathInfo();
         resp.setContentType("application/json");
@@ -942,6 +949,7 @@ public class GuidewireRestServlet extends HttpServlet {
     }
 
     private void serveOpenApiJson(HttpServletResponse resp) throws IOException {
+        LOGGER.log(Level.FINE, "→ GuidewireRestServlet.serveOpenApiJson");
         Map<String, Object> openApi = new HashMap<>();
         openApi.put("openapi", "3.0.1");
         openApi.put("info", Map.of(

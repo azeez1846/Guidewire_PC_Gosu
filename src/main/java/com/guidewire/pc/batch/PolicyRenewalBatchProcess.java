@@ -17,13 +17,16 @@ public class PolicyRenewalBatchProcess implements BatchProcess {
     private static final Logger LOGGER = Logger.getLogger(PolicyRenewalBatchProcess.class.getName());
 
     @Override
-    public String getType() { return "PolicyRenewal"; }
+    public String getType() {
+        LOGGER.log(Level.FINE, "→ PolicyRenewalBatchProcess.getType"); return "PolicyRenewal"; }
 
     @Override
-    public String getDescription() { return "Scans issued policies and generates renewal jobs for upcoming expirations using Java 23 Virtual Threads."; }
+    public String getDescription() {
+        LOGGER.log(Level.FINE, "→ PolicyRenewalBatchProcess.getDescription"); return "Scans issued policies and generates renewal jobs for upcoming expirations using Java 23 Virtual Threads."; }
 
     @Override
     public BatchProcessResult run() {
+        LOGGER.log(Level.FINE, "→ PolicyRenewalBatchProcess.run");
         LOGGER.info("Executing Guidewire Batch Job: PolicyRenewalBatchProcess on Virtual Threads...");
         DataStoreService dataStore = DataStoreService.getInstance();
         List<PolicyPeriod> submissions = dataStore.getSubmissions();

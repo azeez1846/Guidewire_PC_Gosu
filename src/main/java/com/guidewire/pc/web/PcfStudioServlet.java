@@ -13,8 +13,11 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class PcfStudioServlet extends HttpServlet {
+    private static final Logger LOGGER = Logger.getLogger(PcfStudioServlet.class.getName());
 
     private final File rootDir;
 
@@ -24,6 +27,7 @@ public class PcfStudioServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        LOGGER.log(Level.FINE, "→ PcfStudioServlet.doGet");
         String pathInfo = req.getPathInfo();
         if (pathInfo == null || pathInfo.equals("/") || pathInfo.equals("/index.html")) {
             serveStudioUI(resp);
@@ -50,6 +54,7 @@ public class PcfStudioServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        LOGGER.log(Level.FINE, "→ PcfStudioServlet.doPost");
         String pathInfo = req.getPathInfo();
 
         if (pathInfo != null && pathInfo.equals("/api/validate")) {
@@ -66,6 +71,7 @@ public class PcfStudioServlet extends HttpServlet {
     }
 
     private void listPcfFiles(HttpServletResponse resp) throws IOException {
+        LOGGER.log(Level.FINE, "→ PcfStudioServlet.listPcfFiles");
         resp.setContentType("application/json;charset=UTF-8");
         File pcfDir = new File(rootDir, "config/web/pcf");
         List<String> fileList = new ArrayList<>();
@@ -89,6 +95,7 @@ public class PcfStudioServlet extends HttpServlet {
     }
 
     private void readPcfFile(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        LOGGER.log(Level.FINE, "→ PcfStudioServlet.readPcfFile");
         String relativePath = req.getParameter("path");
         if (relativePath == null || relativePath.isEmpty()) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing path parameter");
@@ -106,6 +113,7 @@ public class PcfStudioServlet extends HttpServlet {
     }
 
     private void validateDrop(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        LOGGER.log(Level.FINE, "→ PcfStudioServlet.validateDrop");
         resp.setContentType("application/json;charset=UTF-8");
         String childType = req.getParameter("childType");
         String parentType = req.getParameter("parentType");
@@ -124,6 +132,7 @@ public class PcfStudioServlet extends HttpServlet {
     }
 
     private void savePcfFile(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        LOGGER.log(Level.FINE, "→ PcfStudioServlet.savePcfFile");
         resp.setContentType("application/json;charset=UTF-8");
         String relativePath = req.getParameter("path");
         String content = req.getReader().lines().collect(Collectors.joining("\n"));
@@ -142,6 +151,7 @@ public class PcfStudioServlet extends HttpServlet {
     }
 
     private void serveStudioUI(HttpServletResponse resp) throws IOException {
+        LOGGER.log(Level.FINE, "→ PcfStudioServlet.serveStudioUI");
         resp.setContentType("text/html;charset=UTF-8");
         PrintWriter out = resp.getWriter();
         out.println("<!DOCTYPE html>");

@@ -1,5 +1,6 @@
 import { PCFDocument, PCFNode, WidgetType, ValidationResponse } from '../types/guidewire-pcf';
 import { PCFSchemaGuard } from './pcf-schema-guard';
+import { GWLogger } from '../GWLogger';
 
 export class PCFStudioEngine {
   private currentPcf: PCFDocument;
@@ -7,6 +8,7 @@ export class PCFStudioEngine {
   private isLiveMode = false;
 
   constructor(initialDocument?: PCFDocument) {
+    GWLogger.log('pcf-studio-engine', 'constructor');
     this.currentPcf = initialDocument || {
       id: 'WorkersCompCoveragesDVTile',
       title: 'Workers Compensation Coverages',
@@ -48,14 +50,17 @@ export class PCFStudioEngine {
   }
 
   public getDocument(): PCFDocument {
+    GWLogger.log('pcf-studio-engine', 'getDocument');
     return this.currentPcf;
   }
 
   public setDocument(doc: PCFDocument): void {
+    GWLogger.log('pcf-studio-engine', 'setDocument');
     this.currentPcf = doc;
   }
 
   public validateDrop(childType: WidgetType, parentType: WidgetType, widgetId = 'new'): ValidationResponse {
+    GWLogger.log('pcf-studio-engine', 'validateDrop');
     const errors = PCFSchemaGuard.validatePlacement(widgetId, childType, parentType);
     if (errors.length === 0) {
       return { valid: true, message: `Valid drop target inside <${parentType}>` };
@@ -69,6 +74,7 @@ export class PCFStudioEngine {
   }
 
   public generateXML(pcf: PCFDocument = this.currentPcf): string {
+    GWLogger.log('pcf-studio-engine', 'generateXML');
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<PCF xmlns="http://guidewire.com/pcf" id="${pcf.id}" title="${pcf.title || pcf.id}">\n`;
     xml += this.renderChildrenXML(pcf.children, '  ');
     xml += '</PCF>';
@@ -76,6 +82,7 @@ export class PCFStudioEngine {
   }
 
   private renderChildrenXML(children?: PCFNode[], indent = '  '): string {
+    GWLogger.log('pcf-studio-engine', 'renderChildrenXML');
     if (!children) return '';
     let res = '';
     children.forEach((c) => {

@@ -9,10 +9,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class PolicyFormPackagePlugin {
+    private static final Logger LOGGER = Logger.getLogger(PolicyFormPackagePlugin.class.getName());
+
 
     public static Map<String, Object> buildPolicyPacket(PolicyPeriod period, List<PolicyForm> forms) {
+        LOGGER.log(Level.FINE, "→ PolicyFormPackagePlugin.buildPolicyPacket");
         Map<String, Object> packet = new HashMap<>();
         if (period == null) return packet;
 
@@ -47,6 +52,7 @@ public class PolicyFormPackagePlugin {
     }
 
     private static String computeSHA256(String input) {
+        LOGGER.log(Level.FINE, "→ PolicyFormPackagePlugin.computeSHA256");
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hashBytes = digest.digest(input.getBytes(StandardCharsets.UTF_8));

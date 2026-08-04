@@ -7,6 +7,7 @@ import java.math.RoundingMode
 class CommercialAutoRatingEngine {
 
   public static function rateCommercialAuto(period : PolicyPeriod, vehicleCount : int, isFleet : boolean, radius : String) : BigDecimal {
+    print("[GW-LOG] → CommercialAutoRatingEngine.rateCommercialAuto")
     if (period == null or vehicleCount <= 0) return BigDecimal.ZERO
 
     var basePerVehicle = 1200.00

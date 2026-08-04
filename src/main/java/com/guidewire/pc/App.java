@@ -1,12 +1,21 @@
 package com.guidewire.pc;
 
 import com.guidewire.pc.gosu.GosuBridge;
+import com.guidewire.pc.logging.GWLoggingConfig;
 import com.guidewire.pc.web.JettyPolicyCenterServer;
 
 import java.io.File;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class App {
+    private static final Logger LOGGER = Logger.getLogger(App.class.getName());
+
     public static void main(String[] args) {
+        LOGGER.log(Level.FINE, "→ App.main");
+        // ── Configure centralised logging (MUST be first) ──────────────────
+        GWLoggingConfig.configure();
+
         System.out.println("Starting Guidewire PolicyCenter Application Engine...");
 
         File rootDir = new File(".");

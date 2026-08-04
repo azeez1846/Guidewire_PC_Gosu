@@ -19,6 +19,7 @@ public class MultinationalLedgerEngine {
     private final Map<String, Double> localTaxRates = new HashMap<>();
 
     private MultinationalLedgerEngine() {
+        LOGGER.log(Level.FINE, "→ MultinationalLedgerEngine.MultinationalLedgerEngine");
         // Exchange rates relative to USD (1 USD = X Local Currency)
         exchangeRates.put("GBP", 0.78);  // UK Pound
         exchangeRates.put("EUR", 0.92);  // Euro
@@ -33,10 +34,12 @@ public class MultinationalLedgerEngine {
     }
 
     public static MultinationalLedgerEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ MultinationalLedgerEngine.getInstance");
         return instance;
     }
 
     public List<LocalFrontingPolicyResult> generateMultinationalLedger(PolicyPeriod globalMasterPolicy) {
+        LOGGER.log(Level.FINE, "→ MultinationalLedgerEngine.generateMultinationalLedger");
         List<LocalFrontingPolicyResult> frontingPolicies = new ArrayList<>();
         if (globalMasterPolicy == null || globalMasterPolicy.getTotalPremium() == null) return frontingPolicies;
 
@@ -82,31 +85,49 @@ public class MultinationalLedgerEngine {
         private BigDecimal totalLocalCost = BigDecimal.ZERO;
         private BigDecimal masterPremiumUSD = BigDecimal.ZERO;
 
-        public String getMasterPolicyNumber() { return masterPolicyNumber; }
-        public void setMasterPolicyNumber(String masterPolicyNumber) { this.masterPolicyNumber = masterPolicyNumber; }
+        public String getMasterPolicyNumber() {
+        LOGGER.log(Level.FINE, "→ MultinationalLedgerEngine.getMasterPolicyNumber"); return masterPolicyNumber; }
+        public void setMasterPolicyNumber(String masterPolicyNumber) {
+        LOGGER.log(Level.FINE, "→ MultinationalLedgerEngine.setMasterPolicyNumber"); this.masterPolicyNumber = masterPolicyNumber; }
 
-        public String getFrontingPolicyNumber() { return frontingPolicyNumber; }
-        public void setFrontingPolicyNumber(String frontingPolicyNumber) { this.frontingPolicyNumber = frontingPolicyNumber; }
+        public String getFrontingPolicyNumber() {
+        LOGGER.log(Level.FINE, "→ MultinationalLedgerEngine.getFrontingPolicyNumber"); return frontingPolicyNumber; }
+        public void setFrontingPolicyNumber(String frontingPolicyNumber) {
+        LOGGER.log(Level.FINE, "→ MultinationalLedgerEngine.setFrontingPolicyNumber"); this.frontingPolicyNumber = frontingPolicyNumber; }
 
-        public String getJurisdiction() { return jurisdiction; }
-        public void setJurisdiction(String jurisdiction) { this.jurisdiction = jurisdiction; }
+        public String getJurisdiction() {
+        LOGGER.log(Level.FINE, "→ MultinationalLedgerEngine.getJurisdiction"); return jurisdiction; }
+        public void setJurisdiction(String jurisdiction) {
+        LOGGER.log(Level.FINE, "→ MultinationalLedgerEngine.setJurisdiction"); this.jurisdiction = jurisdiction; }
 
-        public String getCurrencyCode() { return currencyCode; }
-        public void setCurrencyCode(String currencyCode) { this.currencyCode = currencyCode; }
+        public String getCurrencyCode() {
+        LOGGER.log(Level.FINE, "→ MultinationalLedgerEngine.getCurrencyCode"); return currencyCode; }
+        public void setCurrencyCode(String currencyCode) {
+        LOGGER.log(Level.FINE, "→ MultinationalLedgerEngine.setCurrencyCode"); this.currencyCode = currencyCode; }
 
-        public double getFxRateToUSD() { return fxRateToUSD; }
-        public void setFxRateToUSD(double fxRateToUSD) { this.fxRateToUSD = fxRateToUSD; }
+        public double getFxRateToUSD() {
+        LOGGER.log(Level.FINE, "→ MultinationalLedgerEngine.getFxRateToUSD"); return fxRateToUSD; }
+        public void setFxRateToUSD(double fxRateToUSD) {
+        LOGGER.log(Level.FINE, "→ MultinationalLedgerEngine.setFxRateToUSD"); this.fxRateToUSD = fxRateToUSD; }
 
-        public BigDecimal getLocalPremium() { return localPremium; }
-        public void setLocalPremium(BigDecimal localPremium) { this.localPremium = localPremium; }
+        public BigDecimal getLocalPremium() {
+        LOGGER.log(Level.FINE, "→ MultinationalLedgerEngine.getLocalPremium"); return localPremium; }
+        public void setLocalPremium(BigDecimal localPremium) {
+        LOGGER.log(Level.FINE, "→ MultinationalLedgerEngine.setLocalPremium"); this.localPremium = localPremium; }
 
-        public BigDecimal getLocalTaxAmount() { return localTaxAmount; }
-        public void setLocalTaxAmount(BigDecimal localTaxAmount) { this.localTaxAmount = localTaxAmount; }
+        public BigDecimal getLocalTaxAmount() {
+        LOGGER.log(Level.FINE, "→ MultinationalLedgerEngine.getLocalTaxAmount"); return localTaxAmount; }
+        public void setLocalTaxAmount(BigDecimal localTaxAmount) {
+        LOGGER.log(Level.FINE, "→ MultinationalLedgerEngine.setLocalTaxAmount"); this.localTaxAmount = localTaxAmount; }
 
-        public BigDecimal getTotalLocalCost() { return totalLocalCost; }
-        public void setTotalLocalCost(BigDecimal totalLocalCost) { this.totalLocalCost = totalLocalCost; }
+        public BigDecimal getTotalLocalCost() {
+        LOGGER.log(Level.FINE, "→ MultinationalLedgerEngine.getTotalLocalCost"); return totalLocalCost; }
+        public void setTotalLocalCost(BigDecimal totalLocalCost) {
+        LOGGER.log(Level.FINE, "→ MultinationalLedgerEngine.setTotalLocalCost"); this.totalLocalCost = totalLocalCost; }
 
-        public BigDecimal getMasterPremiumUSD() { return masterPremiumUSD; }
-        public void setMasterPremiumUSD(BigDecimal masterPremiumUSD) { this.masterPremiumUSD = masterPremiumUSD; }
+        public BigDecimal getMasterPremiumUSD() {
+        LOGGER.log(Level.FINE, "→ MultinationalLedgerEngine.getMasterPremiumUSD"); return masterPremiumUSD; }
+        public void setMasterPremiumUSD(BigDecimal masterPremiumUSD) {
+        LOGGER.log(Level.FINE, "→ MultinationalLedgerEngine.setMasterPremiumUSD"); this.masterPremiumUSD = masterPremiumUSD; }
     }
 }

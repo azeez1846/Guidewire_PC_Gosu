@@ -4,13 +4,18 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class SecurityUtils {
+    private static final Logger LOGGER = Logger.getLogger(SecurityUtils.class.getName());
+
 
     /**
      * Sanitizes user input string for safe HTML context rendering (XSS Protection).
      */
     public static String escapeHtml(String input) {
+        LOGGER.log(Level.FINE, "→ SecurityUtils.escapeHtml");
         if (input == null) {
             return "";
         }
@@ -35,6 +40,7 @@ public class SecurityUtils {
      * e.g., "12-3456789" -> "XX-XXX6789"
      */
     public static String maskFein(String fein) {
+        LOGGER.log(Level.FINE, "→ SecurityUtils.maskFein");
         if (fein == null || fein.trim().isEmpty()) {
             return "N/A";
         }
@@ -66,6 +72,7 @@ public class SecurityUtils {
      * Performs a constant-time string comparison to prevent timing attacks.
      */
     public static boolean constantTimeEquals(String a, String b) {
+        LOGGER.log(Level.FINE, "→ SecurityUtils.constantTimeEquals");
         if (a == null || b == null) {
             return java.util.Objects.equals(a, b);
         }
@@ -78,6 +85,7 @@ public class SecurityUtils {
      * Generates SHA-256 hash of a password string with salt.
      */
     public static String hashPassword(String password, String salt) {
+        LOGGER.log(Level.FINE, "→ SecurityUtils.hashPassword");
         if (password == null) return null;
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -99,6 +107,7 @@ public class SecurityUtils {
      * Applies standard HTTP security headers to outgoing responses.
      */
     public static void addSecurityHeaders(HttpServletResponse response) {
+        LOGGER.log(Level.FINE, "→ SecurityUtils.addSecurityHeaders");
         if (response == null) return;
         response.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data:;");
         response.setHeader("X-Content-Type-Options", "nosniff");

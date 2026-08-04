@@ -7,14 +7,17 @@ import java.util.Map
 class TelematicsPlugin implements IGosuPlugin {
 
   override function getPluginName() : String {
+    print("[GW-LOG] → TelematicsPlugin.getPluginName")
     return "TelematicsPlugin"
   }
 
   override function isAvailable() : boolean {
+    print("[GW-LOG] → TelematicsPlugin.isAvailable")
     return true
   }
 
   public function calculateDriverSafetyScore(milesDriven : int, hardBrakingEvents : int, nightDrivingRatio : double) : Map<String, Object> {
+    print("[GW-LOG] → TelematicsPlugin.calculateDriverSafetyScore")
     var result = new HashMap<String, Object>()
 
     var score = 100

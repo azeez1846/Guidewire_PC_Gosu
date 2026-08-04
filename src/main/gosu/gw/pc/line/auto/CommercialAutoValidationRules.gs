@@ -7,6 +7,7 @@ import java.util.List
 class CommercialAutoValidationRules {
 
   public static function validateCommercialAutoLine(period : PolicyPeriod, vehicleCount : int, radius : String) : List<String> {
+    print("[GW-LOG] → CommercialAutoValidationRules.validateCommercialAutoLine")
     var errors = new ArrayList<String>()
     if (period == null) return errors
 

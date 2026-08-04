@@ -8,6 +8,7 @@ import java.math.RoundingMode
 class ProducerCommissionService {
 
   public static function calculateCommission(period : PolicyPeriod, producer : ProducerCode) : BigDecimal {
+    print("[GW-LOG] → ProducerCommissionService.calculateCommission")
     if (period == null or producer == null) return BigDecimal.ZERO
 
     var prem = period.TotalPremium != null ? period.TotalPremium : BigDecimal.ZERO

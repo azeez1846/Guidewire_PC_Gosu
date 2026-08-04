@@ -4,10 +4,15 @@ import com.guidewire.pc.constants.PCConstants;
 import com.guidewire.pc.model.PolicyPeriod;
 
 import java.math.BigDecimal;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class PolicyPeriodValidation {
+    private static final Logger LOGGER = Logger.getLogger(PolicyPeriodValidation.class.getName());
+
 
     public static PCValidationContext validate(PolicyPeriod period, String level) {
+        LOGGER.log(Level.FINE, "→ PolicyPeriodValidation.validate");
         PCValidationContext context = new PCValidationContext(level);
         if (period == null) {
             context.addError(null, level, "PolicyPeriod is null");

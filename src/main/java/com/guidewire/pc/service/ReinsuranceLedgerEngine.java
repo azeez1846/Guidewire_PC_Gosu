@@ -20,14 +20,17 @@ public class ReinsuranceLedgerEngine {
     private final List<ReinsuranceTreatyLayer> activeTreaties = new ArrayList<>();
 
     private ReinsuranceLedgerEngine() {
+        LOGGER.log(Level.FINE, "→ ReinsuranceLedgerEngine.ReinsuranceLedgerEngine");
         seedTreaties();
     }
 
     public static ReinsuranceLedgerEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ ReinsuranceLedgerEngine.getInstance");
         return instance;
     }
 
     private void seedTreaties() {
+        LOGGER.log(Level.FINE, "→ ReinsuranceLedgerEngine.seedTreaties");
         activeTreaties.add(new ReinsuranceTreatyLayer(
                 "TR-QS-1001", "Global Quota Share Treaty", "QuotaShare", "Swiss Re",
                 BigDecimal.ZERO, new BigDecimal("10000000.00"), 0.30
@@ -43,6 +46,7 @@ public class ReinsuranceLedgerEngine {
     }
 
     public List<ReinsuranceTreatyLayer> getActiveTreaties() {
+        LOGGER.log(Level.FINE, "→ ReinsuranceLedgerEngine.getActiveTreaties");
         return activeTreaties;
     }
 
@@ -50,6 +54,7 @@ public class ReinsuranceLedgerEngine {
      * Generate Reinsurance Cession Ledger Entries for a Bound Policy
      */
     public List<CessionLedgerEntry> generateCessionLedger(PolicyPeriod period) {
+        LOGGER.log(Level.FINE, "→ ReinsuranceLedgerEngine.generateCessionLedger");
         List<CessionLedgerEntry> ledger = new ArrayList<>();
         if (period == null || period.getTotalPremium() == null) return ledger;
 
@@ -84,6 +89,7 @@ public class ReinsuranceLedgerEngine {
      * Simulate Loss Attachment Recovery across Reinsurance Layers
      */
     public Map<String, Object> simulateClaimLossRecovery(BigDecimal totalClaimLoss) {
+        LOGGER.log(Level.FINE, "→ ReinsuranceLedgerEngine.simulateClaimLossRecovery");
         Map<String, Object> recoveryReport = new HashMap<>();
         if (totalClaimLoss == null) totalClaimLoss = BigDecimal.ZERO;
 

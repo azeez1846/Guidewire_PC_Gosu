@@ -15,13 +15,16 @@ public class GroupAccountCOIEngine {
 
     private final List<CertificateOfInsurance> certificateRegistry = new ArrayList<>();
 
-    private GroupAccountCOIEngine() {}
+    private GroupAccountCOIEngine() {
+        LOGGER.log(Level.FINE, "→ GroupAccountCOIEngine.GroupAccountCOIEngine");}
 
     public static GroupAccountCOIEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ GroupAccountCOIEngine.getInstance");
         return instance;
     }
 
     public CertificateOfInsurance issueCertificate(PolicyPeriod period, String certificateHolderName, String certificateHolderAddress, boolean isAdditionalInsured, boolean isWaiverOfSubrogation) {
+        LOGGER.log(Level.FINE, "→ GroupAccountCOIEngine.issueCertificate");
         CertificateOfInsurance coi = new CertificateOfInsurance();
         coi.setCertificateNumber("COI-" + (System.currentTimeMillis() % 899999 + 100000));
         coi.setPolicyNumber(period != null ? period.getPolicyNumber() : "POL-GEN-1001");
@@ -43,6 +46,7 @@ public class GroupAccountCOIEngine {
     }
 
     public List<CertificateOfInsurance> getCertificateRegistry() {
+        LOGGER.log(Level.FINE, "→ GroupAccountCOIEngine.getCertificateRegistry");
         return certificateRegistry;
     }
 
@@ -60,34 +64,54 @@ public class GroupAccountCOIEngine {
         private String propertyDamageLimit;
         private Date issueDate;
 
-        public String getCertificateNumber() { return certificateNumber; }
-        public void setCertificateNumber(String certificateNumber) { this.certificateNumber = certificateNumber; }
+        public String getCertificateNumber() {
+        LOGGER.log(Level.FINE, "→ GroupAccountCOIEngine.getCertificateNumber"); return certificateNumber; }
+        public void setCertificateNumber(String certificateNumber) {
+        LOGGER.log(Level.FINE, "→ GroupAccountCOIEngine.setCertificateNumber"); this.certificateNumber = certificateNumber; }
 
-        public String getPolicyNumber() { return policyNumber; }
-        public void setPolicyNumber(String policyNumber) { this.policyNumber = policyNumber; }
+        public String getPolicyNumber() {
+        LOGGER.log(Level.FINE, "→ GroupAccountCOIEngine.getPolicyNumber"); return policyNumber; }
+        public void setPolicyNumber(String policyNumber) {
+        LOGGER.log(Level.FINE, "→ GroupAccountCOIEngine.setPolicyNumber"); this.policyNumber = policyNumber; }
 
-        public String getInsuredName() { return insuredName; }
-        public void setInsuredName(String insuredName) { this.insuredName = insuredName; }
+        public String getInsuredName() {
+        LOGGER.log(Level.FINE, "→ GroupAccountCOIEngine.getInsuredName"); return insuredName; }
+        public void setInsuredName(String insuredName) {
+        LOGGER.log(Level.FINE, "→ GroupAccountCOIEngine.setInsuredName"); this.insuredName = insuredName; }
 
-        public String getCertificateHolderName() { return certificateHolderName; }
-        public void setCertificateHolderName(String certificateHolderName) { this.certificateHolderName = certificateHolderName; }
+        public String getCertificateHolderName() {
+        LOGGER.log(Level.FINE, "→ GroupAccountCOIEngine.getCertificateHolderName"); return certificateHolderName; }
+        public void setCertificateHolderName(String certificateHolderName) {
+        LOGGER.log(Level.FINE, "→ GroupAccountCOIEngine.setCertificateHolderName"); this.certificateHolderName = certificateHolderName; }
 
-        public String getCertificateHolderAddress() { return certificateHolderAddress; }
-        public void setCertificateHolderAddress(String certificateHolderAddress) { this.certificateHolderAddress = certificateHolderAddress; }
+        public String getCertificateHolderAddress() {
+        LOGGER.log(Level.FINE, "→ GroupAccountCOIEngine.getCertificateHolderAddress"); return certificateHolderAddress; }
+        public void setCertificateHolderAddress(String certificateHolderAddress) {
+        LOGGER.log(Level.FINE, "→ GroupAccountCOIEngine.setCertificateHolderAddress"); this.certificateHolderAddress = certificateHolderAddress; }
 
-        public boolean isAdditionalInsured() { return isAdditionalInsured; }
-        public void setAdditionalInsured(boolean additionalInsured) { isAdditionalInsured = additionalInsured; }
+        public boolean isAdditionalInsured() {
+        LOGGER.log(Level.FINE, "→ GroupAccountCOIEngine.isAdditionalInsured"); return isAdditionalInsured; }
+        public void setAdditionalInsured(boolean additionalInsured) {
+        LOGGER.log(Level.FINE, "→ GroupAccountCOIEngine.setAdditionalInsured"); isAdditionalInsured = additionalInsured; }
 
-        public boolean isWaiverOfSubrogation() { return isWaiverOfSubrogation; }
-        public void setWaiverOfSubrogation(boolean waiverOfSubrogation) { isWaiverOfSubrogation = waiverOfSubrogation; }
+        public boolean isWaiverOfSubrogation() {
+        LOGGER.log(Level.FINE, "→ GroupAccountCOIEngine.isWaiverOfSubrogation"); return isWaiverOfSubrogation; }
+        public void setWaiverOfSubrogation(boolean waiverOfSubrogation) {
+        LOGGER.log(Level.FINE, "→ GroupAccountCOIEngine.setWaiverOfSubrogation"); isWaiverOfSubrogation = waiverOfSubrogation; }
 
-        public String getBodilyInjuryLimit() { return bodilyInjuryLimit; }
-        public void setBodilyInjuryLimit(String bodilyInjuryLimit) { this.bodilyInjuryLimit = bodilyInjuryLimit; }
+        public String getBodilyInjuryLimit() {
+        LOGGER.log(Level.FINE, "→ GroupAccountCOIEngine.getBodilyInjuryLimit"); return bodilyInjuryLimit; }
+        public void setBodilyInjuryLimit(String bodilyInjuryLimit) {
+        LOGGER.log(Level.FINE, "→ GroupAccountCOIEngine.setBodilyInjuryLimit"); this.bodilyInjuryLimit = bodilyInjuryLimit; }
 
-        public String getPropertyDamageLimit() { return propertyDamageLimit; }
-        public void setPropertyDamageLimit(String propertyDamageLimit) { this.propertyDamageLimit = propertyDamageLimit; }
+        public String getPropertyDamageLimit() {
+        LOGGER.log(Level.FINE, "→ GroupAccountCOIEngine.getPropertyDamageLimit"); return propertyDamageLimit; }
+        public void setPropertyDamageLimit(String propertyDamageLimit) {
+        LOGGER.log(Level.FINE, "→ GroupAccountCOIEngine.setPropertyDamageLimit"); this.propertyDamageLimit = propertyDamageLimit; }
 
-        public Date getIssueDate() { return issueDate; }
-        public void setIssueDate(Date issueDate) { this.issueDate = issueDate; }
+        public Date getIssueDate() {
+        LOGGER.log(Level.FINE, "→ GroupAccountCOIEngine.getIssueDate"); return issueDate; }
+        public void setIssueDate(Date issueDate) {
+        LOGGER.log(Level.FINE, "→ GroupAccountCOIEngine.setIssueDate"); this.issueDate = issueDate; }
     }
 }

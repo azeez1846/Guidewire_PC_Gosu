@@ -12,6 +12,7 @@ import java.util.Map
 class PolicyFormPackagePlugin {
 
   public static function buildPolicyPacket(period : PolicyPeriod, forms : List<PolicyForm>) : Map<String, Object> {
+    print("[GW-LOG] → PolicyFormPackagePlugin.buildPolicyPacket")
     var packet = new HashMap<String, Object>()
     if (period == null) return packet
 
@@ -46,6 +47,7 @@ class PolicyFormPackagePlugin {
   }
 
   private static function computeSHA256(input : String) : String {
+    print("[GW-LOG] → PolicyFormPackagePlugin.computeSHA256")
     try {
       var digest = MessageDigest.getInstance("SHA-256")
       var hashBytes = digest.digest(input.getBytes(StandardCharsets.UTF_8))

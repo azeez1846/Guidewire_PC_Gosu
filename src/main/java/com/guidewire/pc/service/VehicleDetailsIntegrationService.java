@@ -16,9 +16,11 @@ public class VehicleDetailsIntegrationService {
     private static final Logger LOGGER = Logger.getLogger(VehicleDetailsIntegrationService.class.getName());
     private static final VehicleDetailsIntegrationService instance = new VehicleDetailsIntegrationService();
 
-    private VehicleDetailsIntegrationService() {}
+    private VehicleDetailsIntegrationService() {
+        LOGGER.log(Level.FINE, "→ VehicleDetailsIntegrationService.VehicleDetailsIntegrationService");}
 
     public static VehicleDetailsIntegrationService getInstance() {
+        LOGGER.log(Level.FINE, "→ VehicleDetailsIntegrationService.getInstance");
         return instance;
     }
 
@@ -26,6 +28,7 @@ public class VehicleDetailsIntegrationService {
      * Invokes the Integration Gateway (IG) microservice layer for Vehicle & MVR vendor verification
      */
     public VehicleDetailsResponse executeVehicleLookup(String vin, Integer year, String make, String model, String driverLicense, String driverState, String policyType) {
+        LOGGER.log(Level.FINE, "→ VehicleDetailsIntegrationService.executeVehicleLookup");
         LOGGER.log(Level.INFO, "[PolicyCenter Integration Gateway Bridge] Invoking Integration Gateway (IG) JAR for VIN: {0}, DL: {1}",
                 new Object[]{vin, driverLicense});
 
@@ -37,6 +40,7 @@ public class VehicleDetailsIntegrationService {
      * Executes auto underwriting enrichment during Personal Auto or Commercial Auto submission
      */
     public VehicleDetailsResponse enrichAutoSubmissionWithIG(PolicyPeriod period, String vin, String driverLicense, String driverState) {
+        LOGGER.log(Level.FINE, "→ VehicleDetailsIntegrationService.enrichAutoSubmissionWithIG");
         String polType = period != null && period.getProductCode() != null ? period.getProductCode() : "PersonalAuto";
         VehicleDetailsResponse igResponse = executeVehicleLookup(vin, 2025, "Ford", "F-150", driverLicense, driverState, polType);
 

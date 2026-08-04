@@ -15,9 +15,11 @@ public class AddressStandardizationService {
     private static final Logger LOGGER = Logger.getLogger(AddressStandardizationService.class.getName());
     private static final AddressStandardizationService instance = new AddressStandardizationService();
 
-    private AddressStandardizationService() {}
+    private AddressStandardizationService() {
+        LOGGER.log(Level.FINE, "→ AddressStandardizationService.AddressStandardizationService");}
 
     public static AddressStandardizationService getInstance() {
+        LOGGER.log(Level.FINE, "→ AddressStandardizationService.getInstance");
         return instance;
     }
 
@@ -25,6 +27,7 @@ public class AddressStandardizationService {
      * Standardizes street addresses and retrieves USPS DPV deliverability and geocoding details via the IG Layer.
      */
     public AddressValidationResponse executeAddressStandardization(String addressLine1, String addressLine2, String city, String state, String zip, String country) {
+        LOGGER.log(Level.FINE, "→ AddressStandardizationService.executeAddressStandardization");
         LOGGER.log(Level.INFO, "[PolicyCenter Address IG Bridge] Invoking Address Standardization IG JAR for: {0}, {1}, {2} {3}",
                 new Object[]{addressLine1, city, state, zip});
 

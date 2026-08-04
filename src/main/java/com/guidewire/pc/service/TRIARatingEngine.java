@@ -11,13 +11,16 @@ public class TRIARatingEngine {
     private static final Logger LOGGER = Logger.getLogger(TRIARatingEngine.class.getName());
     private static final TRIARatingEngine instance = new TRIARatingEngine();
 
-    private TRIARatingEngine() {}
+    private TRIARatingEngine() {
+        LOGGER.log(Level.FINE, "→ TRIARatingEngine.TRIARatingEngine");}
 
     public static TRIARatingEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ TRIARatingEngine.getInstance");
         return instance;
     }
 
     public TRIAResult evaluateTRIAOption(PolicyPeriod period, boolean optInTerrorismCoverage, double triaRatePct) {
+        LOGGER.log(Level.FINE, "→ TRIARatingEngine.evaluateTRIAOption");
         TRIAResult result = new TRIAResult();
         if (period == null) return result;
 
@@ -63,31 +66,49 @@ public class TRIARatingEngine {
         private boolean disclosureFormAttached;
         private String statusMessage;
 
-        public String getPolicyNumber() { return policyNumber; }
-        public void setPolicyNumber(String policyNumber) { this.policyNumber = policyNumber; }
+        public String getPolicyNumber() {
+        LOGGER.log(Level.FINE, "→ TRIARatingEngine.getPolicyNumber"); return policyNumber; }
+        public void setPolicyNumber(String policyNumber) {
+        LOGGER.log(Level.FINE, "→ TRIARatingEngine.setPolicyNumber"); this.policyNumber = policyNumber; }
 
-        public BigDecimal getBaseSubjectPremium() { return baseSubjectPremium; }
-        public void setBaseSubjectPremium(BigDecimal baseSubjectPremium) { this.baseSubjectPremium = baseSubjectPremium; }
+        public BigDecimal getBaseSubjectPremium() {
+        LOGGER.log(Level.FINE, "→ TRIARatingEngine.getBaseSubjectPremium"); return baseSubjectPremium; }
+        public void setBaseSubjectPremium(BigDecimal baseSubjectPremium) {
+        LOGGER.log(Level.FINE, "→ TRIARatingEngine.setBaseSubjectPremium"); this.baseSubjectPremium = baseSubjectPremium; }
 
-        public boolean isOptInTerrorismCoverage() { return optInTerrorismCoverage; }
-        public void setOptInTerrorismCoverage(boolean optInTerrorismCoverage) { this.optInTerrorismCoverage = optInTerrorismCoverage; }
+        public boolean isOptInTerrorismCoverage() {
+        LOGGER.log(Level.FINE, "→ TRIARatingEngine.isOptInTerrorismCoverage"); return optInTerrorismCoverage; }
+        public void setOptInTerrorismCoverage(boolean optInTerrorismCoverage) {
+        LOGGER.log(Level.FINE, "→ TRIARatingEngine.setOptInTerrorismCoverage"); this.optInTerrorismCoverage = optInTerrorismCoverage; }
 
-        public double getTriaRatePercentage() { return triaRatePercentage; }
-        public void setTriaRatePercentage(double triaRatePercentage) { this.triaRatePercentage = triaRatePercentage; }
+        public double getTriaRatePercentage() {
+        LOGGER.log(Level.FINE, "→ TRIARatingEngine.getTriaRatePercentage"); return triaRatePercentage; }
+        public void setTriaRatePercentage(double triaRatePercentage) {
+        LOGGER.log(Level.FINE, "→ TRIARatingEngine.setTriaRatePercentage"); this.triaRatePercentage = triaRatePercentage; }
 
-        public BigDecimal getTriaPremiumSurcharge() { return triaPremiumSurcharge; }
-        public void setTriaPremiumSurcharge(BigDecimal triaPremiumSurcharge) { this.triaPremiumSurcharge = triaPremiumSurcharge; }
+        public BigDecimal getTriaPremiumSurcharge() {
+        LOGGER.log(Level.FINE, "→ TRIARatingEngine.getTriaPremiumSurcharge"); return triaPremiumSurcharge; }
+        public void setTriaPremiumSurcharge(BigDecimal triaPremiumSurcharge) {
+        LOGGER.log(Level.FINE, "→ TRIARatingEngine.setTriaPremiumSurcharge"); this.triaPremiumSurcharge = triaPremiumSurcharge; }
 
-        public BigDecimal getFinalTotalPremium() { return finalTotalPremium; }
-        public void setFinalTotalPremium(BigDecimal finalTotalPremium) { this.finalTotalPremium = finalTotalPremium; }
+        public BigDecimal getFinalTotalPremium() {
+        LOGGER.log(Level.FINE, "→ TRIARatingEngine.getFinalTotalPremium"); return finalTotalPremium; }
+        public void setFinalTotalPremium(BigDecimal finalTotalPremium) {
+        LOGGER.log(Level.FINE, "→ TRIARatingEngine.setFinalTotalPremium"); this.finalTotalPremium = finalTotalPremium; }
 
-        public String getAttachedEndorsement() { return attachedEndorsement; }
-        public void setAttachedEndorsement(String attachedEndorsement) { this.attachedEndorsement = attachedEndorsement; }
+        public String getAttachedEndorsement() {
+        LOGGER.log(Level.FINE, "→ TRIARatingEngine.getAttachedEndorsement"); return attachedEndorsement; }
+        public void setAttachedEndorsement(String attachedEndorsement) {
+        LOGGER.log(Level.FINE, "→ TRIARatingEngine.setAttachedEndorsement"); this.attachedEndorsement = attachedEndorsement; }
 
-        public boolean isDisclosureFormAttached() { return disclosureFormAttached; }
-        public void setDisclosureFormAttached(boolean disclosureFormAttached) { this.disclosureFormAttached = disclosureFormAttached; }
+        public boolean isDisclosureFormAttached() {
+        LOGGER.log(Level.FINE, "→ TRIARatingEngine.isDisclosureFormAttached"); return disclosureFormAttached; }
+        public void setDisclosureFormAttached(boolean disclosureFormAttached) {
+        LOGGER.log(Level.FINE, "→ TRIARatingEngine.setDisclosureFormAttached"); this.disclosureFormAttached = disclosureFormAttached; }
 
-        public String getStatusMessage() { return statusMessage; }
-        public void setStatusMessage(String statusMessage) { this.statusMessage = statusMessage; }
+        public String getStatusMessage() {
+        LOGGER.log(Level.FINE, "→ TRIARatingEngine.getStatusMessage"); return statusMessage; }
+        public void setStatusMessage(String statusMessage) {
+        LOGGER.log(Level.FINE, "→ TRIARatingEngine.setStatusMessage"); this.statusMessage = statusMessage; }
     }
 }

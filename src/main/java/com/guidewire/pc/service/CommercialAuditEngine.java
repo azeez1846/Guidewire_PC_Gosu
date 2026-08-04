@@ -11,13 +11,16 @@ public class CommercialAuditEngine {
     private static final Logger LOGGER = Logger.getLogger(CommercialAuditEngine.class.getName());
     private static final CommercialAuditEngine instance = new CommercialAuditEngine();
 
-    private CommercialAuditEngine() {}
+    private CommercialAuditEngine() {
+        LOGGER.log(Level.FINE, "→ CommercialAuditEngine.CommercialAuditEngine");}
 
     public static CommercialAuditEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ CommercialAuditEngine.getInstance");
         return instance;
     }
 
     public AuditResult processFinalAudit(PolicyPeriod period, BigDecimal actualAuditedExposure, BigDecimal estimatedExposure, boolean isNonCompliant) {
+        LOGGER.log(Level.FINE, "→ CommercialAuditEngine.processFinalAudit");
         AuditResult result = new AuditResult();
         if (period == null || period.getTotalPremium() == null) return result;
 
@@ -66,28 +69,44 @@ public class CommercialAuditEngine {
         private BigDecimal auditAdjustmentAmount = BigDecimal.ZERO;
         private BigDecimal ancPenaltyCharge = BigDecimal.ZERO;
 
-        public String getPolicyNumber() { return policyNumber; }
-        public void setPolicyNumber(String policyNumber) { this.policyNumber = policyNumber; }
+        public String getPolicyNumber() {
+        LOGGER.log(Level.FINE, "→ CommercialAuditEngine.getPolicyNumber"); return policyNumber; }
+        public void setPolicyNumber(String policyNumber) {
+        LOGGER.log(Level.FINE, "→ CommercialAuditEngine.setPolicyNumber"); this.policyNumber = policyNumber; }
 
-        public String getAuditStatus() { return auditStatus; }
-        public void setAuditStatus(String auditStatus) { this.auditStatus = auditStatus; }
+        public String getAuditStatus() {
+        LOGGER.log(Level.FINE, "→ CommercialAuditEngine.getAuditStatus"); return auditStatus; }
+        public void setAuditStatus(String auditStatus) {
+        LOGGER.log(Level.FINE, "→ CommercialAuditEngine.setAuditStatus"); this.auditStatus = auditStatus; }
 
-        public BigDecimal getEstimatedExposure() { return estimatedExposure; }
-        public void setEstimatedExposure(BigDecimal estimatedExposure) { this.estimatedExposure = estimatedExposure; }
+        public BigDecimal getEstimatedExposure() {
+        LOGGER.log(Level.FINE, "→ CommercialAuditEngine.getEstimatedExposure"); return estimatedExposure; }
+        public void setEstimatedExposure(BigDecimal estimatedExposure) {
+        LOGGER.log(Level.FINE, "→ CommercialAuditEngine.setEstimatedExposure"); this.estimatedExposure = estimatedExposure; }
 
-        public BigDecimal getActualAuditedExposure() { return actualAuditedExposure; }
-        public void setActualAuditedExposure(BigDecimal actualAuditedExposure) { this.actualAuditedExposure = actualAuditedExposure; }
+        public BigDecimal getActualAuditedExposure() {
+        LOGGER.log(Level.FINE, "→ CommercialAuditEngine.getActualAuditedExposure"); return actualAuditedExposure; }
+        public void setActualAuditedExposure(BigDecimal actualAuditedExposure) {
+        LOGGER.log(Level.FINE, "→ CommercialAuditEngine.setActualAuditedExposure"); this.actualAuditedExposure = actualAuditedExposure; }
 
-        public BigDecimal getEstimatedPremium() { return estimatedPremium; }
-        public void setEstimatedPremium(BigDecimal estimatedPremium) { this.estimatedPremium = estimatedPremium; }
+        public BigDecimal getEstimatedPremium() {
+        LOGGER.log(Level.FINE, "→ CommercialAuditEngine.getEstimatedPremium"); return estimatedPremium; }
+        public void setEstimatedPremium(BigDecimal estimatedPremium) {
+        LOGGER.log(Level.FINE, "→ CommercialAuditEngine.setEstimatedPremium"); this.estimatedPremium = estimatedPremium; }
 
-        public BigDecimal getAuditedEarnedPremium() { return auditedEarnedPremium; }
-        public void setAuditedEarnedPremium(BigDecimal auditedEarnedPremium) { this.auditedEarnedPremium = auditedEarnedPremium; }
+        public BigDecimal getAuditedEarnedPremium() {
+        LOGGER.log(Level.FINE, "→ CommercialAuditEngine.getAuditedEarnedPremium"); return auditedEarnedPremium; }
+        public void setAuditedEarnedPremium(BigDecimal auditedEarnedPremium) {
+        LOGGER.log(Level.FINE, "→ CommercialAuditEngine.setAuditedEarnedPremium"); this.auditedEarnedPremium = auditedEarnedPremium; }
 
-        public BigDecimal getAuditAdjustmentAmount() { return auditAdjustmentAmount; }
-        public void setAuditAdjustmentAmount(BigDecimal auditAdjustmentAmount) { this.auditAdjustmentAmount = auditAdjustmentAmount; }
+        public BigDecimal getAuditAdjustmentAmount() {
+        LOGGER.log(Level.FINE, "→ CommercialAuditEngine.getAuditAdjustmentAmount"); return auditAdjustmentAmount; }
+        public void setAuditAdjustmentAmount(BigDecimal auditAdjustmentAmount) {
+        LOGGER.log(Level.FINE, "→ CommercialAuditEngine.setAuditAdjustmentAmount"); this.auditAdjustmentAmount = auditAdjustmentAmount; }
 
-        public BigDecimal getAncPenaltyCharge() { return ancPenaltyCharge; }
-        public void setAncPenaltyCharge(BigDecimal ancPenaltyCharge) { this.ancPenaltyCharge = ancPenaltyCharge; }
+        public BigDecimal getAncPenaltyCharge() {
+        LOGGER.log(Level.FINE, "→ CommercialAuditEngine.getAncPenaltyCharge"); return ancPenaltyCharge; }
+        public void setAncPenaltyCharge(BigDecimal ancPenaltyCharge) {
+        LOGGER.log(Level.FINE, "→ CommercialAuditEngine.setAncPenaltyCharge"); this.ancPenaltyCharge = ancPenaltyCharge; }
     }
 }

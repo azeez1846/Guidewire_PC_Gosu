@@ -5,17 +5,24 @@ import com.guidewire.pc.model.PolicyPeriod;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class AIUnderwritingAssistant {
+    private static final Logger LOGGER = Logger.getLogger(AIUnderwritingAssistant.class.getName());
+
     private static final AIUnderwritingAssistant INSTANCE = new AIUnderwritingAssistant();
 
-    private AIUnderwritingAssistant() {}
+    private AIUnderwritingAssistant() {
+        LOGGER.log(Level.FINE, "→ AIUnderwritingAssistant.AIUnderwritingAssistant");}
 
     public static AIUnderwritingAssistant getInstance() {
+        LOGGER.log(Level.FINE, "→ AIUnderwritingAssistant.getInstance");
         return INSTANCE;
     }
 
     public Map<String, Object> triageSubmission(PolicyPeriod period, double lossRatio, int feinCreditScore) {
+        LOGGER.log(Level.FINE, "→ AIUnderwritingAssistant.triageSubmission");
         Map<String, Object> result = new HashMap<>();
 
         if (period == null) {

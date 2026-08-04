@@ -14,13 +14,16 @@ public class UWEscalationWorkflowEngine {
     private static final Logger LOGGER = Logger.getLogger(UWEscalationWorkflowEngine.class.getName());
     private static final UWEscalationWorkflowEngine instance = new UWEscalationWorkflowEngine();
 
-    private UWEscalationWorkflowEngine() {}
+    private UWEscalationWorkflowEngine() {
+        LOGGER.log(Level.FINE, "→ UWEscalationWorkflowEngine.UWEscalationWorkflowEngine");}
 
     public static UWEscalationWorkflowEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ UWEscalationWorkflowEngine.getInstance");
         return instance;
     }
 
     public EscalationResult processUWEscalation(PolicyPeriod period, BigDecimal totalInsuredValue, int riskScore) {
+        LOGGER.log(Level.FINE, "→ UWEscalationWorkflowEngine.processUWEscalation");
         EscalationResult result = new EscalationResult();
         if (period == null) return result;
 
@@ -70,27 +73,42 @@ public class UWEscalationWorkflowEngine {
         private List<String> requiredApproverLevels = new ArrayList<>();
         private final Date lastEvaluatedDate = new Date();
 
-        public String getPolicyNumber() { return policyNumber; }
-        public void setPolicyNumber(String policyNumber) { this.policyNumber = policyNumber; }
+        public String getPolicyNumber() {
+        LOGGER.log(Level.FINE, "→ UWEscalationWorkflowEngine.getPolicyNumber"); return policyNumber; }
+        public void setPolicyNumber(String policyNumber) {
+        LOGGER.log(Level.FINE, "→ UWEscalationWorkflowEngine.setPolicyNumber"); this.policyNumber = policyNumber; }
 
-        public BigDecimal getTotalInsuredValue() { return totalInsuredValue; }
-        public void setTotalInsuredValue(BigDecimal totalInsuredValue) { this.totalInsuredValue = totalInsuredValue; }
+        public BigDecimal getTotalInsuredValue() {
+        LOGGER.log(Level.FINE, "→ UWEscalationWorkflowEngine.getTotalInsuredValue"); return totalInsuredValue; }
+        public void setTotalInsuredValue(BigDecimal totalInsuredValue) {
+        LOGGER.log(Level.FINE, "→ UWEscalationWorkflowEngine.setTotalInsuredValue"); this.totalInsuredValue = totalInsuredValue; }
 
-        public int getRiskScore() { return riskScore; }
-        public void setRiskScore(int riskScore) { this.riskScore = riskScore; }
+        public int getRiskScore() {
+        LOGGER.log(Level.FINE, "→ UWEscalationWorkflowEngine.getRiskScore"); return riskScore; }
+        public void setRiskScore(int riskScore) {
+        LOGGER.log(Level.FINE, "→ UWEscalationWorkflowEngine.setRiskScore"); this.riskScore = riskScore; }
 
-        public String getApprovalStatus() { return approvalStatus; }
-        public void setApprovalStatus(String approvalStatus) { this.approvalStatus = approvalStatus; }
+        public String getApprovalStatus() {
+        LOGGER.log(Level.FINE, "→ UWEscalationWorkflowEngine.getApprovalStatus"); return approvalStatus; }
+        public void setApprovalStatus(String approvalStatus) {
+        LOGGER.log(Level.FINE, "→ UWEscalationWorkflowEngine.setApprovalStatus"); this.approvalStatus = approvalStatus; }
 
-        public String getEscalationReason() { return escalationReason; }
-        public void setEscalationReason(String escalationReason) { this.escalationReason = escalationReason; }
+        public String getEscalationReason() {
+        LOGGER.log(Level.FINE, "→ UWEscalationWorkflowEngine.getEscalationReason"); return escalationReason; }
+        public void setEscalationReason(String escalationReason) {
+        LOGGER.log(Level.FINE, "→ UWEscalationWorkflowEngine.setEscalationReason"); this.escalationReason = escalationReason; }
 
-        public boolean isDualSignOffRequired() { return dualSignOffRequired; }
-        public void setDualSignOffRequired(boolean dualSignOffRequired) { this.dualSignOffRequired = dualSignOffRequired; }
+        public boolean isDualSignOffRequired() {
+        LOGGER.log(Level.FINE, "→ UWEscalationWorkflowEngine.isDualSignOffRequired"); return dualSignOffRequired; }
+        public void setDualSignOffRequired(boolean dualSignOffRequired) {
+        LOGGER.log(Level.FINE, "→ UWEscalationWorkflowEngine.setDualSignOffRequired"); this.dualSignOffRequired = dualSignOffRequired; }
 
-        public List<String> getRequiredApproverLevels() { return requiredApproverLevels; }
-        public void setRequiredApproverLevels(List<String> requiredApproverLevels) { this.requiredApproverLevels = requiredApproverLevels; }
+        public List<String> getRequiredApproverLevels() {
+        LOGGER.log(Level.FINE, "→ UWEscalationWorkflowEngine.getRequiredApproverLevels"); return requiredApproverLevels; }
+        public void setRequiredApproverLevels(List<String> requiredApproverLevels) {
+        LOGGER.log(Level.FINE, "→ UWEscalationWorkflowEngine.setRequiredApproverLevels"); this.requiredApproverLevels = requiredApproverLevels; }
 
-        public Date getLastEvaluatedDate() { return lastEvaluatedDate; }
+        public Date getLastEvaluatedDate() {
+        LOGGER.log(Level.FINE, "→ UWEscalationWorkflowEngine.getLastEvaluatedDate"); return lastEvaluatedDate; }
     }
 }

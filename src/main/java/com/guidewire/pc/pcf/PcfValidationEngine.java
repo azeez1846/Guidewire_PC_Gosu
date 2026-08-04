@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class PcfValidationEngine {
+    private static final Logger LOGGER = Logger.getLogger(PcfValidationEngine.class.getName());
+
 
     public static class ValidationError {
         private final String widgetId;
@@ -15,6 +19,7 @@ public class PcfValidationEngine {
         private final String severity; // ERROR or WARNING
 
         public ValidationError(String widgetId, String widgetType, String parentType, String message, String severity) {
+        LOGGER.log(Level.FINE, "→ PcfValidationEngine.ValidationError");
             this.widgetId = widgetId;
             this.widgetType = widgetType;
             this.parentType = parentType;
@@ -22,11 +27,16 @@ public class PcfValidationEngine {
             this.severity = severity;
         }
 
-        public String getWidgetId() { return widgetId; }
-        public String getWidgetType() { return widgetType; }
-        public String getParentType() { return parentType; }
-        public String getMessage() { return message; }
-        public String getSeverity() { return severity; }
+        public String getWidgetId() {
+        LOGGER.log(Level.FINE, "→ PcfValidationEngine.getWidgetId"); return widgetId; }
+        public String getWidgetType() {
+        LOGGER.log(Level.FINE, "→ PcfValidationEngine.getWidgetType"); return widgetType; }
+        public String getParentType() {
+        LOGGER.log(Level.FINE, "→ PcfValidationEngine.getParentType"); return parentType; }
+        public String getMessage() {
+        LOGGER.log(Level.FINE, "→ PcfValidationEngine.getMessage"); return message; }
+        public String getSeverity() {
+        LOGGER.log(Level.FINE, "→ PcfValidationEngine.getSeverity"); return severity; }
     }
 
     // Allowed parent-child mapping rules according to Guidewire PCF schema
@@ -62,12 +72,14 @@ public class PcfValidationEngine {
     }
 
     public static boolean isValidParent(String childType, String parentType) {
+        LOGGER.log(Level.FINE, "→ PcfValidationEngine.isValidParent");
         if (childType == null || parentType == null) return false;
         List<String> allowed = ALLOWED_PARENTS.get(childType);
         return allowed != null && allowed.contains(parentType);
     }
 
     public static List<ValidationError> validateWidgetPlacement(String widgetId, String childType, String parentType) {
+        LOGGER.log(Level.FINE, "→ PcfValidationEngine.validateWidgetPlacement");
         List<ValidationError> errors = new ArrayList<>();
 
         if (!isValidParent(childType, parentType)) {

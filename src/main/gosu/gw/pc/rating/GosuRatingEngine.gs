@@ -7,6 +7,7 @@ import java.math.BigDecimal
 class GosuRatingEngine {
 
   public static function ratePolicy(period : PolicyPeriod) {
+    print("[GW-LOG] → GosuRatingEngine.ratePolicy")
     if (period == null) return
 
     var baseRate = 500.0

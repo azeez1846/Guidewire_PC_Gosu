@@ -14,13 +14,16 @@ public class PolicyFormInferenceEngine {
     private static final Logger LOGGER = Logger.getLogger(PolicyFormInferenceEngine.class.getName());
     private static final PolicyFormInferenceEngine instance = new PolicyFormInferenceEngine();
 
-    public PolicyFormInferenceEngine() {}
+    public PolicyFormInferenceEngine() {
+        LOGGER.log(Level.FINE, "→ PolicyFormInferenceEngine.PolicyFormInferenceEngine");}
 
     public static PolicyFormInferenceEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ PolicyFormInferenceEngine.getInstance");
         return instance;
     }
 
     public static List<PolicyForm> inferPolicyForms(PolicyPeriod period) {
+        LOGGER.log(Level.FINE, "→ PolicyFormInferenceEngine.inferPolicyForms");
         List<PolicyForm> forms = new ArrayList<>();
         if (period == null) return forms;
 

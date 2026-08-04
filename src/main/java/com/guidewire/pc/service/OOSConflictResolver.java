@@ -8,10 +8,15 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class OOSConflictResolver {
+    private static final Logger LOGGER = Logger.getLogger(OOSConflictResolver.class.getName());
+
 
     public static List<String> detectConflicts(PolicyPeriod oosBranch, PolicyPeriod latestPeriod) {
+        LOGGER.log(Level.FINE, "→ OOSConflictResolver.detectConflicts");
         List<String> conflicts = new ArrayList<>();
         if (oosBranch == null || latestPeriod == null) return conflicts;
 
@@ -27,6 +32,7 @@ public class OOSConflictResolver {
     }
 
     public static BigDecimal calculateOOSPremiumDelta(PolicyPeriod oosBranch, PolicyPeriod latestPeriod, BigDecimal newAnnualPremium) {
+        LOGGER.log(Level.FINE, "→ OOSConflictResolver.calculateOOSPremiumDelta");
         if (oosBranch == null || latestPeriod == null || newAnnualPremium == null) return BigDecimal.ZERO;
 
         try {

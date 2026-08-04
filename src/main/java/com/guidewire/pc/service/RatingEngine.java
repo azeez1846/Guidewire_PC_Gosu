@@ -16,13 +16,16 @@ public class RatingEngine {
     private static final Logger LOGGER = Logger.getLogger(RatingEngine.class.getName());
     private static final RatingEngine instance = new RatingEngine();
 
-    private RatingEngine() {}
+    private RatingEngine() {
+        LOGGER.log(Level.FINE, "→ RatingEngine.RatingEngine");}
 
     public static RatingEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ RatingEngine.getInstance");
         return instance;
     }
 
     public List<Cost> rate(PolicyPeriod period) {
+        LOGGER.log(Level.FINE, "→ RatingEngine.rate");
         LOGGER.log(Level.INFO, "Executing Guidewire Rating Engine for PolicyPeriod: {0}", period != null ? period.getJobNumber() : "null");
         List<Cost> costs = new ArrayList<>();
         if (period == null) return costs;
@@ -122,6 +125,7 @@ public class RatingEngine {
     }
 
     public List<Transaction> createTransactions(PolicyPeriod period, List<Cost> costs) {
+        LOGGER.log(Level.FINE, "→ RatingEngine.createTransactions");
         List<Transaction> txns = new ArrayList<>();
         for (Cost c : costs) {
             Transaction tx = new Transaction(c, period.getJobNumber(), c.getActualAmount(), "PremiumCharge");

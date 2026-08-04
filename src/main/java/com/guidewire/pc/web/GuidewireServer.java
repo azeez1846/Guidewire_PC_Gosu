@@ -19,8 +19,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class GuidewireServer {
+    private static final Logger LOGGER = Logger.getLogger(GuidewireServer.class.getName());
     private final int port;
     private final PCFParser pcfParser;
     private final DataStoreService dataStore;
@@ -33,6 +36,7 @@ public class GuidewireServer {
     }
 
     public void start() throws IOException {
+        LOGGER.log(Level.FINE, "→ GuidewireServer.start");
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/", new MainHandler());
         server.setExecutor(java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor());
@@ -117,6 +121,7 @@ public class GuidewireServer {
     }
 
     private void parseFormData(String body, Map<String, String> map) {
+        LOGGER.log(Level.FINE, "→ GuidewireServer.parseFormData");
         if (body == null || body.isEmpty()) return;
         String[] pairs = body.split("&");
         for (String pair : pairs) {
@@ -131,6 +136,7 @@ public class GuidewireServer {
     }
 
     private void redirect(HttpExchange exchange, String location) throws IOException {
+        LOGGER.log(Level.FINE, "→ GuidewireServer.redirect");
         exchange.getResponseHeaders().set("Location", location);
         exchange.sendResponseHeaders(302, -1);
     }
@@ -138,6 +144,7 @@ public class GuidewireServer {
     // HTML RENDERERS
 
     private String getHeaderCSS() {
+        LOGGER.log(Level.FINE, "→ GuidewireServer.getHeaderCSS");
         return "<style>" +
                 ":root { --gw-navy: #1C2B39; --gw-blue: #0A66C2; --gw-header: #1E2D3D; --gw-bg: #F4F6F9; --gw-sidebar: #273849; --gw-accent: #0073B1; }" +
                 "* { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }" +
@@ -198,6 +205,7 @@ public class GuidewireServer {
     }
 
     private String renderLoginPage(boolean hasError) {
+        LOGGER.log(Level.FINE, "→ GuidewireServer.renderLoginPage");
         return "<!DOCTYPE html><html><head><title>Login - Guidewire PolicyCenter</title>" + getHeaderCSS() + "</head>" +
                 "<body style='justify-content: center; align-items: center; background: #1C2B39;'>" +
                 "<div style='width: 380px; background: white; border-radius: 8px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center;'>" +
@@ -217,6 +225,7 @@ public class GuidewireServer {
     }
 
     private String renderHeader(String activeTab) {
+        LOGGER.log(Level.FINE, "→ GuidewireServer.renderHeader");
         return "<div class='gw-header'>" +
                 "<div class='gw-brand'><span class='gw-brand-logo'>GW</span> Guidewire PolicyCenter <span style='font-size:11px; font-weight:normal; opacity:0.8;'>v10.0</span></div>" +
                 "<div class='gw-search-box'>" +
@@ -241,6 +250,7 @@ public class GuidewireServer {
     }
 
     private String renderDesktopPage(String tab, String searchQuery) {
+        LOGGER.log(Level.FINE, "→ GuidewireServer.renderDesktopPage");
         StringBuilder sb = new StringBuilder();
         sb.append("<!DOCTYPE html><html><head><title>Desktop - Guidewire PolicyCenter</title>").append(getHeaderCSS()).append("</head><body>");
         sb.append(renderHeader("desktop"));
@@ -355,6 +365,7 @@ public class GuidewireServer {
     }
 
     private String renderNewAccountPage(Map<String, String> params) {
+        LOGGER.log(Level.FINE, "→ GuidewireServer.renderNewAccountPage");
         if (params.containsKey("action") && "create".equals(params.get("action"))) {
             Account acc = new Account();
             acc.setAccountHolderName(params.get("accountHolderName"));
@@ -424,6 +435,7 @@ public class GuidewireServer {
     }
 
     private String renderAccountDetailPage(String accNum) {
+        LOGGER.log(Level.FINE, "→ GuidewireServer.renderAccountDetailPage");
         Account acc = dataStore.findAccount(accNum);
         if (acc == null) return "Account Not Found";
 
@@ -485,6 +497,7 @@ public class GuidewireServer {
     }
 
     private String renderNewSubmissionPage(Map<String, String> params) {
+        LOGGER.log(Level.FINE, "→ GuidewireServer.renderNewSubmissionPage");
         if (params.containsKey("action") && "create".equals(params.get("action"))) {
             String accNum = params.get("accNum");
             Account acc = dataStore.findAccount(accNum);
@@ -549,6 +562,7 @@ public class GuidewireServer {
     }
 
     private String renderSubmissionWizard(String jobNum, String step, Map<String, String> params) {
+        LOGGER.log(Level.FINE, "→ GuidewireServer.renderSubmissionWizard");
         PolicyPeriod sub = dataStore.findSubmission(jobNum);
         if (sub == null) return "Submission Not Found";
 
@@ -738,6 +752,7 @@ public class GuidewireServer {
     }
 
     private String renderPolicyChangePage(String origJobNum, Map<String, String> params) {
+        LOGGER.log(Level.FINE, "→ GuidewireServer.renderPolicyChangePage");
         PolicyPeriod orig = dataStore.findSubmission(origJobNum);
         if (orig == null) return "Original Policy Period Not Found";
 
@@ -791,6 +806,7 @@ public class GuidewireServer {
     }
 
     private String renderCancellationPage(String origJobNum, Map<String, String> params) {
+        LOGGER.log(Level.FINE, "→ GuidewireServer.renderCancellationPage");
         PolicyPeriod orig = dataStore.findSubmission(origJobNum);
         if (orig == null) return "Original Policy Period Not Found";
 

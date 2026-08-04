@@ -7,6 +7,7 @@ import java.math.RoundingMode
 class CPRatingEngine {
 
   public static function rateCommercialProperty(period : PolicyPeriod, buildingLimit : BigDecimal, bppLimit : BigDecimal, protectionClass : String) : BigDecimal {
+    print("[GW-LOG] → CPRatingEngine.rateCommercialProperty")
     if (period == null) return BigDecimal.ZERO
 
     var bldg = buildingLimit != null ? buildingLimit : new BigDecimal("1000000.00")

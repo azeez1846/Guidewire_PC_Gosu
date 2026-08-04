@@ -10,18 +10,22 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class ActivityEscalationBatchProcess implements BatchProcess {
     private static final Logger LOGGER = Logger.getLogger(ActivityEscalationBatchProcess.class.getName());
 
     @Override
-    public String getType() { return "ActivityEscalation"; }
+    public String getType() {
+        LOGGER.log(Level.FINE, "→ ActivityEscalationBatchProcess.getType"); return "ActivityEscalation"; }
 
     @Override
-    public String getDescription() { return "Escalates open underwriting activities that are near or past due using Java 23 Virtual Threads."; }
+    public String getDescription() {
+        LOGGER.log(Level.FINE, "→ ActivityEscalationBatchProcess.getDescription"); return "Escalates open underwriting activities that are near or past due using Java 23 Virtual Threads."; }
 
     @Override
     public BatchProcessResult run() {
+        LOGGER.log(Level.FINE, "→ ActivityEscalationBatchProcess.run");
         LOGGER.info("Executing Guidewire Batch Job: ActivityEscalationBatchProcess on Virtual Threads...");
         DataStoreService dataStore = DataStoreService.getInstance();
         List<Activity> activities = dataStore.getActivities();

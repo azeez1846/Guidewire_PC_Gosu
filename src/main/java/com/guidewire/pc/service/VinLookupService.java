@@ -2,17 +2,24 @@ package com.guidewire.pc.service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class VinLookupService {
+    private static final Logger LOGGER = Logger.getLogger(VinLookupService.class.getName());
+
     private static final VinLookupService INSTANCE = new VinLookupService();
 
-    private VinLookupService() {}
+    private VinLookupService() {
+        LOGGER.log(Level.FINE, "→ VinLookupService.VinLookupService");}
 
     public static VinLookupService getInstance() {
+        LOGGER.log(Level.FINE, "→ VinLookupService.getInstance");
         return INSTANCE;
     }
 
     public Map<String, Object> decodeVin(String vin) {
+        LOGGER.log(Level.FINE, "→ VinLookupService.decodeVin");
         Map<String, Object> result = new HashMap<>();
 
         if (vin == null || vin.trim().length() != 17) {

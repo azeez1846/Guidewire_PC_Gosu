@@ -17,9 +17,11 @@ public class SIURiskScoringEngine {
 
     private final DataStoreService dataStore = DataStoreService.getInstance();
 
-    private SIURiskScoringEngine() {}
+    private SIURiskScoringEngine() {
+        LOGGER.log(Level.FINE, "→ SIURiskScoringEngine.SIURiskScoringEngine");}
 
     public static SIURiskScoringEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ SIURiskScoringEngine.getInstance");
         return instance;
     }
 
@@ -27,6 +29,7 @@ public class SIURiskScoringEngine {
      * Evaluates policy period for fraud indicators and computes SIU Risk Score
      */
     public FraudRiskScore evaluatePolicyFraudRisk(PolicyPeriod period) {
+        LOGGER.log(Level.FINE, "→ SIURiskScoringEngine.evaluatePolicyFraudRisk");
         if (period == null) return new FraudRiskScore();
 
         FraudRiskScore score = new FraudRiskScore(period.getPolicyNumber(), period.getJobNumber());

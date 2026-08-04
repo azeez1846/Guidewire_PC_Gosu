@@ -10,20 +10,27 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class ProductModelLoader {
+    private static final Logger LOGGER = Logger.getLogger(ProductModelLoader.class.getName());
+
     private static final ProductModelLoader INSTANCE = new ProductModelLoader();
     private final Map<String, Map<String, CoveragePattern>> productPatterns = new ConcurrentHashMap<>();
 
     private ProductModelLoader() {
+        LOGGER.log(Level.FINE, "→ ProductModelLoader.ProductModelLoader");
         loadProductModels();
     }
 
     public static ProductModelLoader getInstance() {
+        LOGGER.log(Level.FINE, "→ ProductModelLoader.getInstance");
         return INSTANCE;
     }
 
     public final synchronized void loadProductModels() {
+        LOGGER.log(Level.FINE, "→ ProductModelLoader.loadProductModels");
         productPatterns.clear();
         File dir = new File("config/resources/productmodel");
         if (!dir.exists() || !dir.isDirectory()) {
@@ -41,6 +48,7 @@ public class ProductModelLoader {
     }
 
     private void parseProductFile(File file) {
+        LOGGER.log(Level.FINE, "→ ProductModelLoader.parseProductFile");
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -91,12 +99,14 @@ public class ProductModelLoader {
     }
 
     public CoveragePattern getCoveragePattern(String productId, String patternCode) {
+        LOGGER.log(Level.FINE, "→ ProductModelLoader.getCoveragePattern");
         Map<String, CoveragePattern> map = productPatterns.get(productId);
         if (map != null) return map.get(patternCode);
         return null;
     }
 
     public Collection<CoveragePattern> getCoveragePatterns(String productId) {
+        LOGGER.log(Level.FINE, "→ ProductModelLoader.getCoveragePatterns");
         Map<String, CoveragePattern> map = productPatterns.get(productId);
         if (map == null) return Collections.emptyList();
         return map.values();

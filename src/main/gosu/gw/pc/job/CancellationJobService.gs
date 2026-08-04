@@ -10,6 +10,7 @@ import java.time.temporal.ChronoUnit
 class CancellationJobService {
 
   public static function cancelPolicy(period : PolicyPeriod, cancelReason : String, calcMethod : String, cancelEffDateStr : String) : PolicyPeriod {
+    print("[GW-LOG] → CancellationJobService.cancelPolicy")
     if (period == null) return null
 
     period.setStatus(PCConstants.STATUS_CANCELED)
@@ -55,6 +56,7 @@ class CancellationJobService {
   }
 
   public static function reinstatePolicy(period : PolicyPeriod, reinstatementReason : String, hasLapse : boolean, feeAmount : BigDecimal) : PolicyPeriod {
+    print("[GW-LOG] → CancellationJobService.reinstatePolicy")
     if (period != null) {
       period.setStatus(PCConstants.STATUS_ISSUED)
       period.setJobType(PCConstants.JOB_TYPE_REINSTATEMENT)

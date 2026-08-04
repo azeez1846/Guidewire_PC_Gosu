@@ -4,3 +4,4 @@ h2_cookies.txt
 *.log
 .DS_Store
 data/
+logs/

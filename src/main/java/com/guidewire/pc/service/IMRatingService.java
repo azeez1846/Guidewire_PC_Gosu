@@ -13,9 +13,11 @@ public class IMRatingService {
     private static final Logger LOGGER = Logger.getLogger(IMRatingService.class.getName());
     private static final IMRatingService instance = new IMRatingService();
 
-    private IMRatingService() {}
+    private IMRatingService() {
+        LOGGER.log(Level.FINE, "→ IMRatingService.IMRatingService");}
 
     public static IMRatingService getInstance() {
+        LOGGER.log(Level.FINE, "→ IMRatingService.getInstance");
         return instance;
     }
 
@@ -23,6 +25,7 @@ public class IMRatingService {
      * Rate Inland Marine Policy Period
      */
     public PolicyPeriod rateInlandMarine(PolicyPeriod period) {
+        LOGGER.log(Level.FINE, "→ IMRatingService.rateInlandMarine");
         if (period == null) return null;
 
         BigDecimal totalEquipmentValue = BigDecimal.ZERO;
@@ -64,6 +67,7 @@ public class IMRatingService {
     }
 
     private double getEquipmentRate(String type) {
+        LOGGER.log(Level.FINE, "→ IMRatingService.getEquipmentRate");
         if (type == null) return 0.015;
         return switch (type.toLowerCase()) {
             case "heavymachinery" -> 0.015;
@@ -76,6 +80,7 @@ public class IMRatingService {
     }
 
     private double getDeductibleFactor(BigDecimal ded) {
+        LOGGER.log(Level.FINE, "→ IMRatingService.getDeductibleFactor");
         if (ded == null) return 1.00;
         int val = ded.intValue();
         if (val >= 5000) return 0.85;

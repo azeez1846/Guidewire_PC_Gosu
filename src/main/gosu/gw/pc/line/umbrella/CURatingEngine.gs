@@ -7,6 +7,7 @@ import java.math.RoundingMode
 class CURatingEngine {
 
   public static function rateCommercialUmbrella(period : PolicyPeriod, limitAmount : BigDecimal, sirAmount : BigDecimal, underlyingPolicyCount : int) : BigDecimal {
+    print("[GW-LOG] → CURatingEngine.rateCommercialUmbrella")
     if (period == null or limitAmount == null) return BigDecimal.ZERO
 
     // Base umbrella rate per $1,000,000 limit e.g. $1,500 for 1st million, $800 for subsequent millions

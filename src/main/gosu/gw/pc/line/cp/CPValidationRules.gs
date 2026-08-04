@@ -8,6 +8,7 @@ import java.util.List
 class CPValidationRules {
 
   public static function validateCommercialPropertyLine(period : PolicyPeriod, buildingLimit : BigDecimal, coinsurance : int) : List<String> {
+    print("[GW-LOG] → CPValidationRules.validateCommercialPropertyLine")
     var errors = new ArrayList<String>()
     if (period == null) return errors
 

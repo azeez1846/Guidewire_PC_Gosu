@@ -6,15 +6,21 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class CommercialAutoRatingService {
+    private static final Logger LOGGER = Logger.getLogger(CommercialAutoRatingService.class.getName());
+
 
     public static BigDecimal rateCommercialAuto(PolicyPeriod period, int vehicleCount, boolean isFleet, String radius) {
+        LOGGER.log(Level.FINE, "→ CommercialAutoRatingService.rateCommercialAuto");
         return rateCommercialAutoExtended(period, vehicleCount, isFleet, radius, 0, false);
     }
 
     public static BigDecimal rateCommercialAutoExtended(PolicyPeriod period, int vehicleCount, boolean isFleet, String radius,
                                                         int avgTelematicsScore, boolean isHighRiskGaraging) {
+        LOGGER.log(Level.FINE, "→ CommercialAutoRatingService.rateCommercialAutoExtended");
         if (period == null || vehicleCount <= 0) return BigDecimal.ZERO;
 
         double basePerVehicle = 1200.00;
@@ -46,6 +52,7 @@ public class CommercialAutoRatingService {
     }
 
     public static List<String> validateCommercialAutoLine(PolicyPeriod period, int vehicleCount, String radius) {
+        LOGGER.log(Level.FINE, "→ CommercialAutoRatingService.validateCommercialAutoLine");
         List<String> errors = new ArrayList<>();
         if (period == null) return errors;
 

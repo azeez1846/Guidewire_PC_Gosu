@@ -13,9 +13,11 @@ public class DecPageImporterService {
     private static final Logger LOGGER = Logger.getLogger(DecPageImporterService.class.getName());
     private static final DecPageImporterService instance = new DecPageImporterService();
 
-    private DecPageImporterService() {}
+    private DecPageImporterService() {
+        LOGGER.log(Level.FINE, "→ DecPageImporterService.DecPageImporterService");}
 
     public static DecPageImporterService getInstance() {
+        LOGGER.log(Level.FINE, "→ DecPageImporterService.getInstance");
         return instance;
     }
 
@@ -23,6 +25,7 @@ public class DecPageImporterService {
      * Parses raw dec page text/JSON and converts into a populated PolicyPeriod draft
      */
     public PolicyPeriod importDecPageText(String rawDecPageText) {
+        LOGGER.log(Level.FINE, "→ DecPageImporterService.importDecPageText");
         if (rawDecPageText == null || rawDecPageText.trim().isEmpty()) {
             throw new IllegalArgumentException("Dec page text cannot be empty");
         }
@@ -68,6 +71,7 @@ public class DecPageImporterService {
     }
 
     private String extractRegex(String text, String regex, String defaultVal) {
+        LOGGER.log(Level.FINE, "→ DecPageImporterService.extractRegex");
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {

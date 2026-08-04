@@ -8,6 +8,7 @@ import java.math.RoundingMode
 class ScheduledItemRatingEngine {
 
   public static function rateScheduledItems(period : PolicyPeriod) : BigDecimal {
+    print("[GW-LOG] → ScheduledItemRatingEngine.rateScheduledItems")
     if (period == null or period.ScheduledItems == null or period.ScheduledItems.isEmpty()) {
       return BigDecimal.ZERO
     }

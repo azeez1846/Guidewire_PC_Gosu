@@ -5,10 +5,15 @@ import com.guidewire.pc.model.ProducerCode;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class ProducerCommissionService {
+    private static final Logger LOGGER = Logger.getLogger(ProducerCommissionService.class.getName());
+
 
     public static BigDecimal calculateCommission(PolicyPeriod period, ProducerCode producer) {
+        LOGGER.log(Level.FINE, "→ ProducerCommissionService.calculateCommission");
         if (period == null || producer == null) return BigDecimal.ZERO;
 
         BigDecimal prem = period.getTotalPremium() != null ? period.getTotalPremium() : BigDecimal.ZERO;

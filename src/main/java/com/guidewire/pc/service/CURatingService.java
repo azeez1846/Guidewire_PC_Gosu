@@ -6,15 +6,21 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class CURatingService {
+    private static final Logger LOGGER = Logger.getLogger(CURatingService.class.getName());
+
 
     public static BigDecimal rateCommercialUmbrella(PolicyPeriod period, BigDecimal limitAmount, BigDecimal sirAmount, int underlyingPolicyCount) {
+        LOGGER.log(Level.FINE, "→ CURatingService.rateCommercialUmbrella");
         return rateCommercialUmbrellaExtended(period, limitAmount, sirAmount, underlyingPolicyCount, false);
     }
 
     public static BigDecimal rateCommercialUmbrellaExtended(PolicyPeriod period, BigDecimal limitAmount, BigDecimal sirAmount,
                                                             int underlyingPolicyCount, boolean hasHighRiskUnderlying) {
+        LOGGER.log(Level.FINE, "→ CURatingService.rateCommercialUmbrellaExtended");
         if (period == null || limitAmount == null) return BigDecimal.ZERO;
 
         BigDecimal millions = limitAmount.divide(new BigDecimal("1000000.00"), 2, RoundingMode.HALF_UP);
@@ -43,6 +49,7 @@ public class CURatingService {
     }
 
     public static List<String> validateCommercialUmbrellaLine(PolicyPeriod period, BigDecimal limitAmount, int underlyingPolicyCount) {
+        LOGGER.log(Level.FINE, "→ CURatingService.validateCommercialUmbrellaLine");
         List<String> errors = new ArrayList<>();
         if (period == null) return errors;
 

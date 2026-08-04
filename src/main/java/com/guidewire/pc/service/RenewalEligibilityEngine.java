@@ -10,13 +10,16 @@ public class RenewalEligibilityEngine {
     private static final Logger LOGGER = Logger.getLogger(RenewalEligibilityEngine.class.getName());
     private static final RenewalEligibilityEngine instance = new RenewalEligibilityEngine();
 
-    private RenewalEligibilityEngine() {}
+    private RenewalEligibilityEngine() {
+        LOGGER.log(Level.FINE, "→ RenewalEligibilityEngine.RenewalEligibilityEngine");}
 
     public static RenewalEligibilityEngine getInstance() {
+        LOGGER.log(Level.FINE, "→ RenewalEligibilityEngine.getInstance");
         return instance;
     }
 
     public RenewalEligibilityResult evaluateRenewalEligibility(PolicyPeriod period, double proposedRateIncreasePct) {
+        LOGGER.log(Level.FINE, "→ RenewalEligibilityEngine.evaluateRenewalEligibility");
         RenewalEligibilityResult result = new RenewalEligibilityResult();
         if (period == null) return result;
 
@@ -71,31 +74,49 @@ public class RenewalEligibilityEngine {
         private boolean statutoryNoticeRequired;
         private int noticeDays;
 
-        public String getPolicyNumber() { return policyNumber; }
-        public void setPolicyNumber(String policyNumber) { this.policyNumber = policyNumber; }
+        public String getPolicyNumber() {
+        LOGGER.log(Level.FINE, "→ RenewalEligibilityEngine.getPolicyNumber"); return policyNumber; }
+        public void setPolicyNumber(String policyNumber) {
+        LOGGER.log(Level.FINE, "→ RenewalEligibilityEngine.setPolicyNumber"); this.policyNumber = policyNumber; }
 
-        public boolean isRenewalEligible() { return renewalEligible; }
-        public void setRenewalEligible(boolean renewalEligible) { this.renewalEligible = renewalEligible; }
+        public boolean isRenewalEligible() {
+        LOGGER.log(Level.FINE, "→ RenewalEligibilityEngine.isRenewalEligible"); return renewalEligible; }
+        public void setRenewalEligible(boolean renewalEligible) {
+        LOGGER.log(Level.FINE, "→ RenewalEligibilityEngine.setRenewalEligible"); this.renewalEligible = renewalEligible; }
 
-        public String getDecisionAction() { return decisionAction; }
-        public void setDecisionAction(String decisionAction) { this.decisionAction = decisionAction; }
+        public String getDecisionAction() {
+        LOGGER.log(Level.FINE, "→ RenewalEligibilityEngine.getDecisionAction"); return decisionAction; }
+        public void setDecisionAction(String decisionAction) {
+        LOGGER.log(Level.FINE, "→ RenewalEligibilityEngine.setDecisionAction"); this.decisionAction = decisionAction; }
 
-        public String getReason() { return reason; }
-        public void setReason(String reason) { this.reason = reason; }
+        public String getReason() {
+        LOGGER.log(Level.FINE, "→ RenewalEligibilityEngine.getReason"); return reason; }
+        public void setReason(String reason) {
+        LOGGER.log(Level.FINE, "→ RenewalEligibilityEngine.setReason"); this.reason = reason; }
 
-        public int getPriorClaimsCount() { return priorClaimsCount; }
-        public void setPriorClaimsCount(int priorClaimsCount) { this.priorClaimsCount = priorClaimsCount; }
+        public int getPriorClaimsCount() {
+        LOGGER.log(Level.FINE, "→ RenewalEligibilityEngine.getPriorClaimsCount"); return priorClaimsCount; }
+        public void setPriorClaimsCount(int priorClaimsCount) {
+        LOGGER.log(Level.FINE, "→ RenewalEligibilityEngine.setPriorClaimsCount"); this.priorClaimsCount = priorClaimsCount; }
 
-        public BigDecimal getTotalPriorLosses() { return totalPriorLosses; }
-        public void setTotalPriorLosses(BigDecimal totalPriorLosses) { this.totalPriorLosses = totalPriorLosses; }
+        public BigDecimal getTotalPriorLosses() {
+        LOGGER.log(Level.FINE, "→ RenewalEligibilityEngine.getTotalPriorLosses"); return totalPriorLosses; }
+        public void setTotalPriorLosses(BigDecimal totalPriorLosses) {
+        LOGGER.log(Level.FINE, "→ RenewalEligibilityEngine.setTotalPriorLosses"); this.totalPriorLosses = totalPriorLosses; }
 
-        public double getProposedRateIncreasePct() { return proposedRateIncreasePct; }
-        public void setProposedRateIncreasePct(double proposedRateIncreasePct) { this.proposedRateIncreasePct = proposedRateIncreasePct; }
+        public double getProposedRateIncreasePct() {
+        LOGGER.log(Level.FINE, "→ RenewalEligibilityEngine.getProposedRateIncreasePct"); return proposedRateIncreasePct; }
+        public void setProposedRateIncreasePct(double proposedRateIncreasePct) {
+        LOGGER.log(Level.FINE, "→ RenewalEligibilityEngine.setProposedRateIncreasePct"); this.proposedRateIncreasePct = proposedRateIncreasePct; }
 
-        public boolean isStatutoryNoticeRequired() { return statutoryNoticeRequired; }
-        public void setStatutoryNoticeRequired(boolean statutoryNoticeRequired) { this.statutoryNoticeRequired = statutoryNoticeRequired; }
+        public boolean isStatutoryNoticeRequired() {
+        LOGGER.log(Level.FINE, "→ RenewalEligibilityEngine.isStatutoryNoticeRequired"); return statutoryNoticeRequired; }
+        public void setStatutoryNoticeRequired(boolean statutoryNoticeRequired) {
+        LOGGER.log(Level.FINE, "→ RenewalEligibilityEngine.setStatutoryNoticeRequired"); this.statutoryNoticeRequired = statutoryNoticeRequired; }
 
-        public int getNoticeDays() { return noticeDays; }
-        public void setNoticeDays(int noticeDays) { this.noticeDays = noticeDays; }
+        public int getNoticeDays() {
+        LOGGER.log(Level.FINE, "→ RenewalEligibilityEngine.getNoticeDays"); return noticeDays; }
+        public void setNoticeDays(int noticeDays) {
+        LOGGER.log(Level.FINE, "→ RenewalEligibilityEngine.setNoticeDays"); this.noticeDays = noticeDays; }
     }
 }

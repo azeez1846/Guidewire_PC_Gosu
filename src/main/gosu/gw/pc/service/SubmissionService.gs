@@ -24,6 +24,7 @@ class SubmissionService {
   }
 
   private function initSampleSubmissions() {
+    print("[GW-LOG] → SubmissionService.initSampleSubmissions")
     var acc = AccountService.Instance.findByNumber("A0001001")
     if (acc != null) {
       var sub1 = new PolicyPeriod()
@@ -72,10 +73,12 @@ class SubmissionService {
   }
 
   public function getAllSubmissions() : List<PolicyPeriod> {
+    print("[GW-LOG] → SubmissionService.getAllSubmissions")
     return _submissions
   }
 
   public function findByJobNumber(jobNum : String) : PolicyPeriod {
+    print("[GW-LOG] → SubmissionService.findByJobNumber")
     if (jobNum == null) return null
     for (sub in _submissions) {
       if (sub?.JobNumber != null and sub.JobNumber.equalsIgnoreCase(jobNum)) {
@@ -86,6 +89,7 @@ class SubmissionService {
   }
 
   public function findSubmissionsForAccount(accountNum : String) : List<PolicyPeriod> {
+    print("[GW-LOG] → SubmissionService.findSubmissionsForAccount")
     var result = new ArrayList<PolicyPeriod>()
     if (accountNum == null) return result
     for (sub in _submissions) {
@@ -97,12 +101,14 @@ class SubmissionService {
   }
 
   public function generateJobNumber() : String {
+    print("[GW-LOG] → SubmissionService.generateJobNumber")
     var num = "S000" + _jobCounter
     _jobCounter = _jobCounter + 1
     return num
   }
 
   public function createSubmission(sub : PolicyPeriod) : PolicyPeriod {
+    print("[GW-LOG] → SubmissionService.createSubmission")
     if (sub?.JobNumber == null or sub.JobNumber.length() == 0) {
       sub.JobNumber = generateJobNumber()
     }
@@ -117,6 +123,7 @@ class SubmissionService {
   }
 
   public function copySubmission(origJobNum : String) : PolicyPeriod {
+    print("[GW-LOG] → SubmissionService.copySubmission")
     var orig = findByJobNumber(origJobNum)
     if (orig == null) return null
     var newJobNum = generateJobNumber()

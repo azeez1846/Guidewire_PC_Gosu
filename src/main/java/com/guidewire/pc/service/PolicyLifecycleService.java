@@ -17,9 +17,11 @@ public class PolicyLifecycleService {
 
     private final DataStoreService dataStore = DataStoreService.getInstance();
 
-    private PolicyLifecycleService() {}
+    private PolicyLifecycleService() {
+        LOGGER.log(Level.FINE, "→ PolicyLifecycleService.PolicyLifecycleService");}
 
     public static PolicyLifecycleService getInstance() {
+        LOGGER.log(Level.FINE, "→ PolicyLifecycleService.getInstance");
         return instance;
     }
 
@@ -27,6 +29,7 @@ public class PolicyLifecycleService {
      * Start a mid-term Policy Change (Endorsement)
      */
     public PolicyPeriod startPolicyChange(String policyNumber, String editEffectiveDate, String newBiLimit, String newCollDeductible) {
+        LOGGER.log(Level.FINE, "→ PolicyLifecycleService.startPolicyChange");
         PolicyPeriod orig = dataStore.findPolicyByPolicyNumber(policyNumber);
         if (orig == null) {
             throw new IllegalArgumentException("Policy not found for policy number: " + policyNumber);
@@ -68,6 +71,7 @@ public class PolicyLifecycleService {
      * Bind and complete a Policy Change
      */
     public PolicyPeriod bindPolicyChange(String jobNumber) {
+        LOGGER.log(Level.FINE, "→ PolicyLifecycleService.bindPolicyChange");
         PolicyPeriod changePeriod = dataStore.findSubmission(jobNumber);
         if (changePeriod == null) {
             throw new IllegalArgumentException("Job not found: " + jobNumber);
@@ -90,6 +94,7 @@ public class PolicyLifecycleService {
      * Cancel an active policy
      */
     public PolicyPeriod cancelPolicy(String policyNumber, String cancelReason, String calcMethod, String cancelEffDateStr) {
+        LOGGER.log(Level.FINE, "→ PolicyLifecycleService.cancelPolicy");
         PolicyPeriod period = dataStore.findPolicyByPolicyNumber(policyNumber);
         if (period == null) {
             throw new IllegalArgumentException("Policy not found: " + policyNumber);
@@ -122,6 +127,7 @@ public class PolicyLifecycleService {
      * Reinstate a cancelled policy
      */
     public PolicyPeriod reinstatePolicy(String policyNumber, String reinstatementReason) {
+        LOGGER.log(Level.FINE, "→ PolicyLifecycleService.reinstatePolicy");
         PolicyPeriod period = dataStore.findPolicyByPolicyNumber(policyNumber);
         if (period == null) {
             throw new IllegalArgumentException("Policy not found: " + policyNumber);
@@ -138,6 +144,7 @@ public class PolicyLifecycleService {
      * Generate Policy Renewal
      */
     public PolicyPeriod renewPolicy(String policyNumber) {
+        LOGGER.log(Level.FINE, "→ PolicyLifecycleService.renewPolicy");
         PolicyPeriod orig = dataStore.findPolicyByPolicyNumber(policyNumber);
         if (orig == null) {
             throw new IllegalArgumentException("Policy not found: " + policyNumber);
@@ -175,6 +182,7 @@ public class PolicyLifecycleService {
     }
 
     public PolicyPeriod copySubmission(String sourceJobNum) {
+        LOGGER.log(Level.FINE, "→ PolicyLifecycleService.copySubmission");
         PolicyPeriod orig = dataStore.findSubmission(sourceJobNum);
         if (orig == null) {
             throw new IllegalArgumentException("Source submission not found for copy: " + sourceJobNum);
@@ -191,6 +199,7 @@ public class PolicyLifecycleService {
      * Quote a Policy Submission branch with UW Authority Issue evaluation
      */
     public PolicyPeriod quoteSubmissionBranch(String jobNumber) {
+        LOGGER.log(Level.FINE, "→ PolicyLifecycleService.quoteSubmissionBranch");
         PolicyPeriod period = dataStore.findSubmission(jobNumber);
         if (period == null) {
             throw new IllegalArgumentException("Job not found: " + jobNumber);
@@ -216,6 +225,7 @@ public class PolicyLifecycleService {
      * Bind a Policy Submission branch with UW Authority Issue evaluation
      */
     public PolicyPeriod bindSubmissionBranch(String jobNumber) {
+        LOGGER.log(Level.FINE, "→ PolicyLifecycleService.bindSubmissionBranch");
         PolicyPeriod period = dataStore.findSubmission(jobNumber);
         if (period == null) {
             throw new IllegalArgumentException("Job not found: " + jobNumber);
@@ -236,6 +246,7 @@ public class PolicyLifecycleService {
      * Start a Mid-Term Policy Rewrite job
      */
     public PolicyPeriod startRewrite(String policyNumber, String rewriteReason, String effectiveDateStr) {
+        LOGGER.log(Level.FINE, "→ PolicyLifecycleService.startRewrite");
         PolicyPeriod orig = dataStore.findPolicyByPolicyNumber(policyNumber);
         if (orig == null) {
             throw new IllegalArgumentException("Policy not found for rewrite: " + policyNumber);
@@ -273,6 +284,7 @@ public class PolicyLifecycleService {
      * Start a Rewrite New Account job
      */
     public PolicyPeriod startRewriteNewAccount(String policyNumber, String targetAccountNumber, String rewriteReason) {
+        LOGGER.log(Level.FINE, "→ PolicyLifecycleService.startRewriteNewAccount");
         PolicyPeriod orig = dataStore.findPolicyByPolicyNumber(policyNumber);
         if (orig == null) {
             throw new IllegalArgumentException("Policy not found for rewrite new account: " + policyNumber);
@@ -316,6 +328,7 @@ public class PolicyLifecycleService {
     }
 
     private double calculateProRataFactor(Date start, Date end, Date effective) {
+        LOGGER.log(Level.FINE, "→ PolicyLifecycleService.calculateProRataFactor");
         if (start == null || end == null || effective == null) return 0.5;
         long totalMs = Math.max(1, end.getTime() - start.getTime());
         long remainingMs = Math.max(0, end.getTime() - effective.getTime());
@@ -323,6 +336,7 @@ public class PolicyLifecycleService {
     }
 
     private Date parseDate(String dateStr) {
+        LOGGER.log(Level.FINE, "→ PolicyLifecycleService.parseDate");
         if (dateStr == null || dateStr.trim().isEmpty()) return new Date();
         try {
             return new SimpleDateFormat("yyyy-MM-dd").parse(dateStr);

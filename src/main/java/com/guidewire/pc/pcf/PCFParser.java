@@ -9,17 +9,23 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class PCFParser {
+    private static final Logger LOGGER = Logger.getLogger(PCFParser.class.getName());
+
     private final Map<String, File> pcfFiles = new HashMap<>();
     private final Map<String, PCFDefinition> pcfCache = new ConcurrentHashMap<>();
 
     public PCFParser(File baseConfigDir) {
+        LOGGER.log(Level.FINE, "→ PCFParser.PCFParser");
         scanDirectory(new File(baseConfigDir, "config/web/pcf"));
         warmupCache();
     }
 
     private void scanDirectory(File dir) {
+        LOGGER.log(Level.FINE, "→ PCFParser.scanDirectory");
         if (!dir.exists() || !dir.isDirectory()) return;
         File[] files = dir.listFiles();
         if (files == null) return;
@@ -34,21 +40,25 @@ public class PCFParser {
     }
 
     private void warmupCache() {
+        LOGGER.log(Level.FINE, "→ PCFParser.warmupCache");
         for (String pcfId : pcfFiles.keySet()) {
             parsePCFInternal(pcfId);
         }
     }
 
     public Map<String, File> getPcfFiles() {
+        LOGGER.log(Level.FINE, "→ PCFParser.getPcfFiles");
         return pcfFiles;
     }
 
     public PCFDefinition parsePCF(String pcfId) {
+        LOGGER.log(Level.FINE, "→ PCFParser.parsePCF");
         if (pcfId == null) return null;
         return pcfCache.computeIfAbsent(pcfId, this::parsePCFInternal);
     }
 
     private PCFDefinition parsePCFInternal(String pcfId) {
+        LOGGER.log(Level.FINE, "→ PCFParser.parsePCFInternal");
         File file = pcfFiles.get(pcfId);
         if (file == null) return null;
 
@@ -70,6 +80,7 @@ public class PCFParser {
     }
 
     public void clearCache() {
+        LOGGER.log(Level.FINE, "→ PCFParser.clearCache");
         pcfCache.clear();
         warmupCache();
     }
@@ -81,15 +92,20 @@ public class PCFParser {
         private final Element rootElement;
 
         public PCFDefinition(String id, String title, String filePath, Element rootElement) {
+        LOGGER.log(Level.FINE, "→ PCFParser.PCFDefinition");
             this.id = id;
             this.title = title;
             this.filePath = filePath;
             this.rootElement = rootElement;
         }
 
-        public String getId() { return id; }
-        public String getTitle() { return title; }
-        public String getFilePath() { return filePath; }
-        public Element getRootElement() { return rootElement; }
+        public String getId() {
+        LOGGER.log(Level.FINE, "→ PCFParser.getId"); return id; }
+        public String getTitle() {
+        LOGGER.log(Level.FINE, "→ PCFParser.getTitle"); return title; }
+        public String getFilePath() {
+        LOGGER.log(Level.FINE, "→ PCFParser.getFilePath"); return filePath; }
+        public Element getRootElement() {
+        LOGGER.log(Level.FINE, "→ PCFParser.getRootElement"); return rootElement; }
     }
 }

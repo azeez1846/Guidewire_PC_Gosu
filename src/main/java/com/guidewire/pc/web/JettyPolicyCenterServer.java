@@ -9,18 +9,24 @@ import org.eclipse.jetty.util.thread.QueuedThreadPool;
 
 import java.io.File;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class JettyPolicyCenterServer {
+    private static final Logger LOGGER = Logger.getLogger(JettyPolicyCenterServer.class.getName());
+
     private final int port;
     private final File rootDir;
     private Server server;
 
     public JettyPolicyCenterServer(int port, File rootDir) {
+        LOGGER.log(Level.FINE, "→ JettyPolicyCenterServer.JettyPolicyCenterServer");
         this.port = port;
         this.rootDir = rootDir;
     }
 
     public void start() throws Exception {
+        LOGGER.log(Level.FINE, "→ JettyPolicyCenterServer.start");
         QueuedThreadPool threadPool = new QueuedThreadPool();
         threadPool.setVirtualThreadsExecutor(Executors.newVirtualThreadPerTaskExecutor());
         threadPool.setName("gw-virtual-jetty-worker");
@@ -74,6 +80,7 @@ public class JettyPolicyCenterServer {
     }
 
     public void stop() throws Exception {
+        LOGGER.log(Level.FINE, "→ JettyPolicyCenterServer.stop");
         if (server != null) {
             server.stop();
         }

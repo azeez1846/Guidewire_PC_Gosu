@@ -10,6 +10,7 @@ import java.time.LocalDate
 class AuditJobService {
 
   public static function startAudit(period : PolicyPeriod, auditType : String, auditMethod : String, estimatedExposure : BigDecimal) : AuditInformation {
+    print("[GW-LOG] → AuditJobService.startAudit")
     if (period == null) return null
 
     var auditInfo = new AuditInformation(
@@ -26,6 +27,7 @@ class AuditJobService {
   }
 
   public static function enterAuditedExposure(auditInfo : AuditInformation, auditedExposure : BigDecimal) : AuditInformation {
+    print("[GW-LOG] → AuditJobService.enterAuditedExposure")
     if (auditInfo == null) return null
 
     auditInfo.setAuditedExposure(auditedExposure != null ? auditedExposure : BigDecimal.ZERO)
@@ -34,6 +36,7 @@ class AuditJobService {
   }
 
   public static function calculateAuditAdjustment(auditInfo : AuditInformation, period : PolicyPeriod) : BigDecimal {
+    print("[GW-LOG] → AuditJobService.calculateAuditAdjustment")
     if (auditInfo == null or period == null) return BigDecimal.ZERO
 
     var adjustment = AuditRatingEngine.calculateAuditPremiumAdjustment(auditInfo, period)
@@ -42,6 +45,7 @@ class AuditJobService {
   }
 
   public static function closeAudit(auditInfo : AuditInformation, period : PolicyPeriod) : AuditInformation {
+    print("[GW-LOG] → AuditJobService.closeAudit")
     if (auditInfo == null) return null
 
     calculateAuditAdjustment(auditInfo, period)

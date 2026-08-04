@@ -23,6 +23,7 @@ public class ExternalAddressVendorConnector {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public AddressValidationResponse performOutboundAddressStandardization(AddressLookupRequest req) {
+        LOGGER.log(Level.FINE, "→ ExternalAddressVendorConnector.performOutboundAddressStandardization");
         String line1 = req.getAddressLine1() != null ? req.getAddressLine1().trim() : "100 California St";
         String city = req.getCity() != null ? req.getCity().trim() : "San Francisco";
         String state = req.getState() != null ? req.getState().trim().toUpperCase() : "CA";
@@ -45,6 +46,7 @@ public class ExternalAddressVendorConnector {
     }
 
     private AddressSpecs fetchLiveGeocoding(String line1, String city, String state, String zip) {
+        LOGGER.log(Level.FINE, "→ ExternalAddressVendorConnector.fetchLiveGeocoding");
         AddressSpecs specs = new AddressSpecs();
         String fullSearchStr = line1 + ", " + city + ", " + state + " " + zip;
         specs.setRawAddress(fullSearchStr);

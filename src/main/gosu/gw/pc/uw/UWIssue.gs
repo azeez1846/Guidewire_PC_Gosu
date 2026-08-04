@@ -23,6 +23,7 @@ class UWIssue {
   public property set ApprovedBy(user : String) { _approvedBy = user }
 
   public function approve(username : String) {
+    print("[GW-LOG] → UWIssue.approve")
     _approved = true
     _approvedBy = username
   }

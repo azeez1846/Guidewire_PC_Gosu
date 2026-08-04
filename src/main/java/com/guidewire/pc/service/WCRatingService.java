@@ -6,16 +6,22 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class WCRatingService {
+    private static final Logger LOGGER = Logger.getLogger(WCRatingService.class.getName());
+
 
     public static BigDecimal rateWorkersComp(PolicyPeriod period, BigDecimal estimatedPayroll, BigDecimal expMod, BigDecimal classRate) {
+        LOGGER.log(Level.FINE, "→ WCRatingService.rateWorkersComp");
         return rateWorkersCompWithSpecialClassCodes(period, estimatedPayroll, expMod, classRate, null, null, null, false);
     }
 
     public static BigDecimal rateWorkersCompWithSpecialClassCodes(PolicyPeriod period, BigDecimal estimatedPayroll, BigDecimal expMod, BigDecimal classRate,
                                                                  String specialClassCode, BigDecimal specialClassPayroll, BigDecimal specialClassRate,
                                                                  boolean hasSafetyProgram) {
+        LOGGER.log(Level.FINE, "→ WCRatingService.rateWorkersCompWithSpecialClassCodes");
         if (period == null) return BigDecimal.ZERO;
 
         BigDecimal payroll = estimatedPayroll != null ? estimatedPayroll : new BigDecimal("100000.00");
@@ -46,11 +52,13 @@ public class WCRatingService {
     }
 
     public static List<String> validateWorkersCompLine(PolicyPeriod period, BigDecimal estimatedPayroll, BigDecimal expMod) {
+        LOGGER.log(Level.FINE, "→ WCRatingService.validateWorkersCompLine");
         return validateWorkersCompLineDetails(period, estimatedPayroll, expMod, null, null);
     }
 
     public static List<String> validateWorkersCompLineDetails(PolicyPeriod period, BigDecimal estimatedPayroll, BigDecimal expMod,
                                                                String specialClassCode, BigDecimal specialClassPayroll) {
+        LOGGER.log(Level.FINE, "→ WCRatingService.validateWorkersCompLineDetails");
         List<String> errors = new ArrayList<>();
         if (period == null) return errors;
 

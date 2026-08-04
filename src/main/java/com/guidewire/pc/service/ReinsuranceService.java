@@ -6,10 +6,15 @@ import com.guidewire.pc.model.RICession;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class ReinsuranceService {
+    private static final Logger LOGGER = Logger.getLogger(ReinsuranceService.class.getName());
+
 
     public static RICession calculateCession(PolicyPeriod period, RIAgreement agreement, BigDecimal grossLimit) {
+        LOGGER.log(Level.FINE, "→ ReinsuranceService.calculateCession");
         if (period == null || agreement == null) return null;
 
         RICession cession = new RICession();

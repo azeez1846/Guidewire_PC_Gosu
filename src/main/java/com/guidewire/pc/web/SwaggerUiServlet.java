@@ -7,10 +7,14 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class SwaggerUiServlet extends HttpServlet {
+    private static final Logger LOGGER = Logger.getLogger(SwaggerUiServlet.class.getName());
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        LOGGER.log(Level.FINE, "→ SwaggerUiServlet.doGet");
         resp.setContentType("text/html;charset=UTF-8");
         PrintWriter out = resp.getWriter();
         out.println("<!DOCTYPE html>");

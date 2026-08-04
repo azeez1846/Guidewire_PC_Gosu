@@ -8,6 +8,7 @@ import java.math.BigDecimal
 class PolicyChangeJobService {
 
   public static function startPolicyChange(origPeriod : PolicyPeriod, editEffDateStr : String) : PolicyPeriod {
+    print("[GW-LOG] → PolicyChangeJobService.startPolicyChange")
     if (origPeriod == null) return null
 
     var changePeriod = new PolicyPeriod()
@@ -36,6 +37,7 @@ class PolicyChangeJobService {
   }
 
   public static function processEndorsement(changePeriod : PolicyPeriod, newLimit : String, newDeductible : String) : PolicyPeriod {
+    print("[GW-LOG] → PolicyChangeJobService.processEndorsement")
     if (changePeriod == null) return null
 
     if (newLimit != null and newLimit.trim().length() > 0) {
@@ -51,6 +53,7 @@ class PolicyChangeJobService {
   }
 
   public static function bindEndorsement(changePeriod : PolicyPeriod) : PolicyPeriod {
+    print("[GW-LOG] → PolicyChangeJobService.bindEndorsement")
     if (changePeriod != null) {
       changePeriod.setStatus(PCConstants.STATUS_BOUND)
     }
