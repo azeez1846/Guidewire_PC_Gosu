@@ -47,8 +47,6 @@
             <groupId>com.guidewire.ig</groupId>
             <artifactId>vehicledetails_IG</artifactId>
             <version>1.0.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/vehicledetails_IG-1.0.0.jar</systemPath>
         </dependency>
 
         <dependency>
