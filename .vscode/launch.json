@@ -5,16 +5,31 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "java",
+            "name": "Launch Java App",
+            "request": "launch",
+            "mainClass": "com.guidewire.pc.App",
+            "projectName": "guidewire-policycenter",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Compile Project (mvn compile)",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "🚀 Run & Debug PolicyCenter (Jetty)",
+            "request": "launch",
+            "mainClass": "com.guidewire.pc.App",
+            "projectName": "guidewire-policycenter",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Compile Project (mvn compile)",
+            "console": "integratedTerminal"
+        },
+        {
             "name": "Attach to Edge",
             "port": 9222,
             "request": "attach",
             "type": "msedge",
             "webRoot": "${workspaceFolder}"
-        },
-        {
-            "type": "jdk",
-            "request": "launch",
-            "name": "Launch Java App"
         }
     ]
 }
