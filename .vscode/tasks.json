@@ -1,28 +1,121 @@
 {
     "version": "2.0.0",
     "tasks": [
+
+        // ── Build ──────────────────────────────────────────────────────────
         {
             "label": "Compile Project (mvn compile)",
             "type": "shell",
-            "command": "mvn compile",
+            "command": "mvn compile -q",
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
             "presentation": {
+                "reveal": "silent",
+                "panel": "shared",
+                "clear": true
+            },
+            "problemMatcher": ["$javac"]
+        },
+
+        // ── Server lifecycle ───────────────────────────────────────────────
+        {
+            "label": "▶ Start PolicyCenter Server",
+            "type": "shell",
+            "command": "./start-server.sh",
+            "group": "none",
+            "presentation": {
                 "reveal": "always",
-                "panel": "shared"
+                "panel": "dedicated",
+                "clear": true,
+                "showReuseMessage": false
+            },
+            "problemMatcher": [],
+            "runOptions": {
+                "instanceLimit": 1
+            }
+        },
+        {
+            "label": "⏹ Stop PolicyCenter Server",
+            "type": "shell",
+            "command": "./stop-server.sh",
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true,
+                "showReuseMessage": false
             },
             "problemMatcher": []
         },
         {
-            "label": "Run Jetty Server (mvn exec:java)",
+            "label": "🔄 Restart PolicyCenter Server",
             "type": "shell",
-            "command": "mvn exec:java",
+            "command": "./stop-server.sh ; sleep 1 ; ./start-server.sh",
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true,
+                "showReuseMessage": false
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "📋 Tail Server Logs",
+            "type": "shell",
+            "command": "tail -f logs/server.log",
+            "group": "none",
+            "isBackground": true,
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true,
+                "showReuseMessage": false
+            },
+            "problemMatcher": []
+        },
+
+        // ── Tests ──────────────────────────────────────────────────────────
+        {
+            "label": "🧪 Run All Tests",
+            "type": "shell",
+            "command": "mvn test --no-transfer-progress",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            },
+            "problemMatcher": ["$javac"]
+        },
+        {
+            "label": "🔐 Run Auth Tests Only",
+            "type": "shell",
+            "command": "mvn test -Dtest=\"AuthenticationServiceTest,SecuritySessionTest\" --no-transfer-progress",
             "group": "test",
             "presentation": {
                 "reveal": "always",
-                "panel": "new"
+                "panel": "dedicated",
+                "clear": true
+            },
+            "problemMatcher": ["$javac"]
+        },
+
+        // ── Smoke test ─────────────────────────────────────────────────────
+        {
+            "label": "🌐 Smoke Test Login (curl)",
+            "type": "shell",
+            "command": "echo '=== Login su/gw (expect: 302 → desktop) ===' && curl -s -o /dev/null -w 'HTTP %{http_code} → %{redirect_url}\\n' -c /tmp/gw_smoke.txt -b /tmp/gw_smoke.txt --data 'username=su&password=gw' 'http://localhost:8085/api/login' && echo '=== Wrong password (expect: 302 → login&error=invalid) ===' && curl -s -o /dev/null -w 'HTTP %{http_code} → %{redirect_url}\\n' --data 'username=su&password=wrongpass' 'http://localhost:8085/api/login' && echo '=== Desktop page (expect: <title>Desktop...) ===' && curl -s -c /tmp/gw_smoke.txt -b /tmp/gw_smoke.txt 'http://localhost:8085/?page=desktop' | grep -o '<title>[^<]*</title>'",
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
             },
             "problemMatcher": []
         }

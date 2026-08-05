@@ -65,4 +65,22 @@ public class SecuritySessionTest {
         IllegalArgumentException ex2 = assertThrows(IllegalArgumentException.class, () -> sessionManager.createSession("   "));
         assertNotNull(ex2);
     }
+
+    /**
+     * Regression test: the old SessionManager.validateSession() had a backdoor that
+     * auto-created sessions for the magic IDs "su" and "gw_su_session", bypassing login
+     * entirely. This test permanently guards against that backdoor being re-introduced.
+     */
+    @Test
+    public void testSessionBackdoorIsRemoved() {
+        // These must return null — no auto-session creation for magic IDs.
+        assertNull(sessionManager.validateSession("su"),
+                "Magic ID 'su' must NOT auto-create a session — backdoor was removed");
+        assertNull(sessionManager.validateSession("gw_su_session"),
+                "Magic ID 'gw_su_session' must NOT auto-create a session — backdoor was removed");
+        // Confirm no sessions were silently created as a side effect.
+        assertEquals(0, sessionManager.getActiveSessionCount(),
+                "No sessions should exist after validating magic backdoor IDs");
+    }
 }
+

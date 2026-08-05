@@ -5,6 +5,7 @@ import com.guidewire.pc.model.Account;
 import com.guidewire.pc.model.Activity;
 import com.guidewire.pc.model.PolicyPeriod;
 import com.guidewire.pc.pcf.PCFParser;
+import com.guidewire.pc.security.AuthenticationService;
 import com.guidewire.pc.security.SecurityUtils;
 import com.guidewire.pc.security.SessionManager;
 import com.guidewire.pc.service.DataStoreService;
@@ -101,28 +102,21 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
                 p = params.get("password");
             }
 
-            boolean valid = false;
-            if (u != null && !u.trim().isEmpty()) {
-                String uClean = u.trim().toLowerCase();
-                String pClean = p != null ? p.trim() : "";
-                if (("su".equals(uClean) || "admin".equals(uClean) || "underwriter".equals(uClean) || "testuser".equals(uClean)) && !pClean.isEmpty()) {
-                    valid = true;
-                }
-            }
+            // Delegate entirely to AuthenticationService — never inline credentials here.
+            AuthenticationService.AuthResult authResult =
+                    AuthenticationService.getInstance().authenticate(u, p);
 
-            if (valid) {
-                String usernameToUse = (u != null && !u.trim().isEmpty()) ? u.trim() : "su";
-                String token = SessionManager.getInstance().createSession(usernameToUse);
+            if (authResult.isSuccess()) {
+                String token = SessionManager.getInstance().createSession(authResult.getUsername());
                 Cookie sessionCookie = new Cookie("SESSIONID", token);
                 sessionCookie.setPath("/");
                 sessionCookie.setHttpOnly(true);
                 resp.addCookie(sessionCookie);
                 resp.sendRedirect("/?page=desktop");
-                return;
             } else {
                 resp.sendRedirect("/?page=login&error=invalid");
-                return;
             }
+            return;
         }
 
         if ("/api/logout".equalsIgnoreCase(path)) {
@@ -258,7 +252,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
     private String renderLoginPage(boolean hasError) {
         LOGGER.log(Level.FINE, "→ GuidewirePolicyCenterServlet.renderLoginPage");
         return "<!DOCTYPE html><html><head><title>Login - Guidewire PolicyCenter (Jetty)</title>" + getHeaderCSS() + "</head>" +
-                "<body style='justify-content: center; align-items: center; background: #1C2B39;'>" +
+                "<body style='display:flex; justify-content: center; align-items: center; min-height:100vh; background: #1C2B39;'>" +
                 "<div style='width: 380px; background: white; border-radius: 8px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center;'>" +
                 "<div style='display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px;'>" +
                 "<span style='background:#0088CC; color:white; padding:6px 12px; border-radius:4px; font-weight:800; font-size:16px;'>GW</span>" +

@@ -1,33 +1,107 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    // Antigravity IDE — Run & Debug configurations
+    // Click the ▶ Run button or press F5 to launch the selected configuration.
     "version": "0.2.0",
     "configurations": [
+
+        // ── ▶  START SERVER (foreground — shows live logs in Debug Console) ──
+        {
+            "name": "▶ Start PolicyCenter Server",
+            "type": "jdk",
+            "request": "launch",
+            "mainClass": "com.guidewire.pc.App",
+            "projectName": "guidewire-policycenter",
+            "cwd": "${workspaceFolder}",
+            "args": "8085",
+            "vmArgs": "-XX:+UseZGC --enable-preview -XX:+UseStringDeduplication",
+            "preLaunchTask": "Compile Project (mvn compile)",
+            "console": "integratedTerminal",
+            "shortenCommandLine": "none"
+        },
+
+        // ── 🐛  DEBUG SERVER (attach breakpoints, same as above + debug port) ─
+        {
+            "name": "🐛 Debug PolicyCenter Server",
+            "type": "jdk",
+            "request": "launch",
+            "mainClass": "com.guidewire.pc.App",
+            "projectName": "guidewire-policycenter",
+            "cwd": "${workspaceFolder}",
+            "args": "8085",
+            "vmArgs": "-XX:+UseZGC --enable-preview -XX:+UseStringDeduplication -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005",
+            "preLaunchTask": "Compile Project (mvn compile)",
+            "console": "integratedTerminal",
+            "shortenCommandLine": "none"
+        },
+
+        // ── ▶  START (background, script-managed — use this for day-to-day) ───
+        {
+            "name": "▶ Start Server (background daemon)",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "./start-server.sh",
+            "cwd": "${workspaceFolder}"
+        },
+
+        // ── ⏹  STOP SERVER ──────────────────────────────────────────────────
+        {
+            "name": "⏹ Stop PolicyCenter Server",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "./stop-server.sh",
+            "cwd": "${workspaceFolder}"
+        },
+
+        // ── 🔄  RESTART SERVER ───────────────────────────────────────────────
+        {
+            "name": "🔄 Restart PolicyCenter Server",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "./stop-server.sh ; sleep 1 ; ./start-server.sh",
+            "cwd": "${workspaceFolder}"
+        },
+
+        // ── 🌐  SMOKE TEST LOGIN ─────────────────────────────────────────────
+        {
+            "name": "🌐 Smoke Test Login",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "echo '--- su/gw (expect: 302→desktop) ---' && curl -s -o /dev/null -w 'HTTP %{http_code} → %{redirect_url}\\n' -c /tmp/gw_smoke.txt -b /tmp/gw_smoke.txt --data 'username=su&password=gw' 'http://localhost:8085/api/login' && echo '--- wrong password (expect: 302→login error) ---' && curl -s -o /dev/null -w 'HTTP %{http_code} → %{redirect_url}\\n' --data 'username=su&password=wrongpass' 'http://localhost:8085/api/login'",
+            "cwd": "${workspaceFolder}"
+        },
+
+        // ── 🧪  RUN ALL TESTS ────────────────────────────────────────────────
+        {
+            "name": "🧪 Run All Tests",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "mvn test --no-transfer-progress",
+            "cwd": "${workspaceFolder}"
+        },
+
+        // ── 🔐  RUN AUTH TESTS ───────────────────────────────────────────────
+        {
+            "name": "🔐 Run Auth Tests",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "mvn test -Dtest='AuthenticationServiceTest,SecuritySessionTest' --no-transfer-progress",
+            "cwd": "${workspaceFolder}"
+        },
+
+        // ── 📋  TAIL LOGS ────────────────────────────────────────────────────
+        {
+            "name": "📋 Tail Server Logs",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "tail -f logs/server.log",
+            "cwd": "${workspaceFolder}"
+        },
+
+        // ── Legacy configs (kept for compatibility) ──────────────────────────
         {
             "type": "jdk",
             "request": "launch",
             "name": "Launch Java App",
-            "mainClass": "com.guidewire.pc.App",
-            "projectName": "guidewire-policycenter",
-            "cwd": "${workspaceFolder}",
-            "preLaunchTask": "Compile Project (mvn compile)",
-            "console": "integratedTerminal"
-        },
-        {
-            "type": "jdk",
-            "request": "launch",
-            "name": "🚀 Run & Debug PolicyCenter (Jetty)",
-            "mainClass": "com.guidewire.pc.App",
-            "projectName": "guidewire-policycenter",
-            "cwd": "${workspaceFolder}",
-            "preLaunchTask": "Compile Project (mvn compile)",
-            "console": "integratedTerminal"
-        },
-        {
-            "type": "java",
-            "request": "launch",
-            "name": "Launch Java App (RedHat Java)",
             "mainClass": "com.guidewire.pc.App",
             "projectName": "guidewire-policycenter",
             "cwd": "${workspaceFolder}",

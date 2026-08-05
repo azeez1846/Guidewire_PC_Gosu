@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  com.guidewire.policycenter.plist
+  macOS LaunchAgent for Guidewire PolicyCenter Jetty Server
+
+  This makes the server:
+    1. Start automatically when you log in to your Mac
+    2. Restart automatically within 5 seconds if it crashes
+    3. Log all output to logs/server.log
+
+  To install:   cp com.guidewire.policycenter.plist ~/Library/LaunchAgents/
+                launchctl load ~/Library/LaunchAgents/com.guidewire.policycenter.plist
+
+  To start now: launchctl start com.guidewire.policycenter
+  To stop:      launchctl stop com.guidewire.policycenter
+  To uninstall: launchctl unload ~/Library/LaunchAgents/com.guidewire.policycenter.plist
+                rm ~/Library/LaunchAgents/com.guidewire.policycenter.plist
+-->
+<plist version="1.0">
+<dict>
+    <!-- Unique label for this service -->
+    <key>Label</key>
+    <string>com.guidewire.policycenter</string>
+
+    <!-- The script to run (our start-server.sh wrapper) -->
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/zsh</string>
+        <string>/Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/start-server.sh</string>
+    </array>
+
+    <!-- Working directory -->
+    <key>WorkingDirectory</key>
+    <string>/Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu</string>
+
+    <!-- Log stdout and stderr to the server log file -->
+    <key>StandardOutPath</key>
+    <string>/Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/logs/launchd.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/azeezmohiuddin/Downloads/Guidewire_PC_Java_Gosu/logs/launchd.log</string>
+
+    <!-- Auto-start on login -->
+    <key>RunAtLoad</key>
+    <true/>
+
+    <!-- Auto-restart on crash with a 5-second delay (prevents CPU spin on repeated crash) -->
+    <key>KeepAlive</key>
+    <true/>
+    <key>ThrottleInterval</key>
+    <integer>5</integer>
+
+    <!-- Environment: inherit PATH so mvn and java are found -->
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin</string>
+        <key>JAVA_HOME</key>
+        <string>/usr/bin</string>
+    </dict>
+</dict>
+</plist>
