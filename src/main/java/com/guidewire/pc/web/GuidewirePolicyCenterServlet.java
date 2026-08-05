@@ -292,7 +292,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
                 "<a href='/?page=search' class='gw-tab " + ("search".equals(activeTab) ? "active" : "") + "'>🔍 Search</a>" +
                 "<a href='/?page=new-account' class='gw-tab'>+ New Account</a>" +
                 "<a href='/?page=new-submission' class='gw-tab'>+ New Submission</a>" +
-                "<a href='/?page=features' class='gw-tab " + ("features".equals(activeTab) ? "active" : "") + "' style='background:linear-gradient(135deg, #FFD700, #FF8C00); color:#000; font-weight:bold; border-radius:4px;'>🚀 Features (31)</a>" +
+                "<a href='/?page=features' class='gw-tab " + ("features".equals(activeTab) ? "active" : "") + "' style='background:linear-gradient(135deg, #FFD700, #FF8C00); color:#000; font-weight:bold; border-radius:4px;'>🚀 Features (40)</a>" +
                 "<a href='/swagger-ui' target='_blank' class='gw-tab' style='color:#38B6FF;'>⚡ Swagger REST API</a>" +
                 "<a href='http://localhost:8082' target='_blank' class='gw-tab' style='color:#00C853;'>🗄️ H2 DB Console</a>" +
                 "<a href='/pcf-studio/' target='_blank' class='gw-tab' style='color:#A7F3D0;'>🧩 Visual PCF Studio</a>" +
@@ -1236,11 +1236,11 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
 
         sb.append("<div class='gw-main-container'><div class='gw-content'>");
         sb.append("<div class='gw-page-header'><div class='gw-page-title'>🚀 Guidewire PolicyCenter Enterprise Features Suite <span class='gw-pcf-tag'>EnterpriseFeaturesSuite.pcf</span></div>");
-        sb.append("<div style='color:#718096; font-size:14px; margin-top:4px;'>Comprehensive suite of 36 enterprise-grade insurance industry engines & accelerators with interactive TypeScript/REST execution drivers.</div></div>");
+        sb.append("<div style='color:#718096; font-size:14px; margin-top:4px;'>Comprehensive suite of 40 enterprise-grade insurance industry engines & accelerators with interactive TypeScript/REST execution drivers.</div></div>");
 
         // Filter Bar
         sb.append("<div style='display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;'>");
-        sb.append("<button onclick=\"filterFeatures('all')\" class='gw-filter-btn active' id='btn-all'>All Features (36)</button>");
+        sb.append("<button onclick=\"filterFeatures('all')\" class='gw-filter-btn active' id='btn-all'>All Features (40)</button>");
         sb.append("<button onclick=\"filterFeatures('Specialty Lines')\" class='gw-filter-btn' id='btn-specialty'>Specialty Lines</button>");
         sb.append("<button onclick=\"filterFeatures('Commercial Rating & Retrospective')\" class='gw-filter-btn' id='btn-rating'>Commercial Rating</button>");
         sb.append("<button onclick=\"filterFeatures('Underwriting & Risk')\" class='gw-filter-btn' id='btn-uw'>Underwriting & Risk</button>");
@@ -1348,7 +1348,7 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
           .append("  .then(data => { resBox.innerText = '✅ Module Execution Success:\\n' + JSON.stringify(data, null, 2); })")
           .append("  .catch(err => { resBox.innerText = '❌ Error executing module: ' + err.message; });")
           .append("}")
-          .append("document.addEventListener('DOMContentLoaded', () => renderCards('all'));")
+          .append("document.addEventListener('DOMContentLoaded', () => { const btn = document.getElementById('btn-all'); if (btn) btn.innerText = `All Features (${FEATURES.length})`; renderCards('all'); });")
           .append("</script>");
 
         sb.append("</div></div></body></html>");
