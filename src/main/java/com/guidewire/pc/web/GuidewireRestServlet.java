@@ -54,10 +54,7 @@ public class GuidewireRestServlet extends HttpServlet {
             }
         }
         String referer = req.getHeader("Referer");
-        if (referer != null && (referer.contains("localhost") || referer.contains("127.0.0.1"))) {
-            return true;
-        }
-        return false;
+        return referer != null && (referer.contains("localhost") || referer.contains("127.0.0.1"));
     }
 
     @Override
@@ -190,6 +187,27 @@ public class GuidewireRestServlet extends HttpServlet {
             return;
         }
 
+        if (path.startsWith("/policies/") && path.endsWith("/coi")) {
+            String policyNumber = path.replace("/policies/", "").replace("/coi", "");
+            PolicyPeriod period = dataStore.findPolicyByPolicyNumber(policyNumber);
+            if (period == null) {
+                period = dataStore.findSubmission(policyNumber);
+            }
+            String certHolder = req.getParameter("certificateHolder");
+            String addlNotes = req.getParameter("additionalInsured");
+            byte[] pdfBytes = com.guidewire.pc.service.CertificateOfInsuranceService.getInstance().generateAcord25CoiPdf(period, certHolder, addlNotes);
+            resp.setContentType("application/pdf");
+            resp.setHeader("Content-Disposition", "inline; filename=\"ACORD_25_COI_" + policyNumber + ".pdf\"");
+            resp.getOutputStream().write(pdfBytes);
+            return;
+        }
+
+        if (path.equals("/webhooks/dlq")) {
+            var dlq = com.guidewire.pc.service.WebhookPublisherService.getInstance().getDeadLetterQueue();
+            objectMapper.writeValue(resp.getWriter(), Map.of("status", "SUCCESS", "dlqCount", dlq.size(), "failedWebhooks", dlq));
+            return;
+        }
+
         if (path.startsWith("/policies/") && path.endsWith("/diff")) {
             String policyNumber = path.replace("/policies/", "").replace("/diff", "");
             PolicyPeriod current = dataStore.findPolicyByPolicyNumber(policyNumber);
@@ -262,6 +280,39 @@ public class GuidewireRestServlet extends HttpServlet {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
+        if ("/auth/login".equals(path) || "/login".equals(path)) {
+            String username = req.getParameter("username");
+            String password = req.getParameter("password");
+            if (username == null || password == null) {
+                try {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> body = objectMapper.readValue(req.getInputStream(), Map.class);
+                    if (body != null) {
+                        if (username == null && body.get("username") != null) username = body.get("username").toString();
+                        if (password == null && body.get("password") != null) password = body.get("password").toString();
+                    }
+                } catch (Exception ignored) {}
+            }
+
+            var authResult = com.guidewire.pc.security.AuthenticationService.getInstance().authenticate(username, password);
+            if (authResult.isSuccess()) {
+                String token = SessionManager.getInstance().createSession(authResult.getUsername());
+                resp.addHeader("Set-Cookie", "SESSIONID=" + token + "; Path=/; HttpOnly; SameSite=Lax");
+                objectMapper.writeValue(resp.getWriter(), Map.of(
+                        "status", "SUCCESS",
+                        "username", authResult.getUsername(),
+                        "token", token
+                ));
+            } else {
+                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                objectMapper.writeValue(resp.getWriter(), Map.of(
+                        "status", "FAILURE",
+                        "error", authResult.getReason() != null ? authResult.getReason() : "Invalid credentials"
+                ));
+            }
+            return;
+        }
+
         if (!isAuthenticated(req)) {
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             objectMapper.writeValue(resp.getWriter(), Map.of("error", "Unauthorized: Invalid or missing API session token"));
@@ -325,6 +376,52 @@ public class GuidewireRestServlet extends HttpServlet {
                 "riskScore", decision.getRiskScore(),
                 "rationale", decision.getRationale(),
                 "escalationRequired", decision.isEscalationRequired()
+            ));
+            return;
+        }
+
+        if ("/claims/submit".equals(path) || "/claims/evaluate-fraud".equals(path)) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> body = objectMapper.readValue(req.getInputStream(), Map.class);
+            String polNum = body.getOrDefault("policyNumber", "POL-849102").toString();
+            String claimant = body.getOrDefault("claimantName", "John Doe").toString();
+            BigDecimal lossAmt = new BigDecimal(body.getOrDefault("lossAmount", "12500").toString());
+            String cause = body.getOrDefault("lossCause", "Collision").toString();
+            String desc = body.getOrDefault("lossDescription", "Vehicle impact at intersection").toString();
+
+            var result = com.guidewire.pc.service.SIUClaimsIntegrationService.getInstance()
+                    .processClaimIntake(polNum, claimant, lossAmt, cause, desc, new java.util.Date());
+
+            objectMapper.writeValue(resp.getWriter(), Map.of(
+                    "claimNumber", result.getClaimNumber(),
+                    "policyNumber", result.getPolicyNumber(),
+                    "status", result.getStatus(),
+                    "fraudRiskScore", result.getFraudRiskScore(),
+                    "siuReferralTriggered", result.isSiuReferralTriggered(),
+                    "riskSignals", result.getRiskSignals(),
+                    "underwritingAction", result.getUnderwritingAction()
+            ));
+            return;
+        }
+
+        if ("/ai/triage-portal".equals(path)) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> body = objectMapper.readValue(req.getInputStream(), Map.class);
+            String polNum = body.getOrDefault("policyNumber", "POL-849102").toString();
+            int driverScore = Integer.parseInt(body.getOrDefault("driverScore", "75").toString());
+            boolean flood = Boolean.parseBoolean(body.getOrDefault("highFloodZone", "false").toString());
+            BigDecimal prem = new BigDecimal(body.getOrDefault("annualPremium", "3200").toString());
+
+            var decision = triageAgent.evaluateSubmission("PORTAL-JOB-" + System.currentTimeMillis() % 10000,
+                    polNum, "PersonalAuto", prem, driverScore, flood);
+
+            objectMapper.writeValue(resp.getWriter(), Map.of(
+                    "policyNumber", polNum,
+                    "recommendation", decision.getRecommendation(),
+                    "riskScore", decision.getRiskScore(),
+                    "rationale", decision.getRationale(),
+                    "escalationRequired", decision.isEscalationRequired(),
+                    "timestamp", System.currentTimeMillis()
             ));
             return;
         }
@@ -580,9 +677,54 @@ public class GuidewireRestServlet extends HttpServlet {
             PolicyPeriod period = dataStore.findSubmission(jobNumber);
             long daysInForce = reqMap.get("daysInForce") != null ? ((Number) reqMap.get("daysInForce")).longValue() : 180;
             long totalDays = reqMap.get("totalTermDays") != null ? ((Number) reqMap.get("totalTermDays")).longValue() : 365;
-            boolean isInsured = reqMap.get("isInsuredInitiated") != null ? (Boolean) reqMap.get("isInsuredInitiated") : true;
+            Object isInsuredObj = reqMap.get("isInsuredInitiated");
+            boolean isInsured = isInsuredObj == null || Boolean.TRUE.equals(isInsuredObj);
             var res = com.guidewire.pc.service.ProrationRefundEngine.getInstance().calculateCancellationRefund(period, daysInForce, totalDays, isInsured);
             objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && (path.equals("/policy/diff") || path.equals("/endorsement/diff"))) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String baseJob = (String) reqMap.get("baseJobNumber");
+            String revisedJob = (String) reqMap.get("revisedJobNumber");
+            double proRataFactor = reqMap.get("proRataFactor") != null ? ((Number) reqMap.get("proRataFactor")).doubleValue() : 0.50;
+            PolicyPeriod basePeriod = dataStore.findSubmission(baseJob);
+            PolicyPeriod revisedPeriod = dataStore.findSubmission(revisedJob);
+            var res = com.guidewire.pc.service.PolicyDiffEngine.getInstance().calculateEndorsementDiff(basePeriod, revisedPeriod, proRataFactor);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/webhooks/retry")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String eventId = (String) reqMap.get("eventId");
+            boolean replayed = com.guidewire.pc.service.WebhookPublisherService.getInstance().replayFailedWebhook(eventId);
+            objectMapper.writeValue(resp.getWriter(), Map.of("eventId", eventId != null ? eventId : "", "replayed", replayed));
+            return;
+        }
+
+        if (path != null && (path.equals("/claimcenter/fnol") || path.equals("/claims/fnol"))) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String policyNumber = (String) reqMap.get("policyNumber");
+            String claimType = (String) reqMap.get("claimType");
+            Object lossAmtObj = reqMap.get("lossAmount");
+            BigDecimal lossAmount = lossAmtObj != null ? new BigDecimal(lossAmtObj.toString()) : new BigDecimal("5000.00");
+            String description = (String) reqMap.get("description");
+            Object writtenPremObj = reqMap.get("writtenPremium");
+            BigDecimal writtenPremium = writtenPremObj != null ? new BigDecimal(writtenPremObj.toString()) : new BigDecimal("2500.00");
+
+            var result = com.guidewire.pc.service.ClaimCenterIntegrationEngine.getInstance().ingestAndEvaluateFNOL(
+                policyNumber != null ? policyNumber : "POL-849102",
+                claimType != null ? claimType : "COLLISION",
+                lossAmount,
+                description != null ? description : "Front bumper collision",
+                writtenPremium
+            );
+            objectMapper.writeValue(resp.getWriter(), result);
             return;
         }
 

@@ -1,8 +1,10 @@
 package com.guidewire.pc.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -14,8 +16,19 @@ public class WebhookPublisherService {
 
     public record WebhookEvent(String eventId, String eventType, String timestamp, Map<String, Object> payload) {}
 
+    public record FailedWebhook(
+        String eventId,
+        String targetUrl,
+        String eventType,
+        String failureReason,
+        int retryCount,
+        String timestamp,
+        Map<String, Object> payload
+    ) {}
+
     private final List<String> subscribers = new ArrayList<>();
     private final List<WebhookEvent> eventLog = new ArrayList<>();
+    private final ConcurrentLinkedQueue<FailedWebhook> deadLetterQueue = new ConcurrentLinkedQueue<>();
 
     private WebhookPublisherService() {
         subscribers.add("https://analytics.guidewire-demo.com/webhooks");
@@ -45,10 +58,41 @@ public class WebhookPublisherService {
         try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
             for (String subUrl : subscribers) {
                 executor.submit(() -> {
-                    LOGGER.log(Level.INFO, "[Virtual Thread Webhook Publisher] Dispatched event: {0} [{1}] to {2}", new Object[]{eventType, eventId, subUrl});
+                    if (subUrl.contains("fail") || subUrl.contains("error")) {
+                        recordFailure(eventId, subUrl, eventType, "HTTP 503 Service Unavailable / Connection Timeout", payload);
+                    } else {
+                        LOGGER.log(Level.INFO, "[Virtual Thread Webhook Publisher] Dispatched event: {0} [{1}] to {2}", new Object[]{eventType, eventId, subUrl});
+                    }
                 });
             }
         }
+    }
+
+    public void recordFailure(String eventId, String targetUrl, String eventType, String failureReason, Map<String, Object> payload) {
+        String timestamp = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(new java.util.Date());
+        FailedWebhook failed = new FailedWebhook(eventId, targetUrl, eventType, failureReason, 1, timestamp, payload);
+        deadLetterQueue.add(failed);
+        LOGGER.log(Level.WARNING, "[Webhook DLQ] Captured failed delivery [{0}] to {1}: {2}", new Object[]{eventId, targetUrl, failureReason});
+    }
+
+    public List<FailedWebhook> getDeadLetterQueue() {
+        return Collections.unmodifiableList(new ArrayList<>(deadLetterQueue));
+    }
+
+    public boolean replayFailedWebhook(String eventId) {
+        FailedWebhook target = null;
+        for (FailedWebhook fw : deadLetterQueue) {
+            if (fw.eventId().equals(eventId)) {
+                target = fw;
+                break;
+            }
+        }
+        if (target != null) {
+            deadLetterQueue.remove(target);
+            LOGGER.log(Level.INFO, "[Webhook DLQ Replay] Successfully replayed webhook event: {0} to {1}", new Object[]{target.eventId(), target.targetUrl()});
+            return true;
+        }
+        return false;
     }
 
     public List<WebhookEvent> getEventLog() {

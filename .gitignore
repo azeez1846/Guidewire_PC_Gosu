@@ -5,3 +5,5 @@ h2_cookies.txt
 .DS_Store
 data/
 logs/
+node_modules/
+

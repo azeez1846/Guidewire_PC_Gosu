@@ -4,10 +4,6 @@ import com.guidewire.pc.web.GraphQLGatewayServlet;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import jakarta.servlet.ReadListener;
-import jakarta.servlet.ServletInputStream;
-import jakarta.servlet.http.HttpServletRequest;
-
 import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.*;

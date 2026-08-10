@@ -7,6 +7,7 @@ import com.guidewire.ig.address.dto.AddressSpecs;
 import com.guidewire.ig.address.dto.AddressValidationResponse;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
@@ -29,7 +30,7 @@ public class ExternalAddressVendorConnector {
         String state = req.getState() != null ? req.getState().trim().toUpperCase() : "CA";
         String zip = req.getPostalCode() != null ? req.getPostalCode().trim() : "94111";
 
-        LOGGER.info("[addressstandardization_IG Gateway Outbound Call] Querying External Address Standardization API for: " + line1 + ", " + city + ", " + state);
+        LOGGER.log(Level.INFO, "[addressstandardization_IG Gateway Outbound Call] Querying External Address Standardization API for: {0}, {1}, {2}", new Object[]{line1, city, state});
 
         AddressSpecs specs = fetchLiveGeocoding(line1, city, state, zip);
 
@@ -87,12 +88,12 @@ public class ExternalAddressVendorConnector {
                     specs.setLongitude(lon);
                     specs.setDeliveryPointValidationDPV("CONFIRMED_DELIVERABLE");
 
-                    LOGGER.info("[addressstandardization_IG Live Success] Matched: " + stdLine1 + ", Lat: " + lat + ", Lon: " + lon);
+                    LOGGER.log(Level.INFO, "[addressstandardization_IG Live Success] Matched: {0}, Lat: {1}, Lon: {2}", new Object[]{stdLine1, lat, lon});
                     return specs;
                 }
             }
-        } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "[addressstandardization_IG Vendor Fallback] Using fallback standardization: " + e.getMessage());
+        } catch (IOException | IllegalArgumentException e) {
+            LOGGER.log(Level.WARNING, "[addressstandardization_IG Vendor Fallback] Using fallback standardization: {0}", e.getMessage());
         }
 
         // Fallback default specs

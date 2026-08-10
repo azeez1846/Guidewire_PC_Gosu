@@ -90,7 +90,8 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
         boolean isLoginPost = "POST".equalsIgnoreCase(method) &&
                 ("/api/login".equalsIgnoreCase(path) || "/login".equalsIgnoreCase(path) ||
                 "login".equalsIgnoreCase(params.get("page")) || "login".equalsIgnoreCase(req.getParameter("page")) ||
-                (req.getParameter("username") != null && req.getParameter("password") != null));
+                (req.getParameter("username") != null && req.getParameter("password") != null) ||
+                (req.getContentType() != null && req.getContentType().contains("application/json")));
 
         if (isLoginPost) {
             String u = req.getParameter("username");
@@ -102,9 +103,25 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
                 p = params.get("password");
             }
 
+            // If parameters were sent as JSON payload, parse them from input stream
+            if ((u == null || p == null) && req.getContentType() != null && req.getContentType().contains("application/json")) {
+                try {
+                    com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> jsonMap = mapper.readValue(req.getInputStream(), Map.class);
+                    if (jsonMap != null) {
+                        if (u == null && jsonMap.get("username") != null) u = jsonMap.get("username").toString();
+                        if (p == null && jsonMap.get("password") != null) p = jsonMap.get("password").toString();
+                    }
+                } catch (Exception ignored) {}
+            }
+
             // Delegate entirely to AuthenticationService — never inline credentials here.
             AuthenticationService.AuthResult authResult =
                     AuthenticationService.getInstance().authenticate(u, p);
+
+            boolean isJsonRequest = (req.getContentType() != null && req.getContentType().contains("application/json")) ||
+                    (req.getHeader("Accept") != null && req.getHeader("Accept").contains("application/json"));
 
             if (authResult.isSuccess()) {
                 String token = SessionManager.getInstance().createSession(authResult.getUsername());
@@ -112,9 +129,22 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
                 sessionCookie.setPath("/");
                 sessionCookie.setHttpOnly(true);
                 resp.addCookie(sessionCookie);
-                resp.sendRedirect("/?page=desktop");
+                resp.addHeader("Set-Cookie", "SESSIONID=" + token + "; Path=/; HttpOnly; SameSite=Lax");
+
+                if (isJsonRequest) {
+                    resp.setContentType("application/json; charset=UTF-8");
+                    resp.getWriter().write("{\"status\":\"SUCCESS\",\"username\":\"" + authResult.getUsername() + "\",\"token\":\"" + token + "\"}");
+                } else {
+                    resp.sendRedirect("/?page=desktop");
+                }
             } else {
-                resp.sendRedirect("/?page=login&error=invalid");
+                if (isJsonRequest) {
+                    resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    resp.setContentType("application/json; charset=UTF-8");
+                    resp.getWriter().write("{\"status\":\"FAILURE\",\"error\":\"" + authResult.getReason() + "\"}");
+                } else {
+                    resp.sendRedirect("/?page=login&error=invalid");
+                }
             }
             return;
         }
@@ -136,12 +166,40 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
             return;
         }
 
-        if (!loggedIn && !params.getOrDefault("page", "").equals("login")) {
+        if (path != null && (path.endsWith(".html") || path.endsWith(".css") || path.endsWith(".js"))) {
+            File staticFile = new File("src/main/webapp" + path);
+            if (!staticFile.exists()) {
+                staticFile = new File("src/main/webapp/portal" + path);
+            }
+            if (staticFile.exists() && staticFile.isFile()) {
+                if (path.endsWith(".css")) resp.setContentType("text/css; charset=UTF-8");
+                else if (path.endsWith(".js")) resp.setContentType("application/javascript; charset=UTF-8");
+                else resp.setContentType("text/html; charset=UTF-8");
+                java.nio.file.Files.copy(staticFile.toPath(), resp.getOutputStream());
+                return;
+            }
+        }
+
+        String page = params.get("page");
+        if (page == null || page.trim().isEmpty()) {
+            if (path != null && path.length() > 1 && !path.startsWith("/api") && !path.startsWith("/rest") && !path.startsWith("/swagger") && !path.startsWith("/pcf-studio")) {
+                String cleanPath = path.startsWith("/") ? path.substring(1) : path;
+                if (cleanPath.contains("?")) cleanPath = cleanPath.substring(0, cleanPath.indexOf("?"));
+                if (cleanPath.endsWith("/")) cleanPath = cleanPath.substring(0, cleanPath.length() - 1);
+                if (!cleanPath.isEmpty() && !cleanPath.contains("/")) {
+                    page = cleanPath;
+                }
+            }
+        }
+
+        if (!loggedIn && (page == null || !page.equalsIgnoreCase("login"))) {
             resp.sendRedirect("/?page=login");
             return;
         }
 
-        String page = params.getOrDefault("page", loggedIn ? "desktop" : "login");
+        if (page == null || page.trim().isEmpty()) {
+            page = loggedIn ? "desktop" : "login";
+        }
 
         if ("search".equalsIgnoreCase(page)) {
             String q = params.get("q");
@@ -290,12 +348,16 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
                 "<a href='/?page=desktop&tab=accounts' class='gw-tab " + ("accounts".equals(activeTab) ? "active" : "") + "'>Accounts</a>" +
                 "<a href='/?page=desktop&tab=submissions' class='gw-tab " + ("submissions".equals(activeTab) ? "active" : "") + "'>Policies &amp; Submissions</a>" +
                 "<a href='/?page=search' class='gw-tab " + ("search".equals(activeTab) ? "active" : "") + "'>🔍 Search</a>" +
+                "<a href='/?page=features' class='gw-tab " + ("features".equals(activeTab) ? "active" : "") + "' style='background:linear-gradient(135deg, #FFD700, #FF8C00); color:#000; font-weight:bold; border-radius:4px;'>🚀 Features (40)</a>" +
+                "<a href='/portal.html' target='_blank' class='gw-tab' style='background:linear-gradient(135deg, #06B6D4, #3B82F6); color:#FFF; font-weight:bold; border-radius:4px;'>🛡️ Smart Portal</a>" +
+                "<a href='/?page=uw-issues' class='gw-tab " + ("uw-issues".equals(activeTab) ? "active" : "") + "'>⚠️ UW Issues</a>" +
+                "<a href='/?page=fraud-dashboard' class='gw-tab " + ("fraud-dashboard".equals(activeTab) ? "active" : "") + "'>🕵️ Fraud Dashboard</a>" +
+                "<a href='/?page=reinsurance-ledger' class='gw-tab " + ("reinsurance-ledger".equals(activeTab) ? "active" : "") + "'>📊 Reinsurance</a>" +
                 "<a href='/?page=new-account' class='gw-tab'>+ New Account</a>" +
                 "<a href='/?page=new-submission' class='gw-tab'>+ New Submission</a>" +
-                "<a href='/?page=features' class='gw-tab " + ("features".equals(activeTab) ? "active" : "") + "' style='background:linear-gradient(135deg, #FFD700, #FF8C00); color:#000; font-weight:bold; border-radius:4px;'>🚀 Features (40)</a>" +
-                "<a href='/swagger-ui' target='_blank' class='gw-tab' style='color:#38B6FF;'>⚡ Swagger REST API</a>" +
-                "<a href='http://localhost:8082' target='_blank' class='gw-tab' style='color:#00C853;'>🗄️ H2 DB Console</a>" +
-                "<a href='/pcf-studio/' target='_blank' class='gw-tab' style='color:#A7F3D0;'>🧩 Visual PCF Studio</a>" +
+                "<a href='/swagger-ui' target='_blank' class='gw-tab' style='color:#38B6FF;'>⚡ Swagger API</a>" +
+                "<a href='http://localhost:8082' target='_blank' class='gw-tab' style='color:#00C853;'>🗄️ H2 Console</a>" +
+                "<a href='/pcf-studio/' target='_blank' class='gw-tab' style='color:#A7F3D0;'>🧩 PCF Studio</a>" +
                 "</div>";
     }
 
@@ -1348,7 +1410,8 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
           .append("  .then(data => { resBox.innerText = '✅ Module Execution Success:\\n' + JSON.stringify(data, null, 2); })")
           .append("  .catch(err => { resBox.innerText = '❌ Error executing module: ' + err.message; });")
           .append("}")
-          .append("document.addEventListener('DOMContentLoaded', () => { const btn = document.getElementById('btn-all'); if (btn) btn.innerText = `All Features (${FEATURES.length})`; renderCards('all'); });")
+          .append("function initFeaturesPage() { const btn = document.getElementById('btn-all'); if (btn) btn.innerText = `All Features (${FEATURES.length})`; renderCards('all'); }")
+          .append("if (document.readyState !== 'loading') { initFeaturesPage(); } else { document.addEventListener('DOMContentLoaded', initFeaturesPage); }")
           .append("</script>");
 
         sb.append("</div></div></body></html>");
@@ -1462,7 +1525,8 @@ public class GuidewirePolicyCenterServlet extends HttpServlet {
           .append("    .then(data => { document.getElementById('gqlResult').innerText = JSON.stringify(data, null, 2); })")
           .append("    .catch(err => { document.getElementById('gqlResult').innerText = 'Error: ' + err.message; });")
           .append("}")
-          .append("document.addEventListener('DOMContentLoaded', () => { drawTelematics(); drawCatMap(); });")
+          .append("function initDashboardPage() { drawTelematics(); drawCatMap(); }")
+          .append("if (document.readyState !== 'loading') { initDashboardPage(); } else { document.addEventListener('DOMContentLoaded', initDashboardPage); }")
           .append("</script>");
 
         sb.append("</div></div></body></html>");

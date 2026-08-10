@@ -12,14 +12,16 @@ import java.util.*;
  */
 public class ClaimCenterIntegrationEngine {
 
+    private static final ClaimCenterIntegrationEngine instance = new ClaimCenterIntegrationEngine();
+
     public static class FNOLEvent {
-        private String claimNumber;
-        private String policyNumber;
-        private LocalDate lossDate;
-        private String claimType;
-        private BigDecimal lossAmount;
-        private String status; // OPEN, CLOSED, REOPENED
-        private String description;
+        private final String claimNumber;
+        private final String policyNumber;
+        private final LocalDate lossDate;
+        private final String claimType;
+        private final BigDecimal lossAmount;
+        private final String status; // OPEN, CLOSED, REOPENED
+        private final String description;
 
         public FNOLEvent(String claimNumber, String policyNumber, LocalDate lossDate, String claimType, BigDecimal lossAmount, String status, String description) {
             this.claimNumber = claimNumber;
@@ -41,14 +43,14 @@ public class ClaimCenterIntegrationEngine {
     }
 
     public static class PolicyLossSummary {
-        private String policyNumber;
-        private int totalClaims;
-        private int openClaims;
-        private BigDecimal totalIncurredLoss;
-        private BigDecimal totalWrittenPremium;
-        private BigDecimal lossRatioPercentage;
-        private boolean underwritingHoldRequired;
-        private String holdReason;
+        private final String policyNumber;
+        private final int totalClaims;
+        private final int openClaims;
+        private final BigDecimal totalIncurredLoss;
+        private final BigDecimal totalWrittenPremium;
+        private final BigDecimal lossRatioPercentage;
+        private final boolean underwritingHoldRequired;
+        private final String holdReason;
 
         public PolicyLossSummary(String policyNumber, int totalClaims, int openClaims, BigDecimal totalIncurredLoss, BigDecimal totalWrittenPremium, BigDecimal lossRatioPercentage, boolean underwritingHoldRequired, String holdReason) {
             this.policyNumber = policyNumber;
@@ -71,13 +73,28 @@ public class ClaimCenterIntegrationEngine {
         public String getHoldReason() { return holdReason; }
     }
 
+    public record FNOLEvaluationResult(FNOLEvent fnolEvent, PolicyLossSummary updatedLossSummary) {}
+
     private final Map<String, List<FNOLEvent>> claimsByPolicy = new HashMap<>();
+
+    public ClaimCenterIntegrationEngine() {}
+
+    public static ClaimCenterIntegrationEngine getInstance() {
+        return instance;
+    }
 
     public FNOLEvent ingestFNOL(String policyNumber, String claimType, BigDecimal lossAmount, String description) {
         String claimNumber = "CLM-" + System.currentTimeMillis() % 1000000;
         FNOLEvent fnol = new FNOLEvent(claimNumber, policyNumber, LocalDate.now(), claimType, lossAmount, "OPEN", description);
         claimsByPolicy.computeIfAbsent(policyNumber, k -> new ArrayList<>()).add(fnol);
         return fnol;
+    }
+
+    public FNOLEvaluationResult ingestAndEvaluateFNOL(String policyNumber, String claimType, BigDecimal lossAmount, String description, BigDecimal writtenPremium) {
+        FNOLEvent fnol = ingestFNOL(policyNumber, claimType, lossAmount, description);
+        BigDecimal premium = (writtenPremium != null && writtenPremium.compareTo(BigDecimal.ZERO) > 0) ? writtenPremium : new BigDecimal("2500.00");
+        PolicyLossSummary summary = evaluatePolicyLossSummary(policyNumber, premium);
+        return new FNOLEvaluationResult(fnol, summary);
     }
 
     public List<FNOLEvent> getClaimsForPolicy(String policyNumber) {

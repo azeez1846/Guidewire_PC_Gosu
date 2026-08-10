@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guidewire PolicyCenter | Smart Claims & AI Underwriting Portal</title>
+  <link rel="stylesheet" href="portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <nav class="navbar">
+    <div class="brand">
+      <div class="brand-icon"><i class="fa-solid fa-shield-halved"></i></div>
+      <span>PolicyCenter Portal</span>
+    </div>
+    <div class="nav-links">
+      <button class="nav-btn active"><i class="fa-solid fa-chart-line"></i> Dashboard</button>
+      <button class="nav-btn" onclick="scrollToSection('claims-section')"><i class="fa-solid fa-file-waveform"></i> Claims Intake</button>
+      <button class="nav-btn" onclick="scrollToSection('ai-triage-section')"><i class="fa-solid fa-brain"></i> AI Triage</button>
+      <button class="nav-btn" onclick="scrollToSection('calculator-section')"><i class="fa-solid fa-calculator"></i> Quick Quote</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- Hero Banner -->
+    <header class="hero">
+      <h1>Smart Claims & <span>AI Underwriting Hub</span></h1>
+      <p>Powered by Guidewire PolicyCenter Java 23 Engine & Gosu Rules Platform</p>
+    </header>
+
+    <!-- Dashboard Grid -->
+    <div class="dashboard-grid">
+      
+      <!-- Card 1: FNOL Claims Intake & SIU Fraud Scoring -->
+      <div class="card" id="claims-section" style="grid-column: span 6;">
+        <div class="card-title">
+          <span><i class="fa-solid fa-truck-medical"></i> FNOL Claims Intake & Fraud Evaluator</span>
+          <span class="badge badge-success">SIU Accelerator</span>
+        </div>
+        <form id="claim-form">
+          <div class="form-group">
+            <label class="form-label">Policy Number</label>
+            <input type="text" id="claim-polnum" class="form-input" value="POL-849102" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Claimant Name</label>
+            <input type="text" id="claim-name" class="form-input" value="John Doe" required>
+          </div>
+          <div class="form-group" style="display: flex; gap: 1rem;">
+            <div style="flex: 1;">
+              <label class="form-label">Loss Amount ($)</label>
+              <input type="number" id="claim-amount" class="form-input" value="18500" required>
+            </div>
+            <div style="flex: 1;">
+              <label class="form-label">Loss Cause</label>
+              <select id="claim-cause" class="form-select">
+                <option value="Collision">Collision</option>
+                <option value="Water Damage">Water Damage</option>
+                <option value="Arson">Arson (High Fraud Risk)</option>
+                <option value="Stolen Vehicle">Stolen Vehicle</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Loss Description</label>
+            <textarea id="claim-desc" class="form-textarea" rows="2">Vehicle impact at intersection during adverse weather conditions.</textarea>
+          </div>
+          <button type="submit" class="btn-primary"><i class="fa-solid fa-paper-plane"></i> Submit FNOL & Run SIU Scoring</button>
+        </form>
+        <div id="claim-result" class="result-box" style="display: none;"></div>
+      </div>
+
+      <!-- Card 2: Autonomous AI Underwriting Triage -->
+      <div class="card" id="ai-triage-section" style="grid-column: span 6;">
+        <div class="card-title">
+          <span><i class="fa-solid fa-robot"></i> Autonomous AI Underwriting Triage</span>
+          <span class="badge badge-warning">AGY AI Agent</span>
+        </div>
+        <form id="ai-triage-form">
+          <div class="form-group">
+            <label class="form-label">Policy Number</label>
+            <input type="text" id="triage-polnum" class="form-input" value="POL-849102" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Telematics Driver Score (0 - 100)</label>
+            <input type="number" id="triage-score" class="form-input" value="55" min="0" max="100" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Annual Premium ($)</label>
+            <input type="number" id="triage-premium" class="form-input" value="3400" required>
+          </div>
+          <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem;">
+            <input type="checkbox" id="triage-flood">
+            <label for="triage-flood" class="form-label" style="margin: 0; cursor: pointer;">High Flood Risk Zone (Zone A)</label>
+          </div>
+          <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #8b5cf6, #6366f1);"><i class="fa-solid fa-wand-magic-sparkles"></i> Evaluate AI Triage Decision</button>
+        </form>
+        <div id="triage-result" class="result-box" style="display: none;"></div>
+      </div>
+
+      <!-- Card 3: Real-Time Quick Quote Calculator -->
+      <div class="card" id="calculator-section" style="grid-column: span 12;">
+        <div class="card-title">
+          <span><i class="fa-solid fa-calculator"></i> Real-Time Premium Rating Calculator</span>
+          <span class="badge badge-success">Gosu Rating Engine</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; align-items: center;">
+          <div>
+            <label class="form-label">Base Premium ($)</label>
+            <input type="number" id="quote-base" class="form-input" value="2500">
+          </div>
+          <div>
+            <label class="form-label">Driver Score</label>
+            <input type="number" id="quote-score" class="form-input" value="88">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem; justify-content: center;">
+            <label class="form-label"><input type="checkbox" id="quote-flood"> Coastal/Flood Surcharge</label>
+            <label class="form-label"><input type="checkbox" id="quote-limit" checked> $1M/$1M High Limit</label>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 0.85rem; color: var(--text-muted);">Estimated Annual Premium</div>
+            <div id="quote-output" style="font-size: 2rem; font-weight: 700; color: var(--accent-cyan);">$2,445.00</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Quick Quote Calculator Handler
+    function calculateQuote() {
+      const base = parseFloat(document.getElementById('quote-base').value) || 0;
+      const score = parseInt(document.getElementById('quote-score').value) || 75;
+      const flood = document.getElementById('quote-flood').checked;
+      const limit = document.getElementById('quote-limit').checked;
+
+      let rate = base;
+      if (score >= 85) rate *= 0.85;
+      else if (score < 60) rate *= 1.30;
+
+      if (flood) rate += 450;
+      if (limit) rate += 320;
+
+      document.getElementById('quote-output').textContent = '$' + rate.toFixed(2);
+    }
+
+    ['quote-base', 'quote-score', 'quote-flood', 'quote-limit'].forEach(id => {
+      document.getElementById(id).addEventListener('input', calculateQuote);
+      document.getElementById(id).addEventListener('change', calculateQuote);
+    });
+
+    // Claim Form Submit Handler
+    document.getElementById('claim-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const resBox = document.getElementById('claim-result');
+      resBox.style.display = 'block';
+      resBox.textContent = 'Processing claim intake & running SIU scoring rules...';
+
+      const payload = {
+        policyNumber: document.getElementById('claim-polnum').value,
+        claimantName: document.getElementById('claim-name').value,
+        lossAmount: parseFloat(document.getElementById('claim-amount').value),
+        lossCause: document.getElementById('claim-cause').value,
+        lossDescription: document.getElementById('claim-desc').value
+      };
+
+      try {
+        const res = await fetch('/rest/v1/claims/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        resBox.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        resBox.textContent = 'Error: ' + err.message;
+      }
+    });
+
+    // AI Triage Form Submit Handler
+    document.getElementById('ai-triage-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const resBox = document.getElementById('triage-result');
+      resBox.style.display = 'block';
+      resBox.textContent = 'Evaluating multi-agent underwriting decision matrix...';
+
+      const payload = {
+        policyNumber: document.getElementById('triage-polnum').value,
+        driverScore: parseInt(document.getElementById('triage-score').value),
+        annualPremium: parseFloat(document.getElementById('triage-premium').value),
+        highFloodZone: document.getElementById('triage-flood').checked
+      };
+
+      try {
+        const res = await fetch('/rest/v1/ai/triage-portal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        resBox.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        resBox.textContent = 'Error: ' + err.message;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -13,13 +13,13 @@ import java.time.temporal.ChronoUnit;
 public class PolicyLifecycleRenewalEngine {
 
     public static class RenewalResult {
-        private String policyNumber;
-        private String renewalJobNumber;
-        private boolean eligible;
-        private BigDecimal previousPremium;
-        private BigDecimal newRenewalPremium;
-        private BigDecimal inflationRatePercentage;
-        private String statusMessage;
+        private final String policyNumber;
+        private final String renewalJobNumber;
+        private final boolean eligible;
+        private final BigDecimal previousPremium;
+        private final BigDecimal newRenewalPremium;
+        private final BigDecimal inflationRatePercentage;
+        private final String statusMessage;
 
         public RenewalResult(String policyNumber, String renewalJobNumber, boolean eligible, BigDecimal previousPremium, BigDecimal newRenewalPremium, BigDecimal inflationRatePercentage, String statusMessage) {
             this.policyNumber = policyNumber;
@@ -41,13 +41,13 @@ public class PolicyLifecycleRenewalEngine {
     }
 
     public static class MTACalculationResult {
-        private String policyNumber;
-        private BigDecimal originalAnnualPremium;
-        private BigDecimal newAnnualPremium;
-        private long totalPolicyDays;
-        private long remainingDays;
-        private BigDecimal proRataFactor;
-        private BigDecimal proratedAdditionalPremium;
+        private final String policyNumber;
+        private final BigDecimal originalAnnualPremium;
+        private final BigDecimal newAnnualPremium;
+        private final long totalPolicyDays;
+        private final long remainingDays;
+        private final BigDecimal proRataFactor;
+        private final BigDecimal proratedAdditionalPremium;
 
         public MTACalculationResult(String policyNumber, BigDecimal originalAnnualPremium, BigDecimal newAnnualPremium, long totalPolicyDays, long remainingDays, BigDecimal proRataFactor, BigDecimal proratedAdditionalPremium) {
             this.policyNumber = policyNumber;

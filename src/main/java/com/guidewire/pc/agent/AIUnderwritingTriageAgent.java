@@ -1,7 +1,6 @@
 package com.guidewire.pc.agent;
 
 import com.guidewire.pc.service.ClaimCenterIntegrationEngine;
-import com.guidewire.pc.service.PolicyLifecycleRenewalEngine;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -15,11 +14,11 @@ import java.util.List;
 public class AIUnderwritingTriageAgent {
 
     public static class TriageDecision {
-        private String submissionId;
-        private String recommendation; // STRAIGHT_THROUGH_BIND, UW_REFERRAL, DECLINE
-        private int riskScore; // 0-100
-        private List<String> rationale;
-        private boolean escalationRequired;
+        private final String submissionId;
+        private final String recommendation; // STRAIGHT_THROUGH_BIND, UW_REFERRAL, DECLINE
+        private final int riskScore; // 0-100
+        private final List<String> rationale;
+        private final boolean escalationRequired;
 
         public TriageDecision(String submissionId, String recommendation, int riskScore, List<String> rationale, boolean escalationRequired) {
             this.submissionId = submissionId;

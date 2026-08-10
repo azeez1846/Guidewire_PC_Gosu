@@ -8,6 +8,7 @@ import com.guidewire.ig.vehicledetails.dto.VehicleLookupRequest;
 import com.guidewire.ig.vehicledetails.dto.VehicleSpecs;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.URI;
@@ -30,9 +31,9 @@ public class ExternalVendorMVRConnector {
         String driverLicense = req.getDriverLicenseNumber() != null ? req.getDriverLicenseNumber().trim().toUpperCase() : "DL-CA-9948123";
         String state = req.getDriverState() != null ? req.getDriverState() : "CA";
 
-        LOGGER.info("[vehicledetails_IG Gateway Outbound HTTP Call] Executing live REST call to External Vendor (NHTSA & Verisk MVR API) for VIN: " + vin);
+        LOGGER.log(Level.INFO, "[vehicledetails_IG Gateway Outbound HTTP Call] Executing live REST call to External Vendor (NHTSA & Verisk MVR API) for VIN: {0}", vin);
 
-        VehicleSpecs specs = fetchLiveNhtsaVinDetails(vin, req.getVehicleMake(), req.getVehicleModel(), req.getVehicleYear());
+        VehicleSpecs specs = fetchLiveNhtsaVinDetails(vin, req.getVehicleMake(), req.getVehicleModel());
 
         // 2. Determine MVR driving record
         MVRRecord mvr = new MVRRecord();
@@ -97,7 +98,7 @@ public class ExternalVendorMVRConnector {
         );
     }
 
-    private VehicleSpecs fetchLiveNhtsaVinDetails(String vin, String fallbackMake, String fallbackModel, Integer fallbackYear) {
+    private VehicleSpecs fetchLiveNhtsaVinDetails(String vin, String fallbackMake, String fallbackModel) {
         LOGGER.log(Level.FINE, "→ ExternalVendorMVRConnector.fetchLiveNhtsaVinDetails");
         VehicleSpecs specs = new VehicleSpecs();
         specs.setVin(vin);
@@ -132,12 +133,12 @@ public class ExternalVendorMVRConnector {
                     specs.setActiveSafetyBraking(activeBraking);
                     specs.setLaneDepartureWarning(laneDep);
 
-                    LOGGER.info("[vehicledetails_IG Live Vendor API Success] Decoded VIN " + vin + " -> Make: " + make + ", Model: " + model + ", Body: " + bodyClass);
+                    LOGGER.log(Level.INFO, "[vehicledetails_IG Live Vendor API Success] Decoded VIN {0} -> Make: {1}, Model: {2}, Body: {3}", new Object[]{vin, make, model, bodyClass});
                     return specs;
                 }
             }
-        } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "[vehicledetails_IG Vendor API Fallback] Could not reach live NHTSA API, using default specs: " + e.getMessage());
+        } catch (IOException | IllegalArgumentException e) {
+            LOGGER.log(Level.WARNING, "[vehicledetails_IG Vendor API Fallback] Could not reach live NHTSA API, using default specs: {0}", e.getMessage());
         }
 
         // Fallback default specs if offline

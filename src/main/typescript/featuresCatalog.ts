@@ -394,5 +394,36 @@ export const ENTERPRISE_FEATURES_CATALOG: FeatureModule[] = [
       { name: 'driverLicenseNumber', label: 'Driver License Number', type: 'string', defaultValue: 'DL-CA-9948123', description: 'Driver license (Use DL-DUI-9948000 for high-risk test)' },
       { name: 'driverState', label: 'Driver State Jurisdiction', type: 'string', defaultValue: 'CA', description: 'State licensing authority' }
     ]
+  },
+  {
+    id: 'facultative-reinsurance',
+    title: 'Facultative Reinsurance & Excess of Loss Allocation Engine',
+    category: 'Reinsurance & Portfolio',
+    shortDescription: 'Allocates Quota Share, Surplus Treaties, and Excess of Loss retention stacks with dynamic facultative placement certificate generation.',
+    businessPurpose: 'Protects carrier balance sheet by ceding excess commercial risk to treaty and facultative reinsurers.',
+    endpoint: '/rest/v1/reinsurance/facultative',
+    method: 'POST',
+    inputs: [
+      { name: 'jobNumber', label: 'Submission Job #', type: 'string', defaultValue: 'S0001001', description: 'Policy Period Job Number' },
+      { name: 'tiv', label: 'Total Insured Value ($)', type: 'number', defaultValue: 10000000, description: 'Total account building and contents TIV' }
+    ]
+  },
+  {
+    id: 'parametric-catastrophe',
+    title: 'Parametric Climate & Catastrophe Real-Time Trigger Engine',
+    category: 'Reinsurance & Portfolio',
+    shortDescription: 'Monitors real-time wind speed and seismic telemetry to trigger instant policy claim settlements.',
+    businessPurpose: 'Provides instant liquidity to policyholders following natural disaster triggers without manual loss adjustment delays.',
+    endpoint: '/rest/v1/parametric/eval',
+    method: 'POST',
+    inputs: [
+      { name: 'postalCode', label: 'Postal Code', type: 'string', defaultValue: '33101', description: 'Insured location postal code' },
+      { name: 'recordedWindSpeed', label: 'Recorded Windspeed (Knots)', type: 'number', defaultValue: 125, description: 'Sustained wind speed reading' }
+    ]
   }
 ];
+
+export { ReinsuranceHeatmapComponent } from './reinsuranceHeatmap';
+export { AIUnderwritingWorkbenchComponent } from './aiUnderwritingWorkbench';
+export { ParametricMapComponent } from './parametricMap';
+

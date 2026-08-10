@@ -5,10 +5,12 @@
   "main": "src/main/typescript/featuresCatalog.ts",
   "scripts": {
     "build:ts": "tsc",
+    "build:ext": "tsc -p extensions/underwriter-helper/tsconfig.extension.json && cp extensions/underwriter-helper/dist/*.js extensions/underwriter-helper/",
     "type-check": "tsc --noEmit",
     "watch": "tsc --watch"
   },
   "devDependencies": {
+    "@types/chrome": "^0.2.5",
     "typescript": "^7.0.2"
   }
 }
