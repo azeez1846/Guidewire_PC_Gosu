@@ -2,8 +2,12 @@ package com.guidewire.pc.model;
 
 import com.guidewire.pc.orm.KeyableBean;
 import com.guidewire.pc.orm.GosuORMSession;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Organization implements KeyableBean {
+    private static final Logger LOGGER = Logger.getLogger(Organization.class.getName());
+
     private Long id;
     private String name;
     private String agencyFEIN;
@@ -12,6 +16,7 @@ public class Organization implements KeyableBean {
 
     public Organization() {
         this.id = GosuORMSession.getInstance().nextID();
+        LOGGER.log(Level.FINE, "Organization created: ID={0}", this.id);
     }
 
     public Organization(String name, String agencyFEIN, String producerType, String address) {

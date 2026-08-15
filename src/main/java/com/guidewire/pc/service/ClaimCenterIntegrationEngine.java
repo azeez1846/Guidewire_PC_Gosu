@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * ClaimCenter Integration Engine.
@@ -11,6 +13,7 @@ import java.util.*;
  * and automated underwriting hold triggers for Guidewire PolicyCenter.
  */
 public class ClaimCenterIntegrationEngine {
+    private static final Logger LOGGER = Logger.getLogger(ClaimCenterIntegrationEngine.class.getName());
 
     private static final ClaimCenterIntegrationEngine instance = new ClaimCenterIntegrationEngine();
 
@@ -84,9 +87,13 @@ public class ClaimCenterIntegrationEngine {
     }
 
     public FNOLEvent ingestFNOL(String policyNumber, String claimType, BigDecimal lossAmount, String description) {
+        LOGGER.log(Level.FINE, "→ ClaimCenterIntegrationEngine.ingestFNOL: policy={0}, type={1}, loss=${2}",
+                new Object[]{policyNumber, claimType, lossAmount});
         String claimNumber = "CLM-" + System.currentTimeMillis() % 1000000;
         FNOLEvent fnol = new FNOLEvent(claimNumber, policyNumber, LocalDate.now(), claimType, lossAmount, "OPEN", description);
         claimsByPolicy.computeIfAbsent(policyNumber, k -> new ArrayList<>()).add(fnol);
+        LOGGER.log(Level.INFO, "Ingested FNOL {0} for policy {1} (Amount=${2})",
+                new Object[]{claimNumber, policyNumber, lossAmount});
         return fnol;
     }
 
@@ -102,6 +109,8 @@ public class ClaimCenterIntegrationEngine {
     }
 
     public PolicyLossSummary evaluatePolicyLossSummary(String policyNumber, BigDecimal writtenPremium) {
+        LOGGER.log(Level.FINE, "→ ClaimCenterIntegrationEngine.evaluatePolicyLossSummary: policy={0}, prem=${1}",
+                new Object[]{policyNumber, writtenPremium});
         List<FNOLEvent> claims = getClaimsForPolicy(policyNumber);
         int totalClaims = claims.size();
         int openClaims = 0;
@@ -129,6 +138,11 @@ public class ClaimCenterIntegrationEngine {
         if (openClaims >= 3) {
             holdRequired = true;
             reason.append("Multiple open claims (").append(openClaims).append(") detected. ");
+        }
+
+        if (holdRequired) {
+            LOGGER.log(Level.WARNING, "Underwriting hold triggered for policy {0}: {1}",
+                    new Object[]{policyNumber, reason.toString().trim()});
         }
 
         return new PolicyLossSummary(policyNumber, totalClaims, openClaims, totalLoss, writtenPremium, lossRatio, holdRequired, reason.toString().trim());

@@ -2,9 +2,12 @@ package com.guidewire.pc.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RateTableEntry implements Serializable {
     private static final long serialVersionUID = 1L;
+    private static final Logger LOGGER = Logger.getLogger(RateTableEntry.class.getName());
 
     private String productCode;
     private String state;
@@ -19,6 +22,7 @@ public class RateTableEntry implements Serializable {
         this.territoryFactor = 1.00;
         this.riskTierFactor = 1.00;
         this.deductibleModifier = 1.00;
+        LOGGER.log(Level.FINE, "RateTableEntry initialized");
     }
 
     public RateTableEntry(String productCode, String state, String territory, String riskTier, BigDecimal baseRate, double territoryFactor, double riskTierFactor) {

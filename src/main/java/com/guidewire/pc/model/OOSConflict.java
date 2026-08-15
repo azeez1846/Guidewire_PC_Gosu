@@ -1,9 +1,12 @@
 package com.guidewire.pc.model;
 
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class OOSConflict implements Serializable {
     private static final long serialVersionUID = 1L;
+    private static final Logger LOGGER = Logger.getLogger(OOSConflict.class.getName());
 
     private String fieldName;
     private String slice1EffectiveDate;
@@ -23,6 +26,7 @@ public class OOSConflict implements Serializable {
         this.slice1Value = slice1Value;
         this.slice2EffectiveDate = slice2EffectiveDate;
         this.slice2Value = slice2Value;
+        LOGGER.log(Level.FINE, "OOSConflict detected on field={0} ({1} vs {2})", new Object[]{fieldName, slice1Value, slice2Value});
     }
 
     public String getFieldName() { return fieldName; }

@@ -4,9 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FraudRiskScore implements Serializable {
     private static final long serialVersionUID = 1L;
+    private static final Logger LOGGER = Logger.getLogger(FraudRiskScore.class.getName());
 
     private String policyNumber;
     private String jobNumber;
@@ -31,6 +34,8 @@ public class FraudRiskScore implements Serializable {
         if (signal != null) {
             this.riskSignals.add(signal);
             this.totalRiskScore += signal.getScoreImpact();
+            LOGGER.log(Level.FINE, "Added risk signal {0} (impact={1}) to policy {2}",
+                    new Object[]{signal.getSignalCode(), signal.getScoreImpact(), this.policyNumber});
             recalculateTier();
         }
     }
@@ -39,6 +44,8 @@ public class FraudRiskScore implements Serializable {
         if (this.totalRiskScore >= 75) {
             this.riskTier = "CRITICAL_SIU";
             this.siuHoldRequired = true;
+            LOGGER.log(Level.WARNING, "Policy {0} evaluated as CRITICAL_SIU (Score={1}). Mandatory SIU Hold triggered.",
+                    new Object[]{this.policyNumber, this.totalRiskScore});
         } else if (this.totalRiskScore >= 50) {
             this.riskTier = "HIGH";
             this.siuHoldRequired = true;

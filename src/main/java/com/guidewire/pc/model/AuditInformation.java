@@ -3,8 +3,12 @@ package com.guidewire.pc.model;
 import com.guidewire.pc.orm.KeyableBean;
 import com.guidewire.pc.orm.GosuORMSession;
 import java.math.BigDecimal;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AuditInformation implements KeyableBean {
+    private static final Logger LOGGER = Logger.getLogger(AuditInformation.class.getName());
+
     private Long id;
     private String auditType = "FinalAudit";
     private String auditStatus = "Draft";
@@ -17,6 +21,7 @@ public class AuditInformation implements KeyableBean {
 
     public AuditInformation() {
         this.id = GosuORMSession.getInstance().nextID();
+        LOGGER.log(Level.FINE, "AuditInformation initialized: ID={0}", this.id);
     }
 
     public AuditInformation(String auditType, String auditMethod, BigDecimal estimatedExposure) {

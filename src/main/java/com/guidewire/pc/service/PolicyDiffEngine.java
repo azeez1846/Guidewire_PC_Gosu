@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Advanced Policy Diff & Endorsement (MTA) Rating Line-Item Comparator Engine.
@@ -13,6 +15,7 @@ import java.util.List;
  * pro-rata premium adjustments between policy revisions or MTA jobs.
  */
 public class PolicyDiffEngine {
+    private static final Logger LOGGER = Logger.getLogger(PolicyDiffEngine.class.getName());
 
     public record CoverageLineDiff(
         String lineItemName,
@@ -41,6 +44,7 @@ public class PolicyDiffEngine {
     }
 
     public PolicyEndorsementDiffResult calculateEndorsementDiff(PolicyPeriod basePeriod, PolicyPeriod revisedPeriod, double proRataFactor) {
+        LOGGER.log(Level.FINE, "→ PolicyDiffEngine.calculateEndorsementDiff: proRataFactor={0}", proRataFactor);
         String polNum = basePeriod != null && basePeriod.getPolicyNumber() != null ? basePeriod.getPolicyNumber() : "POL-MTA-9901";
         String baseJob = basePeriod != null && basePeriod.getJobNumber() != null ? basePeriod.getJobNumber() : "BASE-001";
         String revJob = revisedPeriod != null && revisedPeriod.getJobNumber() != null ? revisedPeriod.getJobNumber() : "REV-002";
@@ -59,6 +63,9 @@ public class PolicyDiffEngine {
         addLineDiff(lineDiffs, "Property Damage Coverage", new BigDecimal("400.00"), new BigDecimal("500.00"), factor);
         addLineDiff(lineDiffs, "Comprehensive & Collision", new BigDecimal("600.00"), new BigDecimal("800.00"), factor);
         addLineDiff(lineDiffs, "Telematics & Safety Discount", new BigDecimal("-200.00"), new BigDecimal("-150.00"), factor);
+
+        LOGGER.log(Level.INFO, "Endorsement diff calculated for policy {0}: netDelta=${1}, proratedDelta=${2}, items={3}",
+                new Object[]{polNum, netDelta, netProrated, lineDiffs.size()});
 
         return new PolicyEndorsementDiffResult(polNum, baseJob, revJob, proRataFactor, netDelta, netProrated, lineDiffs);
     }

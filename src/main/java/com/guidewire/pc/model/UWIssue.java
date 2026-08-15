@@ -4,9 +4,12 @@ import com.guidewire.pc.constants.PCConstants;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UWIssue implements Serializable {
     private static final long serialVersionUID = 1L;
+    private static final Logger LOGGER = Logger.getLogger(UWIssue.class.getName());
 
     private String issueKey;
     private String issueCode;
@@ -51,6 +54,7 @@ public class UWIssue implements Serializable {
     }
 
     public void approve(String approvedBy, String approvalReason) {
+        LOGGER.log(Level.INFO, "UWIssue {0} approved by {1}: {2}", new Object[]{issueCode, approvedBy, approvalReason});
         this.status = PCConstants.UW_STATUS_APPROVED;
         this.approvedBy = approvedBy;
         this.approvalReason = approvalReason;
@@ -58,6 +62,7 @@ public class UWIssue implements Serializable {
     }
 
     public void reject(String rejectedBy, String rejectReason) {
+        LOGGER.log(Level.INFO, "UWIssue {0} rejected by {1}: {2}", new Object[]{issueCode, rejectedBy, rejectReason});
         this.status = PCConstants.UW_STATUS_REJECTED;
         this.approvedBy = rejectedBy;
         this.approvalReason = rejectReason;

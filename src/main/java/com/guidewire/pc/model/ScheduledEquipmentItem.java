@@ -2,9 +2,12 @@ package com.guidewire.pc.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ScheduledEquipmentItem implements Serializable {
     private static final long serialVersionUID = 1L;
+    private static final Logger LOGGER = Logger.getLogger(ScheduledEquipmentItem.class.getName());
 
     private int itemNumber;
     private String equipmentType; // HeavyMachinery, MobileTools, TransitCargo, MedicalEquipment, SolarPanels
@@ -18,6 +21,7 @@ public class ScheduledEquipmentItem implements Serializable {
     public ScheduledEquipmentItem() {
         this.statedValue = BigDecimal.ZERO;
         this.deductible = new BigDecimal("500.00");
+        LOGGER.log(Level.FINE, "ScheduledEquipmentItem initialized");
     }
 
     public ScheduledEquipmentItem(int itemNumber, String equipmentType, String description, String serialNumber, BigDecimal statedValue) {

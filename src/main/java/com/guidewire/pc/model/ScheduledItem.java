@@ -3,8 +3,12 @@ package com.guidewire.pc.model;
 import com.guidewire.pc.orm.KeyableBean;
 import com.guidewire.pc.orm.GosuORMSession;
 import java.math.BigDecimal;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ScheduledItem implements KeyableBean {
+    private static final Logger LOGGER = Logger.getLogger(ScheduledItem.class.getName());
+
     private Long id;
     private Integer itemNumber;
     private String description;
@@ -16,6 +20,7 @@ public class ScheduledItem implements KeyableBean {
 
     public ScheduledItem() {
         this.id = GosuORMSession.getInstance().nextID();
+        LOGGER.log(Level.FINE, "ScheduledItem created: ID={0}", this.id);
     }
 
     public ScheduledItem(Integer itemNumber, String description, String serialNumber, String category, BigDecimal statedValue) {

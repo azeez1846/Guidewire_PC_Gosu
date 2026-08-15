@@ -4,8 +4,12 @@ import com.guidewire.pc.orm.GosuORMSession;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Transaction {
+    private static final Logger LOGGER = Logger.getLogger(Transaction.class.getName());
+
     private Long id;
     private Cost cost;
     private String jobNumber;
@@ -16,6 +20,7 @@ public class Transaction {
     public Transaction() {
         this.id = GosuORMSession.getInstance().nextID();
         this.postedDate = new Date();
+        LOGGER.log(Level.FINE, "Transaction created: ID={0}", this.id);
     }
 
     public Transaction(Cost cost, String jobNumber, BigDecimal amount, String transactionType) {

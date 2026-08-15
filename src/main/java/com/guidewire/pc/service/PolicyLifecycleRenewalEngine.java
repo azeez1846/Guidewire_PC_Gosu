@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Policy Lifecycle Renewal & Mid-Term Endorsement Engine.
@@ -11,6 +13,7 @@ import java.time.temporal.ChronoUnit;
  * and handles pro-rata mid-term endorsement premium calculations.
  */
 public class PolicyLifecycleRenewalEngine {
+    private static final Logger LOGGER = Logger.getLogger(PolicyLifecycleRenewalEngine.class.getName());
 
     public static class RenewalResult {
         private final String policyNumber;
@@ -69,9 +72,13 @@ public class PolicyLifecycleRenewalEngine {
     }
 
     public RenewalResult evaluateAndCreateRenewal(String policyNumber, BigDecimal currentPremium, ClaimCenterIntegrationEngine.PolicyLossSummary lossSummary, BigDecimal baseInflationPercent) {
+        LOGGER.log(Level.FINE, "→ PolicyLifecycleRenewalEngine.evaluateAndCreateRenewal: policy={0}, currentPrem={1}, inflation={2}%",
+                new Object[]{policyNumber, currentPremium, baseInflationPercent});
         String renewalJobNumber = "REN-" + System.currentTimeMillis() % 1000000;
 
         if (lossSummary != null && lossSummary.isUnderwritingHoldRequired()) {
+            LOGGER.log(Level.WARNING, "Renewal ineligible for policy {0} due to UW hold: {1}",
+                    new Object[]{policyNumber, lossSummary.getHoldReason()});
             return new RenewalResult(
                 policyNumber,
                 renewalJobNumber,
@@ -86,6 +93,9 @@ public class PolicyLifecycleRenewalEngine {
         BigDecimal factor = BigDecimal.ONE.add(baseInflationPercent.divide(new BigDecimal("100"), 4, RoundingMode.HALF_UP));
         BigDecimal newPremium = currentPremium.multiply(factor).setScale(2, RoundingMode.HALF_UP);
 
+        LOGGER.log(Level.INFO, "Renewal created for policy {0}: job={1}, newPrem=${2}",
+                new Object[]{policyNumber, renewalJobNumber, newPremium});
+
         return new RenewalResult(
             policyNumber,
             renewalJobNumber,
@@ -98,6 +108,8 @@ public class PolicyLifecycleRenewalEngine {
     }
 
     public MTACalculationResult calculateMidTermEndorsement(String policyNumber, BigDecimal currentAnnualPremium, BigDecimal updatedAnnualPremium, LocalDate policyEffectiveDate, LocalDate policyExpirationDate, LocalDate endorsementEffectiveDate) {
+        LOGGER.log(Level.FINE, "→ PolicyLifecycleRenewalEngine.calculateMidTermEndorsement: policy={0}, currPrem={1}, updatedPrem={2}",
+                new Object[]{policyNumber, currentAnnualPremium, updatedAnnualPremium});
         long totalDays = ChronoUnit.DAYS.between(policyEffectiveDate, policyExpirationDate);
         if (totalDays <= 0) totalDays = 365;
 
@@ -108,6 +120,9 @@ public class PolicyLifecycleRenewalEngine {
         BigDecimal proRataFactor = new BigDecimal(remainingDays).divide(new BigDecimal(totalDays), 6, RoundingMode.HALF_UP);
         BigDecimal fullDelta = updatedAnnualPremium.subtract(currentAnnualPremium);
         BigDecimal proratedDelta = fullDelta.multiply(proRataFactor).setScale(2, RoundingMode.HALF_UP);
+
+        LOGGER.log(Level.INFO, "Mid-term endorsement calculated for policy {0}: remainingDays={1}/{2}, proratedDelta=${3}",
+                new Object[]{policyNumber, remainingDays, totalDays, proratedDelta});
 
         return new MTACalculationResult(
             policyNumber,

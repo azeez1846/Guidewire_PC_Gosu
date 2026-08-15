@@ -3,8 +3,12 @@ package com.guidewire.pc.model;
 import com.guidewire.pc.orm.KeyableBean;
 import com.guidewire.pc.orm.GosuORMSession;
 import java.math.BigDecimal;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RIAgreement implements KeyableBean {
+    private static final Logger LOGGER = Logger.getLogger(RIAgreement.class.getName());
+
     private Long id;
     private String agreementNumber;
     private String agreementName;
@@ -18,6 +22,7 @@ public class RIAgreement implements KeyableBean {
 
     public RIAgreement() {
         this.id = GosuORMSession.getInstance().nextID();
+        LOGGER.log(Level.FINE, "RIAgreement created: ID={0}", this.id);
     }
 
     public RIAgreement(String agreementNumber, String agreementName, String agreementType, BigDecimal grossRetentionLimit, BigDecimal cedingPercentage) {

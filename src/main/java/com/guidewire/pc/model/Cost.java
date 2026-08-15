@@ -6,8 +6,12 @@ import com.guidewire.pc.orm.GosuORMSession;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Cost extends EffDatedBean {
+    private static final Logger LOGGER = Logger.getLogger(Cost.class.getName());
+
     private String chargePattern; // BasePremium, BodilyInjuryCoverage, PropertyDamageCoverage, StateTax, PolicyFee
     private String description;
     private BigDecimal actualAmount = BigDecimal.ZERO;
@@ -28,6 +32,7 @@ public class Cost extends EffDatedBean {
 
     @Override
     public EffDatedBean cloneSlice(EffDatedBranch newBranch, Date editEffDate) {
+        LOGGER.log(Level.FINE, "Cloning Cost slice for pattern={0}, editEffDate={1}", new Object[]{this.chargePattern, editEffDate});
         Cost cloned = new Cost();
         cloned.setFixedId(getFixedId());
         cloned.setBranch(newBranch);

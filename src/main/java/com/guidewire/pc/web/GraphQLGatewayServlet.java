@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -18,26 +20,35 @@ import java.util.stream.Collectors;
  * and handles mutations for FNOL ingestion and Policy Renewals.
  */
 public class GraphQLGatewayServlet extends HttpServlet {
+    private static final Logger LOGGER = Logger.getLogger(GraphQLGatewayServlet.class.getName());
 
     private final ClaimCenterIntegrationEngine claimEngine = new ClaimCenterIntegrationEngine();
     private final PolicyLifecycleRenewalEngine renewalEngine = new PolicyLifecycleRenewalEngine();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        LOGGER.log(Level.FINE, "→ GraphQLGatewayServlet.doGet: schema request");
         resp.setContentType("application/json");
         resp.getWriter().write("{\"status\":\"GraphQL Gateway Active\",\"endpoint\":\"/graphql\",\"schema\":[\"query { policy(id: String), account(id: String), claims(policyNumber: String) }\",\"mutation { createFNOL(policyNumber: String, lossAmount: Float), evaluateRenewal(policyNumber: String) }\"]}");
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        LOGGER.log(Level.FINE, "→ GraphQLGatewayServlet.doPost: processing query");
         resp.setContentType("application/json");
 
         String body;
         try (BufferedReader reader = req.getReader()) {
             body = reader.lines().collect(Collectors.joining("\n"));
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Error reading GraphQL request stream: {0}", e.getMessage());
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.getWriter().write("{\"errors\": [{\"message\": \"Failed to read request body\"}]}");
+            return;
         }
 
         if (body == null || body.trim().isEmpty()) {
+            LOGGER.log(Level.WARNING, "GraphQLGatewayServlet received empty GraphQL request body");
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resp.getWriter().write("{\"errors\": [{\"message\": \"Empty GraphQL request body\"}]}");
             return;
@@ -53,6 +64,7 @@ public class GraphQLGatewayServlet extends HttpServlet {
             query = body.substring(valStart, end);
         }
 
+        LOGGER.log(Level.INFO, "Executing GraphQL Query/Mutation: {0}", query.trim());
         StringBuilder data = new StringBuilder();
 
         if (query.contains("query") || query.contains("policy") || query.contains("claims")) {

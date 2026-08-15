@@ -3,8 +3,12 @@ package com.guidewire.pc.model;
 import com.guidewire.pc.orm.KeyableBean;
 import com.guidewire.pc.orm.GosuORMSession;
 import java.math.BigDecimal;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ProducerCode implements KeyableBean {
+    private static final Logger LOGGER = Logger.getLogger(ProducerCode.class.getName());
+
     private Long id;
     private String code;
     private String producerStatus = "Active";
@@ -15,6 +19,7 @@ public class ProducerCode implements KeyableBean {
 
     public ProducerCode() {
         this.id = GosuORMSession.getInstance().nextID();
+        LOGGER.log(Level.FINE, "ProducerCode instantiated with ID={0}", this.id);
     }
 
     public ProducerCode(String code, String producerStatus, String tier, BigDecimal newBusinessCommissionRate, BigDecimal renewalCommissionRate, String licensedStates) {
