@@ -46,4 +46,28 @@ public class OOSConflict implements Serializable {
 
     public String getResolutionStatus() { return resolutionStatus; }
     public void setResolutionStatus(String resolutionStatus) { this.resolutionStatus = resolutionStatus; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OOSConflict that)) return false;
+        return java.util.Objects.equals(fieldName, that.fieldName) &&
+                java.util.Objects.equals(slice1EffectiveDate, that.slice1EffectiveDate) &&
+                java.util.Objects.equals(slice2EffectiveDate, that.slice2EffectiveDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(fieldName, slice1EffectiveDate, slice2EffectiveDate);
+    }
+
+    @Override
+    public String toString() {
+        return "OOSConflict{" +
+                "field='" + fieldName + '\'' +
+                ", v1='" + slice1Value + '\'' +
+                ", v2='" + slice2Value + '\'' +
+                ", status='" + resolutionStatus + '\'' +
+                '}';
+    }
 }

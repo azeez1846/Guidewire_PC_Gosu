@@ -56,4 +56,26 @@ public class ProducerCode implements KeyableBean {
 
     public String getLicensedStates() { return licensedStates; }
     public void setLicensedStates(String licensedStates) { this.licensedStates = licensedStates; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ProducerCode that)) return false;
+        return java.util.Objects.equals(id, that.id) ||
+                (code != null && code.equalsIgnoreCase(that.code));
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : (code != null ? code.hashCode() : 0);
+    }
+
+    @Override
+    public String toString() {
+        return "ProducerCode{" +
+                "code='" + code + '\'' +
+                ", tier='" + tier + '\'' +
+                ", status='" + producerStatus + '\'' +
+                '}';
+    }
 }

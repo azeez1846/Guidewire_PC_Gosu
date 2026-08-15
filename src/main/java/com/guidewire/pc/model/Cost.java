@@ -56,4 +56,25 @@ public class Cost extends EffDatedBean {
 
     public BigDecimal getActualTermAmount() { return actualTermAmount; }
     public void setActualTermAmount(BigDecimal actualTermAmount) { this.actualTermAmount = actualTermAmount; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Cost cost)) return false;
+        return java.util.Objects.equals(getID(), cost.getID());
+    }
+
+    @Override
+    public int hashCode() {
+        return getID() != null ? getID().hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "Cost{" +
+                "id=" + getID() +
+                ", pattern='" + chargePattern + '\'' +
+                ", amount=" + actualAmount +
+                '}';
+    }
 }

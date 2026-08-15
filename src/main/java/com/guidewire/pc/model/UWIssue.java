@@ -102,4 +102,26 @@ public class UWIssue implements Serializable {
 
     public Date getUpdateTime() { return updateTime; }
     public void setUpdateTime(Date updateTime) { this.updateTime = updateTime; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UWIssue uwIssue)) return false;
+        return java.util.Objects.equals(issueKey, uwIssue.issueKey) ||
+                java.util.Objects.equals(issueCode, uwIssue.issueCode);
+    }
+
+    @Override
+    public int hashCode() {
+        return issueKey != null ? issueKey.hashCode() : (issueCode != null ? issueCode.hashCode() : 0);
+    }
+
+    @Override
+    public String toString() {
+        return "UWIssue{" +
+                "code='" + issueCode + '\'' +
+                ", severity='" + severity + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }

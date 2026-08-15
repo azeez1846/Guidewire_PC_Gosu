@@ -45,4 +45,27 @@ public class Organization implements KeyableBean {
 
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Organization that)) return false;
+        return java.util.Objects.equals(id, that.id) ||
+                (agencyFEIN != null && agencyFEIN.equalsIgnoreCase(that.agencyFEIN));
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : (agencyFEIN != null ? agencyFEIN.hashCode() : 0);
+    }
+
+    @Override
+    public String toString() {
+        return "Organization{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", FEIN='" + agencyFEIN + '\'' +
+                ", type='" + producerType + '\'' +
+                '}';
+    }
 }

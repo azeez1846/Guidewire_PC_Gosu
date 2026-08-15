@@ -33,8 +33,11 @@ class OOSConflictResolver {
     try {
       var eff = LocalDate.parse(oosBranch.EffectiveDate)
       var exp = LocalDate.parse(oosBranch.ExpirationDate)
+      var sliceDate = oosBranch.EditEffectiveDate != null ? LocalDate.of(oosBranch.EditEffectiveDate.Year + 1900, oosBranch.EditEffectiveDate.Month + 1, oosBranch.EditEffectiveDate.Date) : eff
       var totalTermDays = ChronoUnit.DAYS.between(eff, exp)
-      var remainingDays = ChronoUnit.DAYS.between(eff, exp)
+      var remainingDays = ChronoUnit.DAYS.between(sliceDate, exp)
+      if (remainingDays < 0) remainingDays = 0
+      if (remainingDays > totalTermDays) remainingDays = totalTermDays
 
       if (totalTermDays <= 0) return BigDecimal.ZERO
 

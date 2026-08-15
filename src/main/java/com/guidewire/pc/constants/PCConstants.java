@@ -51,6 +51,7 @@ public final class PCConstants {
     // Charge Patterns
     public static final String CHARGE_BASE_PREMIUM = "BasePremium";
     public static final String CHARGE_BODILY_INJURY = "BodilyInjuryCoverage";
+    public static final String CHARGE_PROPERTY_DAMAGE = "PropertyDamageCoverage";
     public static final String CHARGE_COLLISION = "CollisionCoverage";
     public static final String CHARGE_COMPREHENSIVE = "ComprehensiveCoverage";
     public static final String CHARGE_MULTI_POLICY_DISCOUNT = "MultiPolicyDiscount";

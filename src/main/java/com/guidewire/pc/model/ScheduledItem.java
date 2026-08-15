@@ -59,4 +59,28 @@ public class ScheduledItem implements KeyableBean {
 
     public BigDecimal getItemPremium() { return itemPremium; }
     public void setItemPremium(BigDecimal itemPremium) { this.itemPremium = itemPremium; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ScheduledItem that)) return false;
+        return java.util.Objects.equals(id, that.id) ||
+                (itemNumber != null && itemNumber.equals(that.itemNumber) &&
+                        java.util.Objects.equals(serialNumber, that.serialNumber));
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : java.util.Objects.hash(itemNumber, serialNumber);
+    }
+
+    @Override
+    public String toString() {
+        return "ScheduledItem{" +
+                "id=" + id +
+                ", itemNumber=" + itemNumber +
+                ", desc='" + description + '\'' +
+                ", value=" + statedValue +
+                '}';
+    }
 }

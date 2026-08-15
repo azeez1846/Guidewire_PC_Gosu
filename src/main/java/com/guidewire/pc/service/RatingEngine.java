@@ -14,14 +14,14 @@ import java.util.logging.Logger;
 
 public class RatingEngine {
     private static final Logger LOGGER = Logger.getLogger(RatingEngine.class.getName());
-    private static final RatingEngine instance = new RatingEngine();
+    private static final RatingEngine INSTANCE = new RatingEngine();
 
     private RatingEngine() {
-        LOGGER.log(Level.FINE, "→ RatingEngine.RatingEngine");}
+        LOGGER.log(Level.FINE, "RatingEngine initialized");
+    }
 
     public static RatingEngine getInstance() {
-        LOGGER.log(Level.FINE, "→ RatingEngine.getInstance");
-        return instance;
+        return INSTANCE;
     }
 
     public List<Cost> rate(PolicyPeriod period) {
@@ -42,43 +42,53 @@ public class RatingEngine {
             return costs;
         }
 
-        // 1. Base Premium Cost
-        double baseRate = 500.0;
-        if (PCConstants.PRODUCT_PERSONAL_AUTO.equalsIgnoreCase(period.getProductCode())) baseRate = 650.0;
-        else if (PCConstants.PRODUCT_COMMERCIAL_AUTO.equalsIgnoreCase(period.getProductCode())) baseRate = 1250.0;
-        else if (PCConstants.PRODUCT_COMMERCIAL_PROPERTY.equalsIgnoreCase(period.getProductCode())) baseRate = 2100.0;
-        else if (PCConstants.PRODUCT_GENERAL_LIABILITY.equalsIgnoreCase(period.getProductCode())) baseRate = 1800.0;
+        // 1. Base Premium Cost (Pure BigDecimal arithmetic)
+        BigDecimal baseRate = new BigDecimal("500.00");
+        if (PCConstants.PRODUCT_PERSONAL_AUTO.equalsIgnoreCase(period.getProductCode())) {
+            baseRate = new BigDecimal("650.00");
+        } else if (PCConstants.PRODUCT_COMMERCIAL_AUTO.equalsIgnoreCase(period.getProductCode())) {
+            baseRate = new BigDecimal("1250.00");
+        } else if (PCConstants.PRODUCT_COMMERCIAL_PROPERTY.equalsIgnoreCase(period.getProductCode())) {
+            baseRate = new BigDecimal("2100.00");
+        } else if (PCConstants.PRODUCT_GENERAL_LIABILITY.equalsIgnoreCase(period.getProductCode())) {
+            baseRate = new BigDecimal("1800.00");
+        }
 
-        if (period.getTermMonths() == 12) baseRate *= 1.9;
+        if (period.getTermMonths() == 12) {
+            baseRate = baseRate.multiply(new BigDecimal("1.90")).setScale(2, RoundingMode.HALF_UP);
+        }
 
-        BigDecimal baseCostAmt = BigDecimal.valueOf(baseRate).setScale(2, RoundingMode.HALF_UP);
-        Cost baseCost = new Cost(PCConstants.CHARGE_BASE_PREMIUM, "Base Policy Premium for " + period.getProductCode(), baseCostAmt);
+        Cost baseCost = new Cost(PCConstants.CHARGE_BASE_PREMIUM, "Base Policy Premium for " + period.getProductCode(), baseRate);
         costs.add(baseCost);
 
         // 2. Bodily Injury Coverage Cost
-        double biAmount = 0.0;
-        if ("$500k/$500k".equals(period.getBodilyInjuryLimit())) biAmount = 250.0;
-        else if ("$1M/$1M".equals(period.getBodilyInjuryLimit())) biAmount = 500.0;
-        if (biAmount > 0) {
-            BigDecimal biCostAmt = BigDecimal.valueOf(biAmount).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal biCostAmt = BigDecimal.ZERO;
+        if ("$500k/$500k".equals(period.getBodilyInjuryLimit())) {
+            biCostAmt = new BigDecimal("250.00");
+        } else if ("$1M/$1M".equals(period.getBodilyInjuryLimit())) {
+            biCostAmt = new BigDecimal("500.00");
+        }
+        if (biCostAmt.compareTo(BigDecimal.ZERO) > 0) {
             Cost biCost = new Cost(PCConstants.CHARGE_BODILY_INJURY, "Bodily Injury Limit (" + period.getBodilyInjuryLimit() + ")", biCostAmt);
             costs.add(biCost);
         }
 
         // 3. Property Damage Coverage Cost
-        double pdAmount = 0.0;
-        if ("$250k".equals(period.getPropertyDamageLimit())) pdAmount = 150.0;
-        else if ("$500k".equals(period.getPropertyDamageLimit())) pdAmount = 300.0;
-        if (pdAmount > 0) {
-            BigDecimal pdCostAmt = BigDecimal.valueOf(pdAmount).setScale(2, RoundingMode.HALF_UP);
-            Cost pdCost = new Cost("PropertyDamageCoverage", "Property Damage Limit (" + period.getPropertyDamageLimit() + ")", pdCostAmt);
+        BigDecimal pdCostAmt = BigDecimal.ZERO;
+        if ("$250k".equals(period.getPropertyDamageLimit())) {
+            pdCostAmt = new BigDecimal("150.00");
+        } else if ("$500k".equals(period.getPropertyDamageLimit())) {
+            pdCostAmt = new BigDecimal("300.00");
+        }
+        if (pdCostAmt.compareTo(BigDecimal.ZERO) > 0) {
+            Cost pdCost = new Cost(PCConstants.CHARGE_PROPERTY_DAMAGE, "Property Damage Limit (" + period.getPropertyDamageLimit() + ")", pdCostAmt);
             costs.add(pdCost);
         }
 
         // Mid-term proration for PolicyChange / Cancellation
         if (PCConstants.JOB_TYPE_POLICY_CHANGE.equalsIgnoreCase(period.getJobType())) {
             for (Cost c : costs) {
-                c.setActualAmount(c.getActualAmount().multiply(new BigDecimal("0.5")).setScale(2, RoundingMode.HALF_UP));
+                c.setActualAmount(c.getActualAmount().multiply(new BigDecimal("0.50")).setScale(2, RoundingMode.HALF_UP));
             }
         }
 

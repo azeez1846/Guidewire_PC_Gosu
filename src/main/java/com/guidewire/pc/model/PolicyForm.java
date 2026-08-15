@@ -56,4 +56,26 @@ public class PolicyForm implements KeyableBean {
 
     public String getFormDescription() { return formDescription; }
     public void setFormDescription(String formDescription) { this.formDescription = formDescription; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PolicyForm that)) return false;
+        return java.util.Objects.equals(id, that.id) ||
+                (formNumber != null && formNumber.equalsIgnoreCase(that.formNumber));
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : (formNumber != null ? formNumber.hashCode() : 0);
+    }
+
+    @Override
+    public String toString() {
+        return "PolicyForm{" +
+                "formNumber='" + formNumber + '\'' +
+                ", name='" + formName + '\'' +
+                ", mandatory=" + isMandatory +
+                '}';
+    }
 }

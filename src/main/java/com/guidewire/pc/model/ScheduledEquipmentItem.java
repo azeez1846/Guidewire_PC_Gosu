@@ -57,4 +57,27 @@ public class ScheduledEquipmentItem implements Serializable {
 
     public double getCoinsurancePercentage() { return coinsurancePercentage; }
     public void setCoinsurancePercentage(double coinsurancePercentage) { this.coinsurancePercentage = coinsurancePercentage; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ScheduledEquipmentItem that)) return false;
+        return itemNumber == that.itemNumber &&
+                java.util.Objects.equals(serialNumber, that.serialNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(itemNumber, serialNumber);
+    }
+
+    @Override
+    public String toString() {
+        return "ScheduledEquipmentItem{" +
+                "itemNumber=" + itemNumber +
+                ", type='" + equipmentType + '\'' +
+                ", serial='" + serialNumber + '\'' +
+                ", value=" + statedValue +
+                '}';
+    }
 }

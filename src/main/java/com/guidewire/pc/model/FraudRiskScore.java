@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -76,4 +77,27 @@ public class FraudRiskScore implements Serializable {
 
     public List<SIURiskSignal> getRiskSignals() { return riskSignals; }
     public Date getEvaluationTime() { return evaluationTime; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof FraudRiskScore that)) return false;
+        return Objects.equals(policyNumber, that.policyNumber) &&
+                Objects.equals(jobNumber, that.jobNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(policyNumber, jobNumber);
+    }
+
+    @Override
+    public String toString() {
+        return "FraudRiskScore{" +
+                "policyNumber='" + policyNumber + '\'' +
+                ", score=" + totalRiskScore +
+                ", tier='" + riskTier + '\'' +
+                ", hold=" + siuHoldRequired +
+                '}';
+    }
 }

@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 
 public class DataStoreService {
     private static final Logger LOGGER = Logger.getLogger(DataStoreService.class.getName());
-    private static DataStoreService instance;
+    private static final DataStoreService INSTANCE = new DataStoreService();
 
     // Fast In-Memory Cache Layers (Eliminates N+1 SQL queries and disk delays)
     private final Map<String, Account> accountCache = new ConcurrentHashMap<>();
@@ -27,17 +27,13 @@ public class DataStoreService {
     private volatile boolean cacheLoaded = false;
 
     private DataStoreService() {
-        LOGGER.log(Level.FINE, "→ DataStoreService.DataStoreService");
+        LOGGER.log(Level.FINE, "DataStoreService initializing...");
         seedSampleDataIfEmpty();
         warmupCacheFromDb();
     }
 
-    public static synchronized DataStoreService getInstance() {
-        LOGGER.log(Level.FINE, "→ DataStoreService.getInstance");
-        if (instance == null) {
-            instance = new DataStoreService();
-        }
-        return instance;
+    public static DataStoreService getInstance() {
+        return INSTANCE;
     }
 
     private Connection getConnection() throws SQLException {

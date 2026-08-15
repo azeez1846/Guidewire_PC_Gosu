@@ -35,8 +35,8 @@ public class GosuRatingEngineUnitTest {
         assertFalse(costs.isEmpty());
 
         BigDecimal total = costs.stream()
-                .map(Cost::getActualAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .map(c -> c != null && c.getActualAmount() != null ? c.getActualAmount() : BigDecimal.ZERO)
+                .reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
         assertTrue(total.compareTo(BigDecimal.ZERO) > 0);
     }
 
@@ -66,8 +66,8 @@ public class GosuRatingEngineUnitTest {
         List<Cost> costs = ratingEngine.rate(period);
         assertNotNull(costs);
         BigDecimal annualPremium = costs.stream()
-                .map(Cost::getActualAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .map(c -> c != null && c.getActualAmount() != null ? c.getActualAmount() : BigDecimal.ZERO)
+                .reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
 
         assertTrue(annualPremium.compareTo(BigDecimal.ZERO) > 0);
 

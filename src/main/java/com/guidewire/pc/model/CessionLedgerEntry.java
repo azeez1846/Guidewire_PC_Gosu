@@ -57,4 +57,28 @@ public class CessionLedgerEntry implements Serializable {
     public void setNetRetainedPremium(BigDecimal netRetainedPremium) { this.netRetainedPremium = netRetainedPremium; }
 
     public Date getTransactionDate() { return transactionDate; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CessionLedgerEntry that)) return false;
+        return java.util.Objects.equals(policyNumber, that.policyNumber) &&
+                java.util.Objects.equals(treatyNumber, that.treatyNumber) &&
+                java.util.Objects.equals(transactionDate, that.transactionDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(policyNumber, treatyNumber, transactionDate);
+    }
+
+    @Override
+    public String toString() {
+        return "CessionLedgerEntry{" +
+                "policyNumber='" + policyNumber + '\'' +
+                ", treatyNumber='" + treatyNumber + '\'' +
+                ", ceded=" + cededPremium +
+                ", retained=" + netRetainedPremium +
+                '}';
+    }
 }

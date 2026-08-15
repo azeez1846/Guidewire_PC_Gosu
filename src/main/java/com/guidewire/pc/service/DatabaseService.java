@@ -12,19 +12,15 @@ public class DatabaseService {
     private static final String DB_USER = "sa";
     private static final String DB_PASSWORD = "";
 
-    private static DatabaseService instance;
+    private static final DatabaseService INSTANCE = new DatabaseService();
 
     private DatabaseService() {
-        LOGGER.log(Level.FINE, "→ DatabaseService.DatabaseService");
+        LOGGER.log(Level.FINE, "DatabaseService initializing...");
         initDatabase();
     }
 
-    public static synchronized DatabaseService getInstance() {
-        LOGGER.log(Level.FINE, "→ DatabaseService.getInstance");
-        if (instance == null) {
-            instance = new DatabaseService();
-        }
-        return instance;
+    public static DatabaseService getInstance() {
+        return INSTANCE;
     }
 
     public Connection getConnection() throws SQLException {

@@ -67,4 +67,27 @@ public class RIAgreement implements KeyableBean {
 
     public String getExpirationDate() { return expirationDate; }
     public void setExpirationDate(String expirationDate) { this.expirationDate = expirationDate; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RIAgreement that)) return false;
+        return java.util.Objects.equals(id, that.id) ||
+                (agreementNumber != null && agreementNumber.equalsIgnoreCase(that.agreementNumber));
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : (agreementNumber != null ? agreementNumber.hashCode() : 0);
+    }
+
+    @Override
+    public String toString() {
+        return "RIAgreement{" +
+                "agreementNumber='" + agreementNumber + '\'' +
+                ", name='" + agreementName + '\'' +
+                ", type='" + agreementType + '\'' +
+                ", cedingPct=" + cedingPercentage +
+                '}';
+    }
 }

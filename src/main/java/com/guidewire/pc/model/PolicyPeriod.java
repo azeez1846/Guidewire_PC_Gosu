@@ -90,24 +90,16 @@ public class PolicyPeriod implements KeyableBean, EffDatedBranch, Coverable {
 
     public List<UWIssue> getOpenBlockingQuoteIssues() {
         LOGGER.log(Level.FINE, "→ PolicyPeriod.getOpenBlockingQuoteIssues");
-        List<UWIssue> list = new ArrayList<>();
-        for (UWIssue issue : uwIssues) {
-            if (issue.isBlockingQuote()) {
-                list.add(issue);
-            }
-        }
-        return list;
+        return uwIssues.stream()
+                .filter(issue -> issue != null && issue.isBlockingQuote())
+                .toList();
     }
 
     public List<UWIssue> getOpenBlockingBindIssues() {
         LOGGER.log(Level.FINE, "→ PolicyPeriod.getOpenBlockingBindIssues");
-        List<UWIssue> list = new ArrayList<>();
-        for (UWIssue issue : uwIssues) {
-            if (issue.isBlockingBind()) {
-                list.add(issue);
-            }
-        }
-        return list;
+        return uwIssues.stream()
+                .filter(issue -> issue != null && issue.isBlockingBind())
+                .toList();
     }
 
     public boolean hasBlockingQuoteIssues() {
@@ -264,9 +256,11 @@ public class PolicyPeriod implements KeyableBean, EffDatedBranch, Coverable {
     @Override
     public void addEffDatedBean(EffDatedBean bean) {
         LOGGER.log(Level.FINE, "→ PolicyPeriod.addEffDatedBean");
-        bean.setBranch(this);
-        effDatedBeans.add(bean);
-        GosuORMSession.getInstance().saveEffDatedBean(bean);
+        if (bean != null) {
+            bean.setBranch(this);
+            effDatedBeans.add(bean);
+            GosuORMSession.getInstance().saveEffDatedBean(bean);
+        }
     }
 
     public String getBodilyInjuryLimit() {
@@ -292,17 +286,17 @@ public class PolicyPeriod implements KeyableBean, EffDatedBranch, Coverable {
     public BigDecimal getBasePremium() {
         LOGGER.log(Level.FINE, "→ PolicyPeriod.getBasePremium"); return basePremium; }
     public void setBasePremium(BigDecimal basePremium) {
-        LOGGER.log(Level.FINE, "→ PolicyPeriod.setBasePremium"); this.basePremium = basePremium; }
+        LOGGER.log(Level.FINE, "→ PolicyPeriod.setBasePremium"); this.basePremium = basePremium != null ? basePremium : BigDecimal.ZERO; }
 
     public BigDecimal getTaxesAndFees() {
         LOGGER.log(Level.FINE, "→ PolicyPeriod.getTaxesAndFees"); return taxesAndFees; }
     public void setTaxesAndFees(BigDecimal taxesAndFees) {
-        LOGGER.log(Level.FINE, "→ PolicyPeriod.setTaxesAndFees"); this.taxesAndFees = taxesAndFees; }
+        LOGGER.log(Level.FINE, "→ PolicyPeriod.setTaxesAndFees"); this.taxesAndFees = taxesAndFees != null ? taxesAndFees : BigDecimal.ZERO; }
 
     public BigDecimal getTotalPremium() {
         LOGGER.log(Level.FINE, "→ PolicyPeriod.getTotalPremium"); return totalPremium; }
     public void setTotalPremium(BigDecimal totalPremium) {
-        LOGGER.log(Level.FINE, "→ PolicyPeriod.setTotalPremium"); this.totalPremium = totalPremium; }
+        LOGGER.log(Level.FINE, "→ PolicyPeriod.setTotalPremium"); this.totalPremium = totalPremium != null ? totalPremium : BigDecimal.ZERO; }
 
     public String getCreateTime() {
         LOGGER.log(Level.FINE, "→ PolicyPeriod.getCreateTime"); return createTime; }
@@ -319,27 +313,29 @@ public class PolicyPeriod implements KeyableBean, EffDatedBranch, Coverable {
 
     public BigDecimal calculatePremium() {
         LOGGER.log(Level.FINE, "→ PolicyPeriod.calculatePremium");
-        double rate = 500.0;
-        if (PCConstants.PRODUCT_PERSONAL_AUTO.equalsIgnoreCase(productCode)) rate = 650.0;
-        else if (PCConstants.PRODUCT_COMMERCIAL_AUTO.equalsIgnoreCase(productCode)) rate = 1250.0;
-        else if (PCConstants.PRODUCT_COMMERCIAL_PROPERTY.equalsIgnoreCase(productCode)) rate = 2100.0;
-        else if (PCConstants.PRODUCT_GENERAL_LIABILITY.equalsIgnoreCase(productCode)) rate = 1800.0;
+        BigDecimal rate = new BigDecimal("500.00");
+        if (PCConstants.PRODUCT_PERSONAL_AUTO.equalsIgnoreCase(productCode)) rate = new BigDecimal("650.00");
+        else if (PCConstants.PRODUCT_COMMERCIAL_AUTO.equalsIgnoreCase(productCode)) rate = new BigDecimal("1250.00");
+        else if (PCConstants.PRODUCT_COMMERCIAL_PROPERTY.equalsIgnoreCase(productCode)) rate = new BigDecimal("2100.00");
+        else if (PCConstants.PRODUCT_GENERAL_LIABILITY.equalsIgnoreCase(productCode)) rate = new BigDecimal("1800.00");
 
-        if (termMonths == 12) rate *= 1.9;
-
-        if ("$500k/$500k".equals(bodilyInjuryLimit)) rate += 250.0;
-        else if ("$1M/$1M".equals(bodilyInjuryLimit)) rate += 500.0;
-
-        if ("$250k".equals(propertyDamageLimit)) rate += 150.0;
-        else if ("$500k".equals(propertyDamageLimit)) rate += 300.0;
-
-        if (PCConstants.JOB_TYPE_POLICY_CHANGE.equalsIgnoreCase(jobType)) {
-            rate *= 0.5; // Mid-term proration adjustment
+        if (termMonths == 12) {
+            rate = rate.multiply(new BigDecimal("1.90")).setScale(2, java.math.RoundingMode.HALF_UP);
         }
 
-        double tax = rate * 0.08;
-        this.basePremium = BigDecimal.valueOf(rate).setScale(2, java.math.RoundingMode.HALF_UP);
-        this.taxesAndFees = BigDecimal.valueOf(tax).setScale(2, java.math.RoundingMode.HALF_UP);
+        if ("$500k/$500k".equals(bodilyInjuryLimit)) rate = rate.add(new BigDecimal("250.00"));
+        else if ("$1M/$1M".equals(bodilyInjuryLimit)) rate = rate.add(new BigDecimal("500.00"));
+
+        if ("$250k".equals(propertyDamageLimit)) rate = rate.add(new BigDecimal("150.00"));
+        else if ("$500k".equals(propertyDamageLimit)) rate = rate.add(new BigDecimal("300.00"));
+
+        if (PCConstants.JOB_TYPE_POLICY_CHANGE.equalsIgnoreCase(jobType)) {
+            rate = rate.multiply(new BigDecimal("0.50")).setScale(2, java.math.RoundingMode.HALF_UP);
+        }
+
+        BigDecimal tax = rate.multiply(new BigDecimal("0.08")).setScale(2, java.math.RoundingMode.HALF_UP);
+        this.basePremium = rate.setScale(2, java.math.RoundingMode.HALF_UP);
+        this.taxesAndFees = tax;
         this.totalPremium = this.basePremium.add(this.taxesAndFees);
 
         return this.totalPremium;
@@ -501,5 +497,29 @@ public class PolicyPeriod implements KeyableBean, EffDatedBranch, Coverable {
     public com.guidewire.pc.validation.PCValidationContext validate(String validationLevel) {
         LOGGER.log(Level.FINE, "→ PolicyPeriod.validate");
         return com.guidewire.pc.validation.PolicyPeriodValidation.validate(this, validationLevel);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PolicyPeriod that)) return false;
+        return Objects.equals(id, that.id) ||
+                (jobNumber != null && jobNumber.equalsIgnoreCase(that.jobNumber));
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : (jobNumber != null ? jobNumber.hashCode() : 0);
+    }
+
+    @Override
+    public String toString() {
+        return "PolicyPeriod{" +
+                "jobNumber='" + jobNumber + '\'' +
+                ", policyNumber='" + policyNumber + '\'' +
+                ", productCode='" + productCode + '\'' +
+                ", status='" + status + '\'' +
+                ", totalPremium=" + totalPremium +
+                '}';
     }
 }

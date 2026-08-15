@@ -59,4 +59,30 @@ public class RateTableEntry implements Serializable {
 
     public double getDeductibleModifier() { return deductibleModifier; }
     public void setDeductibleModifier(double deductibleModifier) { this.deductibleModifier = deductibleModifier; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RateTableEntry that)) return false;
+        return java.util.Objects.equals(productCode, that.productCode) &&
+                java.util.Objects.equals(state, that.state) &&
+                java.util.Objects.equals(territory, that.territory) &&
+                java.util.Objects.equals(riskTier, that.riskTier);
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(productCode, state, territory, riskTier);
+    }
+
+    @Override
+    public String toString() {
+        return "RateTableEntry{" +
+                "product='" + productCode + '\'' +
+                ", state='" + state + '\'' +
+                ", territory='" + territory + '\'' +
+                ", tier='" + riskTier + '\'' +
+                ", baseRate=" + baseRate +
+                '}';
+    }
 }

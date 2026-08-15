@@ -62,4 +62,26 @@ public class AuditInformation implements KeyableBean {
 
     public String getAuditCompleteDate() { return auditCompleteDate; }
     public void setAuditCompleteDate(String auditCompleteDate) { this.auditCompleteDate = auditCompleteDate; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AuditInformation that)) return false;
+        return java.util.Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "AuditInformation{" +
+                "id=" + id +
+                ", type='" + auditType + '\'' +
+                ", status='" + auditStatus + '\'' +
+                ", auditedExposure=" + auditedExposure +
+                '}';
+    }
 }
