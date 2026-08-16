@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -253,6 +254,40 @@ public class GuidewireRestServlet extends HttpServlet {
                 issues.addAll(p.getUwIssues());
             }
             objectMapper.writeValue(resp.getWriter(), issues);
+            return;
+        }
+
+        if (path.equals("/accelerator/property-prefill") || path.equals("/property/prefill")) {
+            String address = req.getParameter("address");
+            String zip = req.getParameter("zipCode");
+            var profile = com.guidewire.pc.service.PropertyPreFillService.getInstance().lookupPropertyProfile(address, zip);
+            objectMapper.writeValue(resp.getWriter(), com.guidewire.pc.service.PropertyPreFillService.getInstance().toMap(profile));
+            return;
+        }
+
+        if (path.equals("/accelerator/prior-loss") || path.equals("/prior-loss/lookup")) {
+            String searchKey = req.getParameter("searchKey");
+            String premStr = req.getParameter("annualEarnedPremium");
+            BigDecimal prem = premStr != null ? new BigDecimal(premStr) : new BigDecimal("45000.00");
+            var report = com.guidewire.pc.service.PriorLossService.getInstance().retrievePriorLossHistory(searchKey, prem);
+            objectMapper.writeValue(resp.getWriter(), com.guidewire.pc.service.PriorLossService.getInstance().toMap(report));
+            return;
+        }
+
+        if (path.equals("/reinsurance/slip") || path.equals("/reinsurance/generate-slip")) {
+            String policyNum = req.getParameter("policyNumber");
+            PolicyPeriod period = policyNum != null ? dataStore.findPolicyByPolicyNumber(policyNum) : null;
+            String treatyType = req.getParameter("treatyType");
+            String limStr = req.getParameter("policyLimit");
+            String premStr = req.getParameter("grossPremium");
+            String cededStr = req.getParameter("quotaSharePct");
+
+            BigDecimal lim = limStr != null ? new BigDecimal(limStr) : new BigDecimal("20000000.00");
+            BigDecimal prem = premStr != null ? new BigDecimal(premStr) : new BigDecimal("65000.00");
+            double cededPct = cededStr != null ? Double.parseDouble(cededStr) : 40.0;
+
+            var slip = com.guidewire.pc.service.ReinsuranceSlipGenerator.getInstance().generatePlacementSlip(period, treatyType, lim, prem, cededPct);
+            objectMapper.writeValue(resp.getWriter(), com.guidewire.pc.service.ReinsuranceSlipGenerator.getInstance().toMap(slip));
             return;
         }
 
@@ -1144,6 +1179,175 @@ public class GuidewireRestServlet extends HttpServlet {
 
             var res = com.guidewire.pc.service.TelematicsIntegrationService.getInstance().executeTelematicsIngestion(fleetId, accNum, count);
             objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && (path.equals("/accelerator/property-prefill") || path.equals("/property/prefill"))) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String address = (String) reqMap.getOrDefault("address", "100 Corporate Blvd");
+            String zip = (String) reqMap.getOrDefault("zipCode", "94105");
+            var profile = com.guidewire.pc.service.PropertyPreFillService.getInstance().lookupPropertyProfile(address, zip);
+            objectMapper.writeValue(resp.getWriter(), com.guidewire.pc.service.PropertyPreFillService.getInstance().toMap(profile));
+            return;
+        }
+
+        if (path != null && (path.equals("/accelerator/prior-loss") || path.equals("/prior-loss/lookup"))) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String searchKey = (String) reqMap.getOrDefault("searchKey", "TAX-94-1829104");
+            String premStr = reqMap.get("annualEarnedPremium") != null ? reqMap.get("annualEarnedPremium").toString() : "45000.00";
+            BigDecimal prem = new BigDecimal(premStr);
+            var report = com.guidewire.pc.service.PriorLossService.getInstance().retrievePriorLossHistory(searchKey, prem);
+            objectMapper.writeValue(resp.getWriter(), com.guidewire.pc.service.PriorLossService.getInstance().toMap(report));
+            return;
+        }
+
+        if (path != null && (path.equals("/reinsurance/slip") || path.equals("/reinsurance/generate-slip"))) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String policyNum = (String) reqMap.get("policyNumber");
+            PolicyPeriod period = policyNum != null ? dataStore.findPolicyByPolicyNumber(policyNum) : null;
+            String treatyType = (String) reqMap.getOrDefault("treatyType", "QUOTA_SHARE");
+            String limStr = reqMap.get("policyLimit") != null ? reqMap.get("policyLimit").toString() : "20000000.00";
+            String premStr = reqMap.get("grossPremium") != null ? reqMap.get("grossPremium").toString() : "65000.00";
+            double cededPct = reqMap.get("quotaSharePct") != null ? ((Number) reqMap.get("quotaSharePct")).doubleValue() : 40.0;
+
+            var slip = com.guidewire.pc.service.ReinsuranceSlipGenerator.getInstance().generatePlacementSlip(period, treatyType, new BigDecimal(limStr), new BigDecimal(premStr), cededPct);
+            objectMapper.writeValue(resp.getWriter(), com.guidewire.pc.service.ReinsuranceSlipGenerator.getInstance().toMap(slip));
+            return;
+        }
+
+        if (path != null && path.equals("/cp/endorsements/rate")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            var res = com.guidewire.pc.service.CPRatingService.rateFullCommercialPropertyPackage(reqMap);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/cp/coinsurance/calculate")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            BigDecimal limit = new BigDecimal(reqMap.getOrDefault("coverageLimit", "800000.00").toString());
+            int coinsurancePct = reqMap.get("coinsuranceReqPct") != null ? ((Number) reqMap.get("coinsuranceReqPct")).intValue() : 80;
+            BigDecimal fullValue = new BigDecimal(reqMap.getOrDefault("propertyFullValue", "1200000.00").toString());
+            BigDecimal loss = new BigDecimal(reqMap.getOrDefault("lossAmount", "250000.00").toString());
+            BigDecimal ded = new BigDecimal(reqMap.getOrDefault("deductible", "5000.00").toString());
+
+            var res = com.guidewire.pc.service.CPRatingService.calculateCoinsurancePenalty(limit, coinsurancePct, fullValue, loss, ded);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/cp/blanket/rate")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            BigDecimal blanketLimit = new BigDecimal(reqMap.getOrDefault("blanketLimit", "5000000.00").toString());
+            BigDecimal weightedRate = new BigDecimal(reqMap.getOrDefault("weightedRatePer100", "0.45").toString());
+            int coinsurance = reqMap.get("coinsurancePct") != null ? ((Number) reqMap.get("coinsurancePct")).intValue() : 90;
+
+            BigDecimal premium = com.guidewire.pc.service.CPRatingService.rateBlanketCoverage(blanketLimit, weightedRate, coinsurance);
+            objectMapper.writeValue(resp.getWriter(), Map.of(
+                    "blanketLimit", blanketLimit,
+                    "weightedRatePer100", weightedRate,
+                    "coinsurancePct", coinsurance,
+                    "calculatedBlanketPremium", premium,
+                    "status", "SUCCESS"
+            ));
+            return;
+        }
+
+        if (path != null && path.equals("/audit/multiclass/execute")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String polNum = (String) reqMap.getOrDefault("policyNumber", "POL-WC-AUDIT-901");
+            double assessPct = reqMap.get("stateAssessmentPct") != null ? ((Number) reqMap.get("stateAssessmentPct")).doubleValue() : 3.5;
+
+            List<com.guidewire.pc.service.CommercialAuditEngine.ClassCodeAuditExposure> list = new ArrayList<>();
+            list.add(new com.guidewire.pc.service.CommercialAuditEngine.ClassCodeAuditExposure("8810", "Clerical Office Employees", new BigDecimal("0.45"), new BigDecimal("250000.00"), new BigDecimal("280000.00")));
+            list.add(new com.guidewire.pc.service.CommercialAuditEngine.ClassCodeAuditExposure("5183", "Plumbing & Heating Field Techs", new BigDecimal("4.85"), new BigDecimal("450000.00"), new BigDecimal("520000.00")));
+
+            var res = com.guidewire.pc.service.CommercialAuditEngine.getInstance().executeMultiClassAudit(polNum, list, assessPct);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/audit/dispute")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String reason = (String) reqMap.getOrDefault("disputeReason", "Misclassified subcontractor payroll under carpentry code");
+            String revisedExpStr = reqMap.get("revisedAuditedExposure") != null ? reqMap.get("revisedAuditedExposure").toString() : "480000.00";
+
+            List<com.guidewire.pc.service.CommercialAuditEngine.ClassCodeAuditExposure> list = new ArrayList<>();
+            list.add(new com.guidewire.pc.service.CommercialAuditEngine.ClassCodeAuditExposure("5183", "Plumbing Field Techs", new BigDecimal("4.85"), new BigDecimal("450000.00"), new BigDecimal("520000.00")));
+            var orig = com.guidewire.pc.service.CommercialAuditEngine.getInstance().executeMultiClassAudit("POL-WC-AUDIT-901", list, 3.5);
+
+            var revised = com.guidewire.pc.service.CommercialAuditEngine.getInstance().processAuditDispute(orig, reason, new BigDecimal(revisedExpStr));
+            objectMapper.writeValue(resp.getWriter(), revised);
+            return;
+        }
+
+        if (path != null && path.equals("/oos/resolve")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String strat = (String) reqMap.getOrDefault("resolutionStrategy", "AUTO_MERGE_FORWARD");
+            PolicyPeriod branch = new PolicyPeriod();
+            branch.setPolicyNumber("POL-OOS-1001");
+            branch.setEffectiveDate("2026-03-01");
+            branch.setExpirationDate("2027-01-01");
+            branch.setTotalPremium(new BigDecimal("5200.00"));
+
+            PolicyPeriod latest = new PolicyPeriod();
+            latest.setPolicyNumber("POL-OOS-1001");
+            latest.setTotalPremium(new BigDecimal("4800.00"));
+
+            var res = com.guidewire.pc.service.OOSConflictResolver.resolveOOSBranch(branch, latest, strat);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/policy/proration-refund")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            BigDecimal prem = new BigDecimal(reqMap.getOrDefault("annualPremium", "3650.00").toString());
+            String eff = (String) reqMap.getOrDefault("effectiveDate", "2026-01-01");
+            String can = (String) reqMap.getOrDefault("cancellationDate", "2026-07-01");
+            String exp = (String) reqMap.getOrDefault("expirationDate", "2027-01-01");
+            boolean shortRate = Boolean.parseBoolean(String.valueOf(reqMap.getOrDefault("isShortRate", false)));
+
+            var res = com.guidewire.pc.service.OOSConflictResolver.calculateProrationRefundDetailed(prem, eff, can, exp, shortRate);
+            objectMapper.writeValue(resp.getWriter(), res);
+            return;
+        }
+
+        if (path != null && path.equals("/quote/compare-packages")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            BigDecimal bldg = new BigDecimal(reqMap.getOrDefault("buildingLimit", "1000000.00").toString());
+            BigDecimal bpp = new BigDecimal(reqMap.getOrDefault("bppLimit", "250000.00").toString());
+            String protClass = (String) reqMap.getOrDefault("protectionClass", "3");
+
+            // Bronze (Base Property only, $5k deductible)
+            BigDecimal bronzePrem = com.guidewire.pc.service.CPRatingService.rateCommercialPropertyExtended(new PolicyPeriod(), bldg, bpp, protClass, false, false, true);
+
+            // Silver (Base Property + Tenants Improvements $100k + Business Income $250k)
+            BigDecimal tiSilver = com.guidewire.pc.service.CPRatingService.rateTenantsImprovements(new BigDecimal("100000.00"), "ReplacementCost");
+            BigDecimal biSilver = com.guidewire.pc.service.CPRatingService.rateBusinessIncome(new BigDecimal("250000.00"), "1/3", true);
+            BigDecimal silverPrem = bronzePrem.add(tiSilver).add(biSilver);
+
+            // Gold (Silver + Boiler/Machinery $500k + Earthquake & Flood + Sprinkler)
+            BigDecimal eqPrem = com.guidewire.pc.service.CPRatingService.rateBoilerAndMachinery(new BigDecimal("500000.00"), true);
+            BigDecimal goldBase = com.guidewire.pc.service.CPRatingService.rateCommercialPropertyExtended(new PolicyPeriod(), bldg, bpp, protClass, true, true, true);
+            BigDecimal goldPrem = goldBase.add(tiSilver).add(biSilver).add(eqPrem);
+
+            Map<String, Object> comparison = new HashMap<>();
+            comparison.put("bronzePackage", Map.of("tierName", "Bronze Essential", "annualPremium", bronzePrem, "deductible", "$5,000", "includedCoverages", List.of("Building & BPP", "Standard Fire & Wind")));
+            comparison.put("silverPackage", Map.of("tierName", "Silver Preferred", "annualPremium", silverPrem, "deductible", "$2,500", "includedCoverages", List.of("Building & BPP", "Tenants Improvements ($100k)", "Business Income ($250k)", "Sprinkler Leakage")));
+            comparison.put("goldPackage", Map.of("tierName", "Gold Enterprise Comprehensive", "annualPremium", goldPrem, "deductible", "$1,000", "includedCoverages", List.of("Building & BPP", "Tenants Improvements ($100k)", "Business Income ($250k)", "Equipment Breakdown ($500k)", "Earthquake & Flood", "24/7 Loss Recovery")));
+            comparison.put("status", "SUCCESS");
+
+            objectMapper.writeValue(resp.getWriter(), comparison);
             return;
         }
 

@@ -420,6 +420,92 @@ export const ENTERPRISE_FEATURES_CATALOG: FeatureModule[] = [
       { name: 'postalCode', label: 'Postal Code', type: 'string', defaultValue: '33101', description: 'Insured location postal code' },
       { name: 'recordedWindSpeed', label: 'Recorded Windspeed (Knots)', type: 'number', defaultValue: 125, description: 'Sustained wind speed reading' }
     ]
+  },
+  {
+    id: 'property-prefill-hazard-intel',
+    title: 'Property Pre-Fill & Hazard Intelligence Accelerator (ISO 1-6 / FEMA / Wildfire)',
+    category: 'Underwriting & Risk',
+    shortDescription: 'Auto-retrieves building characteristics (ISO Construction Types 1-6, Year Built, Roof Geometry, Distance to Hydrant/Station, Public Protection Class, and Wildfire/Flood Risk Scores) from external property databases.',
+    businessPurpose: 'Eliminates manual property data entry, accelerates commercial property underwriting, and populates building schedules automatically.',
+    endpoint: '/rest/v1/accelerator/property-prefill',
+    method: 'POST',
+    inputs: [
+      { name: 'address', label: 'Property Street Address', type: 'string', defaultValue: '100 Ocean Drive, Miami, FL', description: 'Physical commercial location address' },
+      { name: 'zipCode', label: 'Postal Zip Code', type: 'string', defaultValue: '33139', description: '5-digit postal zip code' }
+    ]
+  },
+  {
+    id: 'prior-loss-clue',
+    title: 'Prior Loss & C.L.U.E. Auto-Retrieval Accelerator (Loss Modifier Engine)',
+    category: 'Underwriting & Risk',
+    shortDescription: 'Retrieves 3-5 year commercial claims and loss histories to calculate loss frequency, severity, loss ratios, and auto-apply experience modifier credits (-15%) or debit surcharges (+30%).',
+    businessPurpose: 'Automates prior loss underwriting verification and triggers referral issues for adverse claims frequency or severe losses.',
+    endpoint: '/rest/v1/accelerator/prior-loss',
+    method: 'POST',
+    inputs: [
+      { name: 'searchKey', label: 'Business FEIN / Tax ID / Name', type: 'string', defaultValue: 'TAX-94-1829104-CLEAN', description: 'Account tax ID or business search identifier' },
+      { name: 'annualEarnedPremium', label: 'Annual Baseline Premium ($)', type: 'number', defaultValue: 45000.00, description: 'Estimated annual policy premium' }
+    ]
+  },
+  {
+    id: 'reinsurance-placement-slip',
+    title: 'ACORD Reinsurance Placement Slip & Syndicate Bordereau Generator',
+    category: 'Reinsurance & Portfolio',
+    shortDescription: 'Generates standardized ACORD Reinsurance Placement Slips, Quota Share cessions, and syndicate bordereau breakdowns for high-limit commercial risks.',
+    businessPurpose: 'Automates reinsurance documentation, ceding commission calculations (25%), and distribution among syndicates (Swiss Re, Munich Re, Hannover Re).',
+    endpoint: '/rest/v1/reinsurance/slip',
+    method: 'POST',
+    inputs: [
+      { name: 'policyNumber', label: 'Commercial Policy Number', type: 'string', defaultValue: 'POL-COMM-PROP-8891', description: 'Target policy number' },
+      { name: 'treatyType', label: 'Treaty / Placement Type', type: 'string', defaultValue: 'QUOTA_SHARE', description: 'QUOTA_SHARE or EXCESS_OF_LOSS' },
+      { name: 'policyLimit', label: 'Gross Policy Limit ($)', type: 'number', defaultValue: 20000000.00, description: 'Total policy property limit' },
+      { name: 'grossPremium', label: 'Gross Written Premium ($)', type: 'number', defaultValue: 65000.00, description: 'Annual policy premium' },
+      { name: 'quotaSharePct', label: 'Quota Share Ceded %', type: 'number', defaultValue: 40.0, description: 'Percentage ceded to treaty reinsurers' }
+    ]
+  },
+  {
+    id: 'cp-endorsements-blanket',
+    title: 'Commercial Property Endorsements & Multi-Location Blanket Suite',
+    category: 'Specialty Lines',
+    shortDescription: 'Calculates detailed premiums for Tenants Improvements & Betterments, Business Income (1/3, 1/4, 1/6 indemnity periods), Equipment Breakdown, Earthquake/Flood, and multi-location Blanket coverage pools.',
+    businessPurpose: 'Provides end-to-end rating for commercial property coverage endorsements and blanket rate averaging.',
+    endpoint: '/rest/v1/cp/endorsements/rate',
+    method: 'POST',
+    inputs: [
+      { name: 'buildingLimit', label: 'Building Limit ($)', type: 'number', defaultValue: 1500000.00, description: 'Primary building structure limit' },
+      { name: 'bppLimit', label: 'Business Personal Property ($)', type: 'number', defaultValue: 350000.00, description: 'Contents and inventory limit' },
+      { name: 'tenantsImprovementLimit', label: 'Tenants Improvements Limit ($)', type: 'number', defaultValue: 150000.00, description: 'Betterments and leasehold improvements' },
+      { name: 'businessIncomeLimit', label: 'Business Income Limit ($)', type: 'number', defaultValue: 300000.00, description: 'Lost business profits & extra expense' },
+      { name: 'equipmentBreakdownLimit', label: 'Equipment Breakdown Limit ($)', type: 'number', defaultValue: 500000.00, description: 'Boiler, mechanical & electrical equipment' },
+      { name: 'protectionClass', label: 'ISO Protection Class (1-10)', type: 'string', defaultValue: '3', description: 'Public protection class rating' }
+    ]
+  },
+  {
+    id: 'commercial-audit-workflow',
+    title: 'Commercial Multi-Class Payroll Audit & Dispute Engine',
+    category: 'Commercial Rating & Retrospective',
+    shortDescription: 'Executes physical and voluntary payroll audits across multiple classification codes with state assessments, exposure variance calculations, and audit dispute handling.',
+    businessPurpose: 'Reconciles policyholder estimated payrolls vs audited actuals for Workers Comp and General Liability, generating return or additional invoices.',
+    endpoint: '/rest/v1/audit/multiclass/execute',
+    method: 'POST',
+    inputs: [
+      { name: 'policyNumber', label: 'Policy Number', type: 'string', defaultValue: 'POL-WC-AUDIT-901', description: 'Target audit policy number' },
+      { name: 'stateAssessmentPct', label: 'State Assessment Surcharge %', type: 'number', defaultValue: 3.5, description: 'State statutory guaranty assessment' }
+    ]
+  },
+  {
+    id: 'quote-compare-packages',
+    title: 'Multi-Option Quote Comparison & Dynamic Tier Matrix',
+    category: 'Underwriting & Risk',
+    shortDescription: 'Generates real-time side-by-side quote packages (Bronze Essential, Silver Preferred, Gold Enterprise) with customizable deductible levels and coverage bundles.',
+    businessPurpose: 'Enables brokers and underwriters to present multi-tier options to insureds for fast comparison and 1-click binding.',
+    endpoint: '/rest/v1/quote/compare-packages',
+    method: 'POST',
+    inputs: [
+      { name: 'buildingLimit', label: 'Building Coverage Limit ($)', type: 'number', defaultValue: 1200000.00, description: 'Commercial building value' },
+      { name: 'bppLimit', label: 'BPP / Contents Limit ($)', type: 'number', defaultValue: 300000.00, description: 'Personal property value' },
+      { name: 'protectionClass', label: 'ISO Protection Class (1-10)', type: 'string', defaultValue: '3', description: 'Local fire protection class' }
+    ]
   }
 ];
 

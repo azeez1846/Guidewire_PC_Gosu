@@ -7,13 +7,26 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
 public class OOSConflictResolver {
     private static final Logger LOGGER = Logger.getLogger(OOSConflictResolver.class.getName());
 
+    public static class OOSMergeResult {
+        public String policyNumber;
+        public boolean hasConflicts;
+        public List<String> detectedConflicts = new ArrayList<>();
+        public String resolutionStrategy; // AUTO_MERGE_FORWARD, OVERWRITE, REQUIRES_MANUAL_UW
+        public BigDecimal originalAnnualPremium;
+        public BigDecimal retroactiveSlicePremiumDelta;
+        public BigDecimal finalAdjustedAnnualPremium;
+        public boolean mergedSuccessfully;
+        public String timelineSummary;
+    }
 
     public static List<String> detectConflicts(PolicyPeriod oosBranch, PolicyPeriod latestPeriod) {
         LOGGER.log(Level.FINE, "→ OOSConflictResolver.detectConflicts");
@@ -52,5 +65,78 @@ public class OOSConflictResolver {
         } catch (Exception e) {
             return BigDecimal.ZERO;
         }
+    }
+
+    public static OOSMergeResult resolveOOSBranch(PolicyPeriod oosBranch, PolicyPeriod latestBoundPeriod, String resolutionStrategy) {
+        LOGGER.log(Level.FINE, "→ OOSConflictResolver.resolveOOSBranch");
+        OOSMergeResult result = new OOSMergeResult();
+        result.policyNumber = latestBoundPeriod != null ? latestBoundPeriod.getPolicyNumber() : "POL-OOS-001";
+        result.detectedConflicts = detectConflicts(oosBranch, latestBoundPeriod);
+        result.hasConflicts = !result.detectedConflicts.isEmpty();
+        result.resolutionStrategy = resolutionStrategy != null ? resolutionStrategy : "AUTO_MERGE_FORWARD";
+
+        BigDecimal origPrem = latestBoundPeriod != null && latestBoundPeriod.getTotalPremium() != null ? latestBoundPeriod.getTotalPremium() : new BigDecimal("4500.00");
+        result.originalAnnualPremium = origPrem;
+
+        if ("OVERWRITE".equalsIgnoreCase(result.resolutionStrategy) || !result.hasConflicts) {
+            result.mergedSuccessfully = true;
+            BigDecimal newPrem = oosBranch != null && oosBranch.getTotalPremium() != null ? oosBranch.getTotalPremium() : origPrem.add(new BigDecimal("500.00"));
+            result.retroactiveSlicePremiumDelta = calculateOOSPremiumDelta(oosBranch, latestBoundPeriod, newPrem);
+            result.finalAdjustedAnnualPremium = origPrem.add(result.retroactiveSlicePremiumDelta);
+            result.timelineSummary = "OOS Branch merged forward cleanly into active policy slice timeline.";
+        } else {
+            result.mergedSuccessfully = false;
+            result.retroactiveSlicePremiumDelta = BigDecimal.ZERO;
+            result.finalAdjustedAnnualPremium = origPrem;
+            result.timelineSummary = "OOS Branch contains " + result.detectedConflicts.size() + " attribute conflicts requiring underwriter adjudication.";
+        }
+
+        return result;
+    }
+
+    public static Map<String, Object> calculateProrationRefundDetailed(BigDecimal annualPremium, String effectiveDateStr, String cancellationDateStr, String expirationDateStr, boolean isShortRate) {
+        LOGGER.log(Level.FINE, "→ OOSConflictResolver.calculateProrationRefundDetailed");
+        Map<String, Object> res = new HashMap<>();
+        try {
+            LocalDate eff = LocalDate.parse(effectiveDateStr);
+            LocalDate can = LocalDate.parse(cancellationDateStr);
+            LocalDate exp = LocalDate.parse(expirationDateStr);
+
+            long totalDays = ChronoUnit.DAYS.between(eff, exp);
+            long daysInForce = ChronoUnit.DAYS.between(eff, can);
+            long unearnedDays = Math.max(0, totalDays - daysInForce);
+
+            if (totalDays <= 0) totalDays = 365;
+
+            BigDecimal earnedFraction = new BigDecimal(daysInForce).divide(new BigDecimal(totalDays), 6, RoundingMode.HALF_UP);
+            BigDecimal unearnedFraction = new BigDecimal(unearnedDays).divide(new BigDecimal(totalDays), 6, RoundingMode.HALF_UP);
+
+            BigDecimal earnedPremium = annualPremium.multiply(earnedFraction).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal grossRefund = annualPremium.multiply(unearnedFraction).setScale(2, RoundingMode.HALF_UP);
+
+            BigDecimal penalty = BigDecimal.ZERO;
+            BigDecimal netRefund = grossRefund;
+
+            if (isShortRate) {
+                // Short rate cancellation applies 10% penalty on unearned refund (90% rule)
+                penalty = grossRefund.multiply(new BigDecimal("0.10")).setScale(2, RoundingMode.HALF_UP);
+                netRefund = grossRefund.subtract(penalty);
+            }
+
+            res.put("annualPremium", annualPremium);
+            res.put("totalPolicyDays", totalDays);
+            res.put("daysInForce", daysInForce);
+            res.put("unearnedDays", unearnedDays);
+            res.put("earnedPremium", earnedPremium);
+            res.put("grossRefund", grossRefund);
+            res.put("isShortRate", isShortRate);
+            res.put("shortRatePenalty", penalty);
+            res.put("netRefundPayable", netRefund);
+            res.put("status", "SUCCESS");
+        } catch (Exception e) {
+            res.put("error", "Failed to calculate proration: " + e.getMessage());
+            res.put("status", "ERROR");
+        }
+        return res;
     }
 }
