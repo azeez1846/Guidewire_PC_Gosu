@@ -506,10 +506,180 @@ export const ENTERPRISE_FEATURES_CATALOG: FeatureModule[] = [
       { name: 'bppLimit', label: 'BPP / Contents Limit ($)', type: 'number', defaultValue: 300000.00, description: 'Personal property value' },
       { name: 'protectionClass', label: 'ISO Protection Class (1-10)', type: 'string', defaultValue: '3', description: 'Local fire protection class' }
     ]
+  },
+  {
+    id: 'wc-retro-rating',
+    title: 'Workers\' Compensation NCCI Retrospective Rating Plan',
+    category: 'Commercial Rating & Retrospective',
+    shortDescription: 'Calculates retrospective premiums based on incurred losses, Loss Conversion Factor (LCF 1.15), Basic Premium factors, and enforces contractual Minimum / Maximum premium boundary caps.',
+    businessPurpose: 'Enables large commercial employers to participate in loss-sensitive Workers Comp plans, aligning premiums with actual workplace safety performance.',
+    endpoint: '/rest/v1/wc/retro/calculate',
+    method: 'POST',
+    inputs: [
+      { name: 'standardPremium', label: 'Standard Manual Premium ($)', type: 'number', defaultValue: 120000.00, description: 'Annual standard earned premium' },
+      { name: 'incurredLosses', label: 'Audited Incurred Losses ($)', type: 'number', defaultValue: 38000.00, description: 'Total paid and reserved claims' },
+      { name: 'basicPremiumFactor', label: 'Basic Premium Factor', type: 'number', defaultValue: 0.220, description: 'Insurer acquisition and overhead factor' },
+      { name: 'lossConversionFactor', label: 'Loss Conversion Factor (LCF)', type: 'number', defaultValue: 1.150, description: 'Claims handling adjustment factor' }
+    ]
+  },
+  {
+    id: 'gl-composite-rating',
+    title: 'General Liability Multi-Variable Composite Rating Suite',
+    category: 'Specialty Lines',
+    shortDescription: 'Composite ratings across Gross Sales ($ per $1k), Square Footage ($ per 1k sq ft), and Payroll ($ per $100) with OCP endorsements and tiered Liquor Liability surcharges.',
+    businessPurpose: 'Streamlines large commercial general liability pricing by combining multiple rating bases into a single composite rate.',
+    endpoint: '/rest/v1/gl/composite/rate',
+    method: 'POST',
+    inputs: [
+      { name: 'grossSales', label: 'Gross Annual Sales ($)', type: 'number', defaultValue: 3500000.00, description: 'Total company gross receipts' },
+      { name: 'squareFootage', label: 'Premises Square Footage', type: 'number', defaultValue: 50000.00, description: 'Total maintained commercial area' },
+      { name: 'payroll', label: 'Operating Payroll ($)', type: 'number', defaultValue: 750000.00, description: 'Direct employee payroll' },
+      { name: 'ocpLimit', label: 'OCP Liability Limit ($)', type: 'number', defaultValue: 1000000.00, description: 'Owners & Contractors Protective limit' }
+    ]
+  },
+  {
+    id: 'im-contractors-equipment',
+    title: 'Inland Marine Contractors\' Equipment Schedule & Floater',
+    category: 'Specialty Lines',
+    shortDescription: 'Rates scheduled mobile machinery, rented/borrowed equipment floaters, Boom & Overload crane collapse perils (+20%), and deductible buy-down structures.',
+    businessPurpose: 'Provides complete Inland Marine physical damage coverage for high-value construction, excavation, and contractor machinery.',
+    endpoint: '/rest/v1/im/contractors-equipment/rate',
+    method: 'POST',
+    inputs: [
+      { name: 'scheduledLimit', label: 'Scheduled Equipment Limit ($)', type: 'number', defaultValue: 850000.00, description: 'Stated value of owned heavy machinery' },
+      { name: 'rentedLimit', label: 'Rented / Leased Gear Limit ($)', type: 'number', defaultValue: 200000.00, description: 'Short-term hired equipment floater' },
+      { name: 'valuationBasis', label: 'Valuation Basis', type: 'string', defaultValue: 'REPLACEMENT_COST', description: 'REPLACEMENT_COST or AGREED_VALUE' },
+      { name: 'boomOverload', label: 'Boom Overload Endorsement', type: 'boolean', defaultValue: true, description: 'Hydraulic boom and crane upset peril' }
+    ]
+  },
+  {
+    id: 'auto-fleet-radius-hazmat',
+    title: 'Commercial Auto Fleet Operating Radius & Hazmat Engine',
+    category: 'Specialty Lines',
+    shortDescription: 'Evaluates fleet operating radius (Local, Intermediate, Long Distance) and applies DOT Hazardous Materials surcharges (up to +85%) with CA 99 48 pollution endorsements.',
+    businessPurpose: 'Prices commercial truck and logistics fleets based on delivery radius and hazardous cargo transportation classifications.',
+    endpoint: '/rest/v1/auto/fleet-radius/rate',
+    method: 'POST',
+    inputs: [
+      { name: 'vehicleCount', label: 'Vehicle Fleet Size', type: 'number', defaultValue: 15, description: 'Number of power units in fleet' },
+      { name: 'operatingRadiusClass', label: 'Operating Radius', type: 'string', defaultValue: 'INTERMEDIATE', description: 'LOCAL (<50mi), INTERMEDIATE (50-200mi), LONG_DISTANCE (>200mi)' },
+      { name: 'dotHazmatClass', label: 'DOT Hazmat Class', type: 'string', defaultValue: 'CLASS_3_FLAMMABLE', description: 'DOT hazardous cargo classification' }
+    ]
+  },
+  {
+    id: 'accelerator-sos-verify',
+    title: 'Accelerator #10: Secretary of State & D&B Commercial Verifier',
+    category: 'Compliance & Regulatory',
+    shortDescription: 'Validates corporate state filing standing (Active/Suspended/Dissolved), officer records, and D&B Paydex Credit & Financial Stress scores to detect fronting fraud.',
+    businessPurpose: 'Automates Secretary of State corporate verification during intake to block shell companies and delinquent entities prior to underwriting.',
+    endpoint: '/rest/v1/accelerator/sos-verify',
+    method: 'POST',
+    inputs: [
+      { name: 'businessName', label: 'Legal Entity Business Name', type: 'string', defaultValue: 'Apex Global Industrial Corp', description: 'Registered commercial legal name' },
+      { name: 'fein', label: 'Federal EIN (FEIN)', type: 'string', defaultValue: '94-8192014', description: 'Federal Tax Identification Number' },
+      { name: 'state', label: 'State of Formation', type: 'string', defaultValue: 'DE', description: 'Jurisdiction of incorporation' }
+    ]
+  },
+  {
+    id: 'accelerator-ofac-screen',
+    title: 'Accelerator #11: OFAC / PEP Sanctions & AML Compliance Screener',
+    category: 'Compliance & Regulatory',
+    shortDescription: 'High-performance fuzzy matching against US Treasury OFAC SDN and Politically Exposed Persons (PEP) watchlist with automated Underwriting Binding Lock enforcement.',
+    businessPurpose: 'Ensures strict compliance with federal OFAC sanctions and AML regulations, instantly freezing binding workflows upon positive match.',
+    endpoint: '/rest/v1/accelerator/ofac-screen',
+    method: 'POST',
+    inputs: [
+      { name: 'screenedSubject', label: 'Screened Subject Name', type: 'string', defaultValue: 'Apex Commercial Logistics', description: 'Insured name, DBA, or officer' },
+      { name: 'country', label: 'Jurisdiction / Country', type: 'string', defaultValue: 'USA', description: 'Country of domicile' }
+    ]
+  },
+  {
+    id: 'accelerator-binder-explainer',
+    title: 'Accelerator #12: AI Policy Binder Document Explainer & Summary',
+    category: 'Underwriting & Risk',
+    shortDescription: 'Synthesizes complex multi-line commercial policy binders into a 1-page executive briefing covering coverages, warranties, deductibles, exclusions, and payment installment plans.',
+    businessPurpose: 'Transforms lengthy insurance contracts into transparent, broker-ready executive summaries for fast client presentation.',
+    endpoint: '/rest/v1/accelerator/binder-explainer',
+    method: 'POST',
+    inputs: [
+      { name: 'productCode', label: 'Policy Product Line', type: 'string', defaultValue: 'CommercialProperty', description: 'Line of business' },
+      { name: 'totalPremium', label: 'Total Policy Premium ($)', type: 'number', defaultValue: 18500.00, description: 'Annual policy premium' }
+    ]
+  },
+  {
+    id: 'policy-split-rewrite',
+    title: 'Guidewire Policy Split & Subsidiary Spin-Off Workflow',
+    category: 'Underwriting & Risk',
+    shortDescription: 'Executes commercial policy split transactions, spinning off subsidiary locations and vehicle schedules into new policies while preserving claims history continuity.',
+    businessPurpose: 'Facilitates corporate restructuring, mergers, and divestitures by splitting complex policies into separate legal entity contracts.',
+    endpoint: '/rest/v1/policy/split-rewrite',
+    method: 'POST',
+    inputs: [
+      { name: 'parentPolicyNumber', label: 'Parent Policy Number', type: 'string', defaultValue: 'POL-PARENT-1001', description: 'Source master policy' },
+      { name: 'newNamedInsured', label: 'New Spin-Off Named Insured', type: 'string', defaultValue: 'Apex West Coast Logistics LLC', description: 'Target subsidiary corporate name' },
+      { name: 'transferRatio', label: 'Asset Transfer Ratio (0.0 - 1.0)', type: 'number', defaultValue: 0.35, description: 'Proportion of premium/assets spun off' }
+    ]
+  },
+  {
+    id: 'loss-control-inspection',
+    title: 'Loss Control Survey & Safety Recommendation Engine',
+    category: 'Underwriting & Risk',
+    shortDescription: 'Evaluates site risk surveys, tracks mandatory 30/60-day engineering recommendations, and triggers Direct Notice of Cancellation (DNOC) workflows upon non-compliance.',
+    businessPurpose: 'Protects commercial property and casualty portfolios by mandating physical risk improvements and enforcing cancellation policies.',
+    endpoint: '/rest/v1/loss-control/recommendations',
+    method: 'POST',
+    inputs: [
+      { name: 'policyNumber', label: 'Policy Number', type: 'string', defaultValue: 'POL-COMM-8801', description: 'Inspected policy number' },
+      { name: 'hasCriticalElectricalFlaw', label: 'Critical Electrical Flaw (FPE Panel)', type: 'boolean', defaultValue: false, description: 'Overdue electrical hazard' },
+      { name: 'hasCookingHazards', label: 'Commercial Kitchen Hood Hazard', type: 'boolean', defaultValue: true, description: 'Kitchen fire suppression required' }
+    ]
+  },
+  {
+    id: 'parametric-event-cancellation',
+    title: 'Parametric Weather & Event Cancellation Endorsement',
+    category: 'Specialty Lines',
+    shortDescription: 'Quotes parametric event cancellation endorsements and evaluates live telemetry data (NOAA rainfall > 1.25", wind > 45 mph) for instant automatic indemnity claims settlement.',
+    businessPurpose: 'Delivers frictionless weather risk transfer for concerts, festivals, and sporting events with zero loss adjustment delays.',
+    endpoint: '/rest/v1/parametric/event-cancellation',
+    method: 'POST',
+    inputs: [
+      { name: 'eventName', label: 'Event Name', type: 'string', defaultValue: 'Austin City Outdoor Music Festival', description: 'Insured special event' },
+      { name: 'eventGrossRevenueLimit', label: 'Stated Value Revenue Limit ($)', type: 'number', defaultValue: 500000.00, description: 'Gross ticket and vendor revenue' },
+      { name: 'observedTelemetryReading', label: 'Observed Sensor Reading', type: 'number', defaultValue: 1.65, description: 'Actual recorded weather telemetry' }
+    ]
+  },
+  {
+    id: 'billing-agency-account-current',
+    title: 'Agency Bill & Monthly Account Current Settlement',
+    category: 'Commercial Rating & Retrospective',
+    shortDescription: 'Generates broker agency monthly Account Current statements, calculating gross written premium, agency commission retention (e.g. 15%), and net carrier ACH remittances.',
+    businessPurpose: 'Automates agency billing reconciliation between insurance carriers and independent broker networks.',
+    endpoint: '/rest/v1/billing/agency-account-current',
+    method: 'POST',
+    inputs: [
+      { name: 'producerCode', label: 'Producer Code', type: 'string', defaultValue: 'PR-WEST-901', description: 'Agency producer identifier' },
+      { name: 'agencyName', label: 'Agency Legal Name', type: 'string', defaultValue: 'Pacific Coast Commercial Insurance Brokers Inc', description: 'Brokerage name' },
+      { name: 'billingMonth', label: 'Billing Statement Month', type: 'string', defaultValue: '2026-08', description: 'Monthly statement cycle' }
+    ]
+  },
+  {
+    id: 'reinsurance-cat-reinstatement',
+    title: 'Catastrophe Reinsurance Treaty Reinstatement Calculator',
+    category: 'Reinsurance & Portfolio',
+    shortDescription: 'Calculates pro-rata reinstatement premium due when a catastrophic claim impairs CAT XOL treaty layers, instantly restoring treaty limit capacity for remaining term.',
+    businessPurpose: 'Manages capital and treaty accounting when major hurricanes or earthquakes breach catastrophe reinsurance layers.',
+    endpoint: '/rest/v1/reinsurance/cat-reinstatement',
+    method: 'POST',
+    inputs: [
+      { name: 'treatyLayerLimit', label: 'Treaty Layer Limit ($)', type: 'number', defaultValue: 50000000.00, description: 'Total treaty capacity' },
+      { name: 'treatyAnnualCededPremium', label: 'Annual Ceded Treaty Premium ($)', type: 'number', defaultValue: 4000000.00, description: 'Annual treaty premium' },
+      { name: 'catastrophicLossAmount', label: 'Catastrophic Incurred Loss ($)', type: 'number', defaultValue: 30000000.00, description: 'Loss amount allocated to layer' }
+    ]
   }
 ];
 
 export { ReinsuranceHeatmapComponent } from './reinsuranceHeatmap';
 export { AIUnderwritingWorkbenchComponent } from './aiUnderwritingWorkbench';
 export { ParametricMapComponent } from './parametricMap';
+
 

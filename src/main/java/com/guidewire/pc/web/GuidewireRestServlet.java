@@ -1351,6 +1351,193 @@ public class GuidewireRestServlet extends HttpServlet {
             return;
         }
 
+        if (path != null && path.equals("/wc/retro/calculate")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            BigDecimal stdPrem = new BigDecimal(reqMap.getOrDefault("standardPremium", "100000.00").toString());
+            BigDecimal losses = new BigDecimal(reqMap.getOrDefault("incurredLosses", "35000.00").toString());
+            BigDecimal basicFac = new BigDecimal(reqMap.getOrDefault("basicPremiumFactor", "0.220").toString());
+            BigDecimal lcf = new BigDecimal(reqMap.getOrDefault("lossConversionFactor", "1.150").toString());
+            BigDecimal taxMult = new BigDecimal(reqMap.getOrDefault("stateTaxMultiplier", "1.050").toString());
+            BigDecimal minFac = new BigDecimal(reqMap.getOrDefault("minimumPremiumFactor", "0.600").toString());
+            BigDecimal maxFac = new BigDecimal(reqMap.getOrDefault("maximumPremiumFactor", "1.400").toString());
+
+            var res = com.guidewire.pc.service.WCRetrospectiveRatingEngine.getInstance().calculateRetroRating(null, stdPrem, losses, basicFac, lcf, taxMult, minFac, maxFac);
+            objectMapper.writeValue(resp.getWriter(), com.guidewire.pc.service.WCRetrospectiveRatingEngine.getInstance().toMap(res));
+            return;
+        }
+
+        if (path != null && path.equals("/gl/composite/rate")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            BigDecimal sales = new BigDecimal(reqMap.getOrDefault("grossSales", "2500000.00").toString());
+            BigDecimal sqFt = new BigDecimal(reqMap.getOrDefault("squareFootage", "45000.00").toString());
+            BigDecimal payroll = new BigDecimal(reqMap.getOrDefault("payroll", "600000.00").toString());
+            BigDecimal ocp = new BigDecimal(reqMap.getOrDefault("ocpLimit", "1000000.00").toString());
+            String liqTier = (String) reqMap.getOrDefault("liquorHazardTier", "TIER_1_RESTAURANT");
+            BigDecimal liqSales = new BigDecimal(reqMap.getOrDefault("liquorSales", "250000.00").toString());
+            BigDecimal pco = new BigDecimal(reqMap.getOrDefault("productsCompletedLimit", "2000000.00").toString());
+
+            var res = com.guidewire.pc.service.GLCompositeRatingEngine.getInstance().rateCompositeGL(null, sales, sqFt, payroll, ocp, liqTier, liqSales, pco);
+            objectMapper.writeValue(resp.getWriter(), com.guidewire.pc.service.GLCompositeRatingEngine.getInstance().toMap(res));
+            return;
+        }
+
+        if (path != null && path.equals("/im/contractors-equipment/rate")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            BigDecimal sched = new BigDecimal(reqMap.getOrDefault("scheduledLimit", "750000.00").toString());
+            BigDecimal rented = new BigDecimal(reqMap.getOrDefault("rentedLimit", "150000.00").toString());
+            BigDecimal unsched = new BigDecimal(reqMap.getOrDefault("unscheduledLimit", "50000.00").toString());
+            String val = (String) reqMap.getOrDefault("valuationBasis", "REPLACEMENT_COST");
+            boolean boom = Boolean.parseBoolean(String.valueOf(reqMap.getOrDefault("boomOverload", true)));
+            BigDecimal ded = new BigDecimal(reqMap.getOrDefault("deductible", "2500.00").toString());
+
+            var res = com.guidewire.pc.service.ContractorsEquipmentEngine.getInstance().rateContractorsEquipment(null, sched, rented, unsched, val, boom, ded);
+            objectMapper.writeValue(resp.getWriter(), com.guidewire.pc.service.ContractorsEquipmentEngine.getInstance().toMap(res));
+            return;
+        }
+
+        if (path != null && path.equals("/auto/fleet-radius/rate")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            int count = reqMap.get("vehicleCount") != null ? ((Number) reqMap.get("vehicleCount")).intValue() : 12;
+            BigDecimal basePerUnit = new BigDecimal(reqMap.getOrDefault("basePremPerVehicle", "2200.00").toString());
+            String radius = (String) reqMap.getOrDefault("operatingRadiusClass", "INTERMEDIATE");
+            String hazmat = (String) reqMap.getOrDefault("dotHazmatClass", "CLASS_3_FLAMMABLE");
+            boolean pollution = Boolean.parseBoolean(String.valueOf(reqMap.getOrDefault("attachCa9948Pollution", true)));
+
+            var res = com.guidewire.pc.service.AutoFleetRadiusHazmatEngine.getInstance().rateFleetRadiusAndHazmat(null, count, basePerUnit, radius, hazmat, pollution);
+            objectMapper.writeValue(resp.getWriter(), com.guidewire.pc.service.AutoFleetRadiusHazmatEngine.getInstance().toMap(res));
+            return;
+        }
+
+        if (path != null && (path.equals("/accelerator/sos-verify") || path.equals("/sos/verify"))) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String name = (String) reqMap.getOrDefault("businessName", "Apex Global Industrial Corp");
+            String fein = (String) reqMap.getOrDefault("fein", "94-8192014");
+            String state = (String) reqMap.getOrDefault("state", "DE");
+
+            var res = com.guidewire.pc.service.SOSEntityVerificationService.getInstance().verifyBusinessEntity(name, fein, state);
+            objectMapper.writeValue(resp.getWriter(), com.guidewire.pc.service.SOSEntityVerificationService.getInstance().toMap(res));
+            return;
+        }
+
+        if (path != null && (path.equals("/accelerator/ofac-screen") || path.equals("/ofac/screen"))) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String subject = (String) reqMap.getOrDefault("screenedSubject", "Apex Commercial Logistics");
+            String country = (String) reqMap.getOrDefault("country", "USA");
+            String type = (String) reqMap.getOrDefault("subjectType", "COMMERCIAL_ORGANIZATION");
+
+            var res = com.guidewire.pc.service.SanctionsComplianceService.getInstance().screenSubject(subject, country, type);
+            objectMapper.writeValue(resp.getWriter(), com.guidewire.pc.service.SanctionsComplianceService.getInstance().toMap(res));
+            return;
+        }
+
+        if (path != null && (path.equals("/accelerator/binder-explainer") || path.equals("/binder/explainer"))) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String jobNum = (String) reqMap.get("jobNumber");
+            PolicyPeriod period = jobNum != null ? dataStore.findSubmission(jobNum) : null;
+            if (period == null) {
+                period = new PolicyPeriod();
+                period.setPolicyNumber("POL-COMM-2026-8801");
+                period.setProductCode((String) reqMap.getOrDefault("productCode", "CommercialProperty"));
+                period.setTotalPremium(new BigDecimal(reqMap.getOrDefault("totalPremium", "18500.00").toString()));
+            }
+
+            var res = com.guidewire.pc.service.PolicyBinderExplainerService.getInstance().generateExecutiveSummary(period);
+            objectMapper.writeValue(resp.getWriter(), com.guidewire.pc.service.PolicyBinderExplainerService.getInstance().toMap(res));
+            return;
+        }
+
+        if (path != null && path.equals("/policy/split-rewrite")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String parentNum = (String) reqMap.getOrDefault("parentPolicyNumber", "POL-PARENT-1001");
+            PolicyPeriod parent = dataStore.findPolicyByPolicyNumber(parentNum);
+            String newInsured = (String) reqMap.getOrDefault("newNamedInsured", "Apex West Coast Logistics LLC");
+            double ratio = reqMap.get("transferRatio") != null ? ((Number) reqMap.get("transferRatio")).doubleValue() : 0.35;
+
+            var res = com.guidewire.pc.service.PolicySplitRewriteService.getInstance().executePolicySplit(parent, newInsured, null, ratio);
+            objectMapper.writeValue(resp.getWriter(), com.guidewire.pc.service.PolicySplitRewriteService.getInstance().toMap(res));
+            return;
+        }
+
+        if (path != null && path.equals("/loss-control/recommendations")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String pol = (String) reqMap.getOrDefault("policyNumber", "POL-COMM-8801");
+            String loc = (String) reqMap.getOrDefault("inspectedLocation", "100 Industrial Pkwy, Building A");
+            boolean elec = Boolean.parseBoolean(String.valueOf(reqMap.getOrDefault("hasCriticalElectricalFlaw", false)));
+            boolean cook = Boolean.parseBoolean(String.valueOf(reqMap.getOrDefault("hasCookingHazards", true)));
+
+            var res = com.guidewire.pc.service.LossControlInspectionService.getInstance().generateSurveyReport(pol, loc, elec, cook);
+            objectMapper.writeValue(resp.getWriter(), com.guidewire.pc.service.LossControlInspectionService.getInstance().toMap(res));
+            return;
+        }
+
+        if (path != null && path.equals("/parametric/event-cancellation")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String evName = (String) reqMap.getOrDefault("eventName", "Austin City Outdoor Music Festival");
+            String evDate = (String) reqMap.getOrDefault("eventDate", "2026-10-15");
+            String venue = (String) reqMap.getOrDefault("eventVenueLocation", "Zilker Park, Austin, TX");
+            BigDecimal lim = new BigDecimal(reqMap.getOrDefault("eventGrossRevenueLimit", "500000.00").toString());
+            String trig = (String) reqMap.getOrDefault("triggerType", "RAINFALL_ACCUMULATION");
+            double threshold = reqMap.get("triggerThresholdValue") != null ? ((Number) reqMap.get("triggerThresholdValue")).doubleValue() : 1.25;
+            double observed = reqMap.get("observedTelemetryReading") != null ? ((Number) reqMap.get("observedTelemetryReading")).doubleValue() : 1.65;
+
+            var quote = com.guidewire.pc.service.ParametricEventCancellationEngine.getInstance().quoteParametricEndorsement(null, evName, evDate, venue, lim, trig, threshold);
+            var settlement = com.guidewire.pc.service.ParametricEventCancellationEngine.getInstance().evaluateTelemetryTrigger(quote, observed);
+
+            Map<String, Object> combined = new HashMap<>();
+            combined.put("quote", com.guidewire.pc.service.ParametricEventCancellationEngine.getInstance().toMap(quote));
+            combined.put("settlement", Map.of(
+                    "isTriggerBreached", settlement.isTriggerBreached,
+                    "observedTelemetryValue", settlement.observedTelemetryValue,
+                    "contractThresholdValue", settlement.contractThresholdValue,
+                    "automaticClaimSettlementAmount", settlement.automaticClaimSettlementAmount,
+                    "claimsStatus", settlement.claimsStatus,
+                    "settlementExplanation", settlement.settlementExplanation
+            ));
+            combined.put("status", "SUCCESS");
+            objectMapper.writeValue(resp.getWriter(), combined);
+            return;
+        }
+
+        if (path != null && path.equals("/billing/agency-account-current")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String code = (String) reqMap.getOrDefault("producerCode", "PR-WEST-901");
+            String name = (String) reqMap.getOrDefault("agencyName", "Pacific Coast Commercial Brokers Inc");
+            String month = (String) reqMap.getOrDefault("billingMonth", "2026-08");
+
+            var res = com.guidewire.pc.service.AgencyBillAccountCurrentService.getInstance().generateAccountCurrent(code, name, month, null);
+            objectMapper.writeValue(resp.getWriter(), com.guidewire.pc.service.AgencyBillAccountCurrentService.getInstance().toMap(res));
+            return;
+        }
+
+        if (path != null && path.equals("/reinsurance/cat-reinstatement")) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> reqMap = objectMapper.readValue(req.getInputStream(), Map.class);
+            String treatyRef = (String) reqMap.getOrDefault("treatyReferenceNumber", "TREATY-CAT-2026-LAYER2");
+            String layerDesc = (String) reqMap.getOrDefault("treatyLayerDescription", "$50M xs $25M Coastal Hurricane CAT XOL");
+            BigDecimal limit = new BigDecimal(reqMap.getOrDefault("treatyLayerLimit", "50000000.00").toString());
+            BigDecimal prem = new BigDecimal(reqMap.getOrDefault("treatyAnnualCededPremium", "4000000.00").toString());
+            BigDecimal loss = new BigDecimal(reqMap.getOrDefault("catastrophicLossAmount", "30000000.00").toString());
+            String eff = (String) reqMap.getOrDefault("treatyEffectiveDate", "2026-01-01");
+            String lossDate = (String) reqMap.getOrDefault("dateOfLoss", "2026-07-01");
+            String exp = (String) reqMap.getOrDefault("treatyExpirationDate", "2027-01-01");
+            double rate = reqMap.get("reinstatementRatePct") != null ? ((Number) reqMap.get("reinstatementRatePct")).doubleValue() : 100.0;
+
+            var res = com.guidewire.pc.service.CatReinsuranceReinstatementEngine.getInstance().calculateCatReinstatement(treatyRef, layerDesc, limit, prem, loss, eff, lossDate, exp, rate);
+            objectMapper.writeValue(resp.getWriter(), com.guidewire.pc.service.CatReinsuranceReinstatementEngine.getInstance().toMap(res));
+            return;
+        }
+
         if (path != null && path.equals("/admin/reset-db")) {
             dataStore.resetToSeedData();
             objectMapper.writeValue(resp.getWriter(), Map.of("status", "Success", "message", "Database reset to clean sample seed data."));
