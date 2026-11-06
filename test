@@ -1,30 +1,128 @@
-SELECT DISTINCT
-    job.createtime      AS job_createtime,
-    job.jobnumber       AS jobnumber,
-    pp.policynumber     AS policynumber,
-    bm.name             AS billingmethod,
-    pol.productcode     AS lob,
-    jobsubtype.name     AS jobtype
-FROM pc10_replication.pc_job job
-JOIN pc10_replication.pctl_job jobsubtype 
-    ON job.subtype = jobsubtype.id 
-    AND LOWER(jobsubtype.typecode) IN ('submission', 'renewal')
-JOIN pc10_replication.pc_policyperiod pp 
-    ON pp.jobid = job.id 
-    AND pp.retired = 0
-JOIN pc10_replication.pc_policy pol 
-    ON pp.policyid = pol.id 
-    AND pol.retired = 0
-    AND pol.productcode IN (
-        'CA7CommAuto', 
-        'GL7GeneralLiability', 
-        'CommercialUmbrella', 
-        'PropertySelect', 
-        'PropertySelectLine', 
-        'WCMWorkersComp'
-    )
-LEFT JOIN pc10_replication.pctl_billingmethod bm 
-    ON pp.billingmethod = bm.id
-WHERE job.retired = 0
-  AND job.createtime >= '2026-08-03 00:00:00'
-ORDER BY job.createtime DESC
+Ran list workspace files
+Ran list recent conversation folders
+Analyzed MEMORY.md:L1-145
+Analyzed CONVERSATION_LOG.md:L1-79
+Ran list reference screenshots and previous brain dir
+Ran check scratch and user uploads in prior conversation
+Analyzed transcript.jsonl:L1-200
+Analyzed 20261106_195735.jpg
+Analyzed 01_teams_problem_statement_snigdha.jpg
+Analyzed 05_pc_gw_connect_dps_package_tree.jpg
+Analyzed 06_agreed_team_action_plan.jpg
+Analyzed 02_teams_pradeep_initial_guidance.jpg
+Analyzed 04_architecture_meeting_notes.jpg
+Analyzed 20261105_182954.jpg
+Analyzed 20261105_183012.jpg
+Analyzed 20261105_183036.jpg
+Analyzed 20261105_183049.jpg
+Analyzed 20261105_183056.jpg
+Analyzed 20261105_183116.jpg
+Analyzed 20261105_183121.jpg
+Analyzed 20261105_183305.jpg
+Analyzed 20261105_183315.jpg
+Analyzed 20261105_183341.jpg
+Analyzed 20261105_183346.jpg
+Analyzed 20261105_183355.jpg
+Analyzed 20261105_183402.jpg
+Analyzed 20261105_183509.jpg
+Analyzed 20261105_185913.jpg
+Analyzed 20261105_190040.jpg
+Analyzed 20261105_190251.jpg
+Analyzed 20261105_190300.jpg
+Analyzed 20261105_190704.jpg
+Analyzed 20261105_192829.jpg
+
+Here is a step-by-step breakdown from a **Guidewire Cloud / Connect DPS & Integration Gateway** perspective, followed by a **simple, ready-to-send draft email** written in your natural style for **Krishna, Amit, and Aditya** (and structured so they can paste the details directly into the Guidewire ticket along with your screenshots).
+
+---
+
+### Step-by-Step Guidewire Expert Thinking (How We Positioned This)
+
+1. **Prevent Guidewire Support from Deflecting to SmartCOMM:**
+   - If a ticket only mentions SmartCOMM job memory failures, Guidewire L1/L2 support often replies saying *"Please check with SmartCOMM support."*
+   - To avoid that, the draft explicitly states up front that **SmartCOMM Support was already engaged**, increased queue memory only as a **temporary workaround**, and confirmed the root cause is the **500+ classes** coming from our single shared Guidewire DPS payload (`pcDocumentCreationRequest`). That frames the ticket squarely as a **Guidewire PolicyCenter (`gw.connect.dps`) + Integration Gateway (IG) architecture & best-practice question**.
+2. **Keep It Simple for Business Reviewers (Krishna, Amit, Aditya) Yet Concrete for Guidewire Engineers:**
+   - **For Krishna, Amit, and Aditya:** Plain language explaining *what is failing*, *why Signature Property (and upcoming LOBs like Inland Marine) cannot be added to the existing schema*, *why existing live LOBs remain untouched (zero regression risk)*, and *that full-fledged PC & IG development will start right after Guidewire's confirmation*.
+   - **For Guidewire Support / Architecture:** Mentions the exact Guidewire layers involved — **PolicyCenter (`gw.connect.dps` accelerator, `messaging-config.xml` / App Events, and synchronous helper `CreateSynchronousDocumentHelper`)** and **Integration Gateway (`automated-documents.yaml` and Camel routes)** — plus notes that we already use a separate root (`pcAccDocumentCreationRequest`) for Account-level Quote/Binder proposals.
+3. **Ask Guidewire the Exact Right Long-Term Questions:**
+   - **Validation & Alternative Proposals:** Is creating a new event + separate lean schema/route the Guidewire-recommended approach, or does Guidewire propose a better OOTB way within `gw.connect.dps` / IG?
+   - **Long-Term Maintainability (Future LOBs like Inland Marine):** Should we create **one schema/event/route per new LOB**, or **group a few related LOBs per schema** (e.g., Property bucket vs. Specialty/Marine bucket) so we stay well below the 500-class ceiling without maintaining dozens of events and routes?
+   - **DPS Accelerator & Upgrade Impact:** Any watchouts across async events, synchronous/manual generation (`CreateSynchronousDocumentHelper`), Draft Editor, or sample payload generation (`SampleDataHelper`) during future Guidewire Cloud upgrades?
+
+---
+
+### Draft Email to AXA XL Team (Krishna, Amit, Aditya) & Guidewire Ticket Content
+
+**Subject:** Review & Guidewire Ticket Request: SmartCOMM Data Model Issue (500+ Classes) & Proposed PC/IG Schema Segregation for Signature Property LOB
+
+---
+
+Hi Krishna, Amit, Aditya,
+
+Hope you are doing well.
+
+Based on our recent discussions with Gaurav, Snigdha, and the PC, IG, and SmartCOMM teams, we need your help in reviewing the details below and raising a **Guidewire Support / Architecture ticket** to get Guidewire's inputs and recommendation.
+
+To give you quick context: SmartCOMM jobs are failing while loading our current PolicyCenter document schema (`pcDocumentCreationRequest`) because all existing LOBs are combined into one single schema, which has crossed **500+ classes**. SmartCOMM Support increased queue memory as a temporary workaround, but adding our new **Signature Property** LOB (and future LOBs like **Inland Marine**) into the same schema will cause this issue to re-occur.
+
+To unblock SmartCOMM template work for now, we are preparing a lean XSD exclusively for Signature Property. For the permanent solution from PC and Integration Gateway (IG), we are proposing to segregate Signature Property from the existing `pcDocumentCreationRequest` by triggering a **new event and lean schema from PC and IG** (leaving all existing live LOBs untouched). Before we kick off full-fledged development from the PC and IG end, we want to get Guidewire's view on best practices, any alternative approach they suggest, and long-term maintainability.
+
+Please review the summary and screenshots below, let us know if everything looks clear, and help us raise a ticket with the Guidewire team. Once we receive Guidewire's response and confirmation, we will proceed with full-fledged development for the long-term solution.
+
+---
+
+#### **Details for Guidewire Support Ticket**
+
+**1. Problem Statement & SmartCOMM Issue**
+* In our Guidewire Cloud implementation (PolicyCenter + Integration Gateway using the `gw.connect.dps` DPS integration with SmartCOMM), all policy-level commercial Lines of Business implemented so far (`WCM`, `GL7`, `CA7`, `CUL`, `PSL`, `WEC`, `WPC`, `EUL`, MM Casualty) are currently mapped under a single shared root request/schema: **`pcDocumentCreationRequest`** (under `policyPeriod` -> `lines`). *(Note: For Account-level Quote/Binder proposals, we already have a separate root schema `pcAccDocumentCreationRequest`.)*
+* Because 8+ LOBs and their coverages/fields are bundled into one single `pcDocumentCreationRequest` data model, the schema has grown beyond **500+ classes/complex types**.
+* **Issue Faced:** SmartCOMM jobs have started failing (`ERRORED` status) at the step of loading the Data Model itself, as loading 500+ classes puts heavy memory load on the queue for every single document job.
+* We already reached out to **SmartCOMM Support**, and as a temporary workaround they increased the memory allocation per queue. However, SmartCOMM confirmed this issue will re-occur whenever more fields, tags, or new LOBs are added to the same data model.
+* We are currently implementing a new LOB — **Signature Property** — and also anticipate onboarding additional LOBs (such as **Inland Marine**) in the future. Adding them to the existing `pcDocumentCreationRequest` schema is no longer sustainable.
+
+*(Insert **Screenshot 1** here: SmartCOMM Job Error log & Snigdha's note showing job failure due to 500+ classes, along with SmartCOMM Data Model / Template Selector screen showing `pcDocumentCreationRequest` with all LOB lines)*
+
+**2. Current Flow in PolicyCenter (PC) & Integration Gateway (IG)**
+* **PolicyCenter (`gw.connect.dps`):**
+  * **Automated / Asynchronous Documents:** Triggered via events configured in `messaging-config.xml` / App Events and DPS plugins (`DocumentCreationUtil.createDocumentAsynchronously`).
+  * **On-Demand / Synchronous & Manual Documents:** Handled via `gw.connect.dps.suite.web.CreateSynchronousDocumentHelper` and `DPSRestService` (along with `DraftWorksheetHelper` and `SampleDataHelper`).
+* **Integration Gateway (IG):**
+  * Uses `automated-documents.yaml` and the existing DPS Camel route class to build and forward the `pcDocumentCreationRequest` payload to SmartCOMM, where SmartCOMM's Template Selector matches on the root element `pcDocumentCreationRequest`.
+
+*(Insert **Screenshot 2** here: PolicyCenter Studio screenshots showing `gw.connect.dps` package structure, `CreateSynchronousDocumentHelper`, and `messaging-config.xml` event setup)*
+
+*(Insert **Screenshot 3** here: Integration Gateway screenshots showing `automated-documents.yaml` and the existing SmartCOMM route class)*
+
+**3. Our Proposed Solution (Segregating `pcDocumentCreationRequest` for Signature Property)**
+To avoid any regression risk to existing live LOBs (while we separately clean up unused fields in the legacy schema), we are proposing to freeze `pcDocumentCreationRequest` for existing LOBs and segregate **Signature Property** into a new, lean schema:
+1. **New Lean Root Schema (`pcSigPropDocumentCreationRequest`):** Create a dedicated schema containing **only** common Policy/Account/Document header fields + Signature Property LOB fields (~50 classes instead of 500+), without referencing the monolithic multi-LOB `PolicyPeriod` object.
+2. **PolicyCenter Changes:** Introduce a **new dedicated Event** in `messaging-config.xml` / App Events exclusively for Signature Property automated documents, and update synchronous/manual document creation (`CreateSynchronousDocumentHelper` / `DPSRestService` + dedicated PC JSON schema/mapping) to build and send the new Signature Property request.
+3. **Integration Gateway (IG) Changes:** Add the new Signature Property request model/endpoint in `automated-documents.yaml` and create a **new dedicated Camel Route class** in the IG `route` package (rather than adding `if-else` logic into the existing route) to send `pcSigPropDocumentCreationRequest` cleanly to SmartCOMM.
+
+**4. Questions for the Guidewire Team**
+Before starting full-scale development, we would like Guidewire's architectural guidance and confirmation on the following points:
+1. **Recommended Solution & Best Practice:** Does our proposed approach (segregating via a dedicated PC Event + lean JSON/OpenAPI model + separate IG route and root element) align with **Guidewire Cloud and Connect DPS (`gw.connect.dps`) best practices** when downstream document systems hit data-model class limits? Or does Guidewire propose a different/better approach out of the box?
+2. **Long-Term Feasibility & Maintainability for Future LOBs:** As we onboard more LOBs in the future (e.g., **Inland Marine** and others), how feasible is this pattern to maintain in the long run? Specifically, does Guidewire recommend:
+   * Creating a **separate event, schema, and IG route per new LOB**, **OR**
+   * **Grouping a few related LOBs into domain-level schemas** (for example, a Property group schema vs. Marine/Specialty group schema) so each schema stays well under the class limit without creating too many events and IG routes?
+3. **DPS Accelerator & Cloud Upgrade Considerations:** Are there any specific impacts, limitations, or best practices we must follow within the `gw.connect.dps` framework (across automated async events, synchronous/manual creation via `CreateSynchronousDocumentHelper`, Draft Editor, or `SampleDataHelper`) so that future Guidewire Cloud upgrades remain smooth?
+
+---
+
+Please let us know if you have any questions or would like to connect briefly to walk through this before raising the ticket.
+
+Thanks & Regards,  
+**Azeez**
+
+---
+
+### Quick Guide on Which Workspace Screenshots to Paste
+
+When you add screenshots into the three placeholders above, you already have great captures in this folder ready to pair with your IG screenshot:
+1. **For Screenshot 1 (SmartCOMM Error & Data Model):**
+   - Snigdha's job error & root-cause message from today: [20261106_195735.jpg](file:///Users/azeezmohiuddin/Downloads/PC%20Smartcomm%20changes%20for%20signature%20property/20261106_195735.jpg)
+   - SmartCOMM Data Model & Template Selector showing `pcDocumentCreationRequest` + all LOB lines: [20261105_190300.jpg](file:///Users/azeezmohiuddin/Downloads/PC%20Smartcomm%20changes%20for%20signature%20property/20261105_190300.jpg) and [20261105_185913.jpg](file:///Users/azeezmohiuddin/Downloads/PC%20Smartcomm%20changes%20for%20signature%20property/20261105_185913.jpg)
+2. **For Screenshot 2 (PolicyCenter `gw.connect.dps` & Events):**
+   - `gw.connect.dps` package tree & `CreateSynchronousDocumentHelper.gs`: [20261105_182954.jpg](file:///Users/azeezmohiuddin/Downloads/PC%20Smartcomm%20changes%20for%20signature%20property/20261105_182954.jpg) + a quick snip of the DPS destination block in `messaging-config.xml`.
+3. **For Screenshot 3 (Integration Gateway):**
+   - A snip from your IG repo showing `automated-documents.yaml` (`pcDocumentCreationRequest`) and the existing SmartCOMM Camel route class inside the `route` package.
