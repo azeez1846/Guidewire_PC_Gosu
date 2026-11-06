@@ -1,0 +1,68 @@
+SELECT
+    d.id AS pcDocumentId,
+    COALESCE(d.docuid, d.documentidentifier) AS documentId,
+    d.docuid AS docUID,
+    d.documentidentifier AS documentIdentifier,
+    pp.policynumber AS policyNumber,
+    bu.name AS OBU,
+    COALESCE(
+        acctholder.contactname,
+        CONCAT(acctholder.firstname, ' ', acctholder.lastname)
+    ) AS accountName,
+    a.accountnumber AS accountNumber,
+    dt.name AS docType,
+    COALESCE(d.datecreated, d.createtime) AS createDate,
+    d.datemodified AS modifyDate,
+    d.updatetime AS updateDate,
+    p.productcode AS lineOfBusiness,
+    pp.periodstart AS inceptionDate,
+    COALESCE(pp.editeffectivedate, pp.periodstart) AS effectiveDate,
+    pp.periodend AS expirationDate,
+    CASE
+        WHEN d.jobid IS NOT NULL
+        OR d.policyperiodid IS NOT NULL THEN 'Transaction Level'
+        WHEN d.policyid IS NOT NULL THEN 'Policy Level'
+        WHEN d.accountid IS NOT NULL THEN 'Account Level'
+        ELSE 'Unlinked'
+    END AS documentLevel,
+    CASE
+        WHEN d.jobid IS NOT NULL THEN COALESCE(jt.name, 'Transaction') || ' : ' || COALESCE(j.jobnumber, '')
+        WHEN d.policyperiodid IS NOT NULL THEN 'PolicyPeriod : ' || COALESCE(pp.policynumber, '')
+        WHEN d.policyid IS NOT NULL THEN 'Policy : ' || COALESCE(pp.policynumber, '')
+        WHEN d.accountid IS NOT NULL THEN 'Account : ' || COALESCE(a.accountnumber, '')
+        ELSE NULL
+    END AS relatedTo
+FROM
+    pc_document d
+    LEFT JOIN pctl_documenttype dt ON dt.id = d.type
+    LEFT JOIN pc_job j ON j.id = d.jobid
+    AND j.retired = 0
+    LEFT JOIN pctl_job jt ON jt.id = j.subtype
+    LEFT JOIN pc_jobpolicyperiod jpp ON jpp.ownerid = j.id
+    LEFT JOIN pc_policyperiod pp ON pp.id = COALESCE(d.policyperiodid, jpp.foreignentityid)
+    AND pp.retired = 0
+    LEFT JOIN pctl_businessunit_ext bu ON bu.id = pp.businessunit_ext
+    LEFT JOIN pc_policy p ON p.id = COALESCE(d.policyid, pp.policyid)
+    AND p.retired = 0
+    LEFT JOIN pc_account a ON a.id = COALESCE(d.accountid, p.accountid)
+    AND a.retired = 0
+    LEFT JOIN (
+        SELECT
+            ahe.ownerid,
+            c.name AS contactname,
+            c.firstname AS firstname,
+            c.lastname AS lastname,
+            ROW_NUMBER() OVER (
+                PARTITION BY
+                    ahe.ownerid
+                ORDER BY
+                    ahe.id DESC
+            ) AS rn
+        FROM
+            pc_acctholderedge ahe
+            JOIN pc_contact c ON c.id = ahe.foreignentityid
+            AND c.retired = 0
+    ) acctholder ON acctholder.ownerid = a.id
+    AND acctholder.rn = 1
+WHERE
+    d.retired = 0;
