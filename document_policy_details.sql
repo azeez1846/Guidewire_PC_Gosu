@@ -5,10 +5,7 @@ SELECT
     d.documentidentifier AS documentIdentifier,
     pp.policynumber AS policyNumber,
     bu.name AS OBU,
-    COALESCE(
-        acctholder.contactname,
-        CONCAT(acctholder.firstname, ' ', acctholder.lastname)
-    ) AS accountName,
+    COALESCE(acctholder.contactname, j.primaryinsuredname) AS accountName,
     a.accountnumber AS accountNumber,
     dt.name AS docType,
     COALESCE(d.datecreated, d.createtime) AS createDate,
@@ -33,23 +30,27 @@ SELECT
         ELSE NULL
     END AS relatedTo
 FROM
-    pc_document d
-    LEFT JOIN pctl_documenttype dt ON dt.id = d.type
-    LEFT JOIN pc_job j ON j.id = d.jobid
+    pc10_replication.pc_document d
+    LEFT JOIN pc10_replication.pctl_documenttype dt ON dt.id = d.type
+    LEFT JOIN pc10_replication.pc_job j ON j.id = d.jobid
     AND j.retired = 0
-    LEFT JOIN pctl_job jt ON jt.id = j.subtype
-    LEFT JOIN pc_jobpolicyperiod jpp ON jpp.ownerid = j.id
-    LEFT JOIN pc_policyperiod pp ON pp.id = COALESCE(d.policyperiodid, jpp.foreignentityid)
+    LEFT JOIN pc10_replication.pctl_job jt ON jt.id = j.subtype
+    LEFT JOIN pc10_replication.pc_jobpolicyperiod jpp ON jpp.ownerid = j.id
+    LEFT JOIN pc10_replication.pc_policyperiod pp ON pp.id = COALESCE(d.policyperiodid, jpp.foreignentityid)
     AND pp.retired = 0
-    LEFT JOIN pctl_businessunit_ext bu ON bu.id = pp.businessunit_ext
-    LEFT JOIN pc_policy p ON p.id = COALESCE(d.policyid, pp.policyid)
+    LEFT JOIN pc10_replication.pctl_businessunit_ext bu ON bu.id = pp.businessunit_ext
+    LEFT JOIN pc10_replication.pc_policy p ON p.id = COALESCE(d.policyid, pp.policyid)
     AND p.retired = 0
-    LEFT JOIN pc_account a ON a.id = COALESCE(d.accountid, p.accountid)
+    LEFT JOIN pc10_replication.pc_account a ON a.id = COALESCE(d.accountid, p.accountid)
     AND a.retired = 0
     LEFT JOIN (
         SELECT
-            ahe.ownerid,
-            c.name AS contactname,
+            ahe.ownerid AS ownerid,
+            COALESCE(
+                c.namedenorm,
+                c.name,
+                CONCAT (c.firstname, ' ', c.lastname)
+            ) AS contactname,
             c.firstname AS firstname,
             c.lastname AS lastname,
             ROW_NUMBER() OVER (
@@ -59,8 +60,8 @@ FROM
                     ahe.id DESC
             ) AS rn
         FROM
-            pc_acctholderedge ahe
-            JOIN pc_contact c ON c.id = ahe.foreignentityid
+            pc10_replication.pc_acctholderedge ahe
+            JOIN pc10_replication.pc_contact c ON c.id = ahe.foreignentityid
             AND c.retired = 0
     ) acctholder ON acctholder.ownerid = a.id
     AND acctholder.rn = 1
